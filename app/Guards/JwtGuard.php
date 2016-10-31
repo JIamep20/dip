@@ -14,10 +14,10 @@ use Illuminate\Auth\GuardHelpers;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\UserProvider;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
-use Illuminate\Validation\UnauthorizedException;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
+use Lcobucci\JWT\Builder;
+use Request;
 
 /**
  * Class JwtGuard
@@ -45,6 +45,8 @@ class JwtGuard implements Guard
 
     protected $token = null;
 
+    protected $prefix = 'bearer';
+
     /**
      * JwtGuard constructor.
      * @param UserProvider $provider
@@ -62,19 +64,47 @@ class JwtGuard implements Guard
      */
     public function user()
     {
-        if(!is_null($this->user)) {
+        if (!is_null($this->user)) {
             return $this->user;
         }
         $user = null;
 
         $token = $this->getJwt();
-        if(!empty($token))
-        {
-            $user = User::findByEmail($token->getClaim('email'));
-
+        if (!empty($token)) {
+            if ($this->is_validJwt()) {
+                $user = User::findByEmail($token->getClaim('email'));
+            }
         }
 
         return $this->user = $user;
+    }
+
+    public function getJwt()
+    {
+        if (is_null($this->token)) {
+            try {
+                if (Request::header('Authorization')) {
+                    $this->token = (new \Lcobucci\JWT\Parser())->parse(trim(str_ireplace($this->prefix, '', Request::header('Authorization'))));
+                } else if (Cookie::has($this->key)) {
+                    $this->token = (new \Lcobucci\JWT\Parser())->parse((string)\Cookie::get('x-access-token'));
+                }
+            } catch (\InvalidArgumentException $ex) {
+                $this->token = false;
+            } finally {
+                return $this->token;
+            }
+        }
+        return $this->token;
+    }
+
+    public function is_validJwt($token = null)
+    {
+        if (is_null($token)) {
+            $token = $this->getJwt();
+        }
+
+        return $this->token ? $token->verify($this->algo, config('jwt.secret')) : false;
+
     }
 
     /**
@@ -102,15 +132,16 @@ class JwtGuard implements Guard
      */
     public function attempt(array $credentials = [], $remember = false, $login = false)
     {
-        $user = User::findByEmail($credentials['email']);
+        $user = $this->provider->retrieveByCredentials($credentials);
         if ($user) {
             $this->setUser($user);
+            $this->assignToken($user, $remember);
             return true;
         }
 
         return false;
     }
-    
+
     public function logout()
     {
         Cookie::queue(Cookie::forget($this->key));
@@ -118,37 +149,35 @@ class JwtGuard implements Guard
 
         return true;
     }
-    
-    public function getJwt()
-    {
-        if(is_null($this->token)) {
-            if(!Cookie::has($this->key)) {return false;}
-            $this->token = (new \Lcobucci\JWT\Parser())->parse((string) \Cookie::get('x-access-token'));
-        }
-        return $this->token;
-    }
-
-    public function is_validJwt($token = null)
-    {
-        if(is_null($token)) {
-            $token = $this->getJwt();
-        }
-
-        return $token->verify($this->algo, config('jwt.secret'));
-
-    }
 
     /**
      * Determine if the user matches the credentials.
      *
-     * @param  mixed  $user
-     * @param  array  $credentials
+     * @param  mixed $user
+     * @param  array $credentials
      * @return bool
      */
     protected function hasValidCredentials($user, $credentials)
     {
-        return ! is_null($user) && $this->provider->validateCredentials($user, $credentials);
+        return !is_null($user) && $this->provider->validateCredentials($user, $credentials);
     }
 
+    protected function assignToken($user = null, $remember = false) {
+        if(!$user) {
+            $user = $this->user();
+        }
+
+        $token = (new Builder())
+            ->set('email', $user->email)
+            ->sign(new Sha256(), config('jwt.secret'))
+            ->getToken();
+
+        Cookie::queue('x-access-token', (string)$token, $remember ? config('jwt.ttl') : 0);
+    }
+
+    public function login(Authenticatable $user){
+        $this->setUser($user);
+        $this->assignToken($user);
+    }
 
 }

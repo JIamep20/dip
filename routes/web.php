@@ -11,15 +11,18 @@
 |
 */
 
-Route::get('', function (Request $request) {
-    //return Cookie::get('access-token') . ' + ' . (new \Lcobucci\JWT\Parser())->parse((string) Cookie::get('access-token'))->getClaim('email');
-});
-
 Auth::routes();
 Route::get('logout', 'Auth\\LoginController@logout');
-Route::get('asd', function() {return Auth::user();});
 
-//Route::get('', function() {
-//    dd($_COOKIE);
-//    return view('home');
-//});
+Route::get('auth/{service}', 'Auth\\SocialAuth@redirectToProvider')->middleware('guest');
+Route::get('auth/{service}/callback', 'Auth\\SocialAuth@handleProviderCallback')->middleware('guest');
+
+Route::group(['middleware' => 'auth'], function() {
+    Route::get('', ['as' => 'base', function (Request $request) {
+
+        return Auth::user();
+    }]);
+});
+
+
+
