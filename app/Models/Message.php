@@ -10,4 +10,9 @@ class Message extends Model
     {
         return $this->belongsToMany(User::class);
     }
+
+    public function attachments()
+    {
+        return $this->hasMany(Attachment::class);
+    }
 }

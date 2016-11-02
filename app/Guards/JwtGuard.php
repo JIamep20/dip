@@ -71,7 +71,9 @@ class JwtGuard implements Guard
         $token = $this->getJwt();
         if (!empty($token)) {
             if ($this->is_validJwt()) {
-                $user = User::findByEmail($token->getClaim('email'));
+                if(!$user = User::findByEmail($token->getClaim('email'))) {
+                    $this->logout();
+                }
             }
         }
 

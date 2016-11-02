@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Seeder;
 use App\Models\Group;
+use App\Models\User;
+
 class GroupsSeeder extends Seeder
 {
     /**
@@ -13,17 +15,14 @@ class GroupsSeeder extends Seeder
     {
         factory(Group::class, 20)->create();
         $groups = Group::all();
-        $users = \App\Models\User::all();
+        $users = User::all();
 
-        $groups->map(function ($item) use ($users) {
+        $groups->each(function ($item) use ($users) {
             foreach ($users as $user) {
                 if(rand(0, 1)) {
                     $item->users()->attach($user);
                 }
             }
-
-            $room = \App\Models\Room::create(['name' => '123']);
-            $item->room()->save($room);
         });
     }
 }
