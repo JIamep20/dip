@@ -11,18 +11,13 @@ class Room extends Model
 
     protected $fillable = ['name', 'friends_room'];
 
-    public function users()
-    {
-        return $this->belongsToMany(User::class);
-    }
-
     public function messages()
     {
         return $this->hasMany(Message::class);
     }
 
-    public function friends()
+    public function roomable()
     {
-        return $this->hasOne(Friends::class);
+        return $this->morphTo();
     }
 }
