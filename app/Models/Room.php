@@ -9,7 +9,7 @@ class Room extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['name', 'friends_room'];
+    protected $fillable = ['name'];
 
     public function messages()
     {
