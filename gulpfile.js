@@ -1,19 +1,53 @@
-const elixir = require('laravel-elixir');
+var gulp =          require("gulp");
+var gutil =         require("gulp-util");
+var webpack =       require("webpack");
+var webpackConfig = require("./webpack.config.js");
+var del =           require('del');
+var gulpif =        require('gulp-if');
+var rename =        require('gulp-rename');
+var sass =          require('gulp-sass');
+var sourcemaps =    require('gulp-sourcemaps');
+var cleancss =      require('gulp-clean-css');
 
-require('laravel-elixir-vue-2');
+var prod = !!gutil.env.prod;
 
-/*
- |--------------------------------------------------------------------------
- | Elixir Asset Management
- |--------------------------------------------------------------------------
- |
- | Elixir provides a clean, fluent API for defining some basic Gulp tasks
- | for your Laravel application. By default, we are compiling the Sass
- | file for our application, as well as publishing vendor resources.
- |
- */
-
-elixir(mix => {
-    mix.sass('app.scss')
-       .webpack('app.js');
+gulp.task('clean', function () {
+    return del('public/{js,css,img}');
 });
+
+gulp.task('sass', function () {
+    return gulp.src('resources/assets/sass/index.scss')
+        .pipe(gulpif(!prod, sourcemaps.init()))
+        .pipe(sass())
+        .pipe(gulpif(prod, cleancss()))
+        .pipe(rename('app.css'))
+        .pipe(gulpif(!prod, sourcemaps.write()))
+        .pipe(gulp.dest('public/css'));
+});
+
+gulp.task('webpack:build', function (callback) {
+    // modify some webpack config options
+    var myConfig = Object.create(webpackConfig);
+
+    // run webpack
+    webpack(myConfig, function (err, stats) {
+        if (err) throw new gutil.PluginError('webpack:build', err);
+        gutil.log('[webpack:build]', stats.toString({
+            colors: true
+        }));
+        callback();
+    });
+});
+
+gulp.task('watch', function() {
+    gulp.watch(['resources/assets/js/**/*'], ['webpack:build']);
+    gulp.watch(['resources/assets/sass/**/*'], ['sass'])
+});
+
+var tasks = ['sass', 'webpack:build'];
+
+if(prod) tasks.unshift('clean');
+console.log(tasks);
+gulp.task('default', ['build']);
+gulp.task('build', tasks);
+gulp.task('build:watch', ['build', 'watch']);

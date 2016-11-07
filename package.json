@@ -1,15 +1,32 @@
 {
   "private": true,
+  "scripts": {
+    "serve": "webpack-dev-server --progress --debug --hot --devtool eval-source-map --output-pathinfo --watch --colors --inline --content-base public --port 8090 --host 0.0.0.0",
+    "webpack": "webpack",
+    "gulp": "gulp"
+  },
   "devDependencies": {
-    "bootstrap-sass": "^3.3.7",
+    "babel-core": "^6.18.2",
+    "babel-loader": "^6.2.7",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-react": "^6.16.0",
+    "babel-preset-react-hmre": "^1.1.1",
     "gulp": "^3.9.1",
-    "jquery": "^3.1.0",
-    "laravel-elixir": "^6.0.0-9",
-    "laravel-elixir-vue-2": "^0.2.0",
-    "laravel-elixir-webpack-official": "^1.0.2",
-    "lodash": "^4.16.2",
-    "vue": "^2.0.1",
-    "vue-resource": "^1.0.3",
-    "webpack": "^1.13.2"
+    "gulp-clean-css": "^2.0.13",
+    "gulp-if": "^2.0.2",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.3.2",
+    "gulp-sourcemaps": "^2.2.0",
+    "gulp-util": "^3.0.7",
+    "react-hot-loader": "^3.0.0-beta.6",
+    "webpack": "^1.13.3",
+    "webpack-dev-middleware": "^1.8.4",
+    "webpack-dev-server": "^1.16.2"
+  },
+  "dependencies": {
+    "babel": "^6.5.2",
+    "bootstrap-sass": "^3.3.7",
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2"
   }
 }
