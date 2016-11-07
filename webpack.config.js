@@ -8,7 +8,8 @@ module.exports = {
     output: {
         path: __dirname + '/public/js/',
         publicPath: "js/",
-        filename: "bundle.js"
+        filename: "bundle.js",
+        stats: 'errors-only'
     },
     module: {
         loaders: [

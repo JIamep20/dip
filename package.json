@@ -1,9 +1,9 @@
 {
   "private": true,
   "scripts": {
-    "serve": "webpack-dev-server --progress --debug --hot --devtool eval-source-map --output-pathinfo --watch --colors --inline --content-base public --port 8090 --host 0.0.0.0",
-    "webpack": "webpack",
-    "gulp": "gulp"
+    "serve": "./node_modules/.bin/webpack-dev-server --progress --debug --hot --devtool eval-source-map --output-pathinfo --watch --colors --inline --content-base public --port 8090 --host 0.0.0.0",
+    "webpack": "./node_modules/.bin/webpack",
+    "gulp": "./node_modules/.bin/gulp"
   },
   "devDependencies": {
     "babel-core": "^6.18.2",
