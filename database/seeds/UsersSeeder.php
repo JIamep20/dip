@@ -11,6 +11,12 @@ class UsersSeeder extends Seeder
      */
     public function run()
     {
+        for($i = 'a'; $i <= 'g'; $i++){
+            factory(\App\Models\User::class)->create([
+                'email' => 'tester' . $i . '@example.com',
+                'password' => bcrypt('tester' . $i)
+            ]);
+        }
         factory(\App\Models\User::class, 10)->create();
     }
 }
