@@ -10,7 +10,8 @@
         "barryvdh/laravel-ide-helper": "^2.2",
         "doctrine/dbal": "^2.5",
         "lcobucci/jwt": "^3.2",
-        "laravel/socialite": "^2.0"
+        "laravel/socialite": "^2.0",
+        "predis/predis": "^1.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

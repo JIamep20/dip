@@ -11,6 +11,17 @@
 |
 */
 
+Route::get('aa', function(){
+
+    event(new \App\Events\SomeEvent());
+    //\Illuminate\Support\Facades\Redis::publish('asd', 1);
+    return 'event fired';
+});
+
+Route::get('aaa', function() {
+    return view('aaa');
+});
+
 Auth::routes();
 Route::get('logout', 'Auth\\LoginController@logout');
 
