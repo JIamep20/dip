@@ -3,6 +3,6 @@ import React from 'react';
 
 export default React.createClass({
     render: function () {
-        return (<p></p>);
+        return (<p>it works1zasdadasddasdasd</p>);
     }
 });

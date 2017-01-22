@@ -11,17 +11,6 @@
 |
 */
 
-Route::get('aa', function(){
-
-    event(new \App\Events\SomeEvent());
-    //\Illuminate\Support\Facades\Redis::publish('asd', 1);
-    return 'event fired';
-});
-
-Route::get('aaa', function() {
-    return view('aaa');
-});
-
 Auth::routes();
 Route::get('logout', 'Auth\\LoginController@logout');
 
@@ -29,10 +18,11 @@ Route::get('auth/{service}', 'Auth\\SocialAuth@redirectToProvider')->middleware(
 Route::get('auth/{service}/callback', 'Auth\\SocialAuth@handleProviderCallback')->middleware('guest');
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::get('', ['as' => 'base', function (Request $request) {
-        return Cookie::get('x-access-token') . '<br>' .Auth::user();
+    Route::get('/', ['as' => 'base', function (Request $request) {
+        return view('main');
     }]);
+    Route::get('d', function(){
+        return view('webpackView');
+    });
 });
-
-
 

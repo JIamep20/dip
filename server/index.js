@@ -8,7 +8,7 @@ var redis = new Redis();
 //.get('/', function (request, response) {
 //    response.send('hi');
 //});
-console.log(123);
+//console.log(123);
 redis.subscribe('test-channel', function (err, count) {});
 
 io = io.listen(3000);

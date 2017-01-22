@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
-    <link href="assets/preloader.css" type="text/css" rel="prefetch" onload="this.rel='stylesheet'">
+    @if(env('APP_DEBUG'))
+        <link href="assets/preloader.css?v={{time()}}" type="text/css" rel="prefetch" onload="this.rel='stylesheet'">
+    @else
+        <link href="assets/preloader.css?v={{env('APP_VER')}}" type="text/css" rel="prefetch" onload="this.rel='stylesheet'">
+    @endif
+
 </head>
 <body>
 <div id="app">
@@ -19,6 +24,6 @@
         </style>
     </div>
 </div>
-<script type="text/javascript" src="assets/bundle.js"></script>
+    <script type="text/javascript" src="http://localhost:8888/assets/bundle.js"></script>
 </body>
 </html>
