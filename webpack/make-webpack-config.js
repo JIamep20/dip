@@ -9,7 +9,7 @@ prod ? console.log('Building app with prodaction flag') : console.log('Building 
 
 module.exports = function (options = {}) {
 
-    var entry = ['./resources/assets/js/app.js'];
+    var entry = ['./resources/assets/js/app.js', 'whatwg-fetch'];
     if(options.entry)
         entry = entry.concat(options.entry);
 

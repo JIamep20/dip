@@ -14,6 +14,9 @@ use Illuminate\Http\Request;
 */
 
 
-Route::group(['middleware' => 'auth'], function () {
-
+Route::group(['middleware' => ['auth']], function () {
+    Route::get('/', function () {
+        return 123;
+    });
 });
+

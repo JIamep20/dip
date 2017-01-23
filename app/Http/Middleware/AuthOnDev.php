@@ -2,9 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use Closure;
+use Illuminate\Support\Facades\Auth;
 
-class AuthApi
+class AuthOnDev
 {
     /**
      * Handle an incoming request.
@@ -15,6 +17,10 @@ class AuthApi
      */
     public function handle($request, Closure $next)
     {
+        if(env('APP_AUTH')) {
+            Auth::login(User::first());
+        }
+
         return $next($request);
     }
 }
