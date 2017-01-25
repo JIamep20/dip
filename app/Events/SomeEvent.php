@@ -35,6 +35,7 @@ class SomeEvent implements ShouldBroadcast
     public function broadcastOn()
     {
         //return new PrivateChannel('user' . $this->user->id);
-        return ['test-channel'];
+        return ['private-' .$this->user->id];
+        //return ['general'];
     }
 }

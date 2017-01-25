@@ -15,8 +15,11 @@ use Illuminate\Http\Request;
 
 
 Route::group(['middleware' => ['auth']], function () {
-    Route::get('/', function () {
-        return 123;
+    Route::get('/user', function () {
+        return Auth::user();
+    });
+    Route::get('fire', function() {
+        event(new \App\Events\SomeEvent());
     });
 });
 

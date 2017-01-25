@@ -1,23 +1,27 @@
 var http = require('http');
 var config = require('./config.js');
 
-//module.exports = function (token, onSuccess) {
+module.exports = function (token, onSuccess) {
 
     var responseData = '';
 
-    var request = http.get({path, host, port} = config);
+    const {path, host, port} = config;
+
+    var request = http.get(Object.assign({}, {path, host, port}, {
+        headers: {
+            'Accept': '/',
+            'Cookie': "x-access-token=" + 123
+        }
+    }));
 
     try {
         request.on('response', function (response) {
             response.on('end', function () {
-                var data = responseData;
-                console.log(data);
-                //console.log(JSON.parse(data));
+                onSuccess(JSON.parse(responseData));
             });
 
             response.on('data', function (chunk) {
                 responseData += chunk;
-                //console.log(chunk);
             });
         });
 
@@ -30,7 +34,7 @@ var config = require('./config.js');
     } catch (error) {
         console.log(error);
     }
-//};
+};
 
 
 

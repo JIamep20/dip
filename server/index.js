@@ -1,26 +1,58 @@
-//var app = require('express')();
-//var server = require('http').Server(app);
+var config = require('./config');
 var io = require('socket.io');
 var Redis = require('ioredis');
 var redis = new Redis();
-//server.listen(3000);
+var socketioJwt = require('socketio-jwt');
 
-//.get('/', function (request, response) {
-//    response.send('hi');
-//});
-//console.log(123);
-redis.subscribe('test-channel', function (err, count) {});
+var users = require('./usersContainer');
+var checkAuth = require('./checkAuth');
 
-io = io.listen(3000);
+console.log("Starting sockets server...");
 
-io.on('connection', function (socket) {
-    console.log('A connection was made');
+io = io.listen(config.socketPort || 3000);
+console.log('Socket server listens on socket: ' + config.socketPort);
+
+try {
+    redis.subscribe('general', function (err, count) {});
+
+    console.log('Subscribed to general channel');
+} catch (e) {
+    console.log('Error happened while subscribing to general channel');
+    console.log(e.message);
+}
+
+redis.on('message', function (channel, message) {
+    var message = JSON.parse(message);
+    console.log(channel, message);
+    if(channel == 'general') {
+
+    } else {
+        id = parseInt(channel.split('-')[1]);
+        users.getUserSockets(id).forEach(function (item) {
+            io.sockets.sockets[item].emit('new event', {channel, data: message.data});
+        });
+    }
 });
 
-redis.on('message', function(channel, message) {
-    io.emit('channel:event', message);
-});
-
-redis.on("error", function(err){
-    //console.log(err);
+io.on('connection', function(socket) {
+    console.log('New user connected');
+    socket.on('authorize', function(loginData) {
+        if(!!loginData.token) {
+            checkAuth(loginData, function (user) {
+                console.log('user id: ' + user.id + " authorized");
+                users.add(user.id, socket.id);
+                socket.emit('logged', {payload: true});
+                redis.subscribe('private-' + user.id);
+                socket.on('disconnect', function () {
+                    console.log('user id: ' + user.id + ' disconnected');
+                    redis.unsubscribe('private-' + user.id);
+                    users.delete(socket.id);
+                });
+            });
+        } else {
+            socket.on('disconnect', function () {
+                console.log('Anauthorized socket disconnected');
+            });
+        }
+    });
 });

@@ -30,3 +30,6 @@ Route::get('dd', function(){
     return view('webpackView');
 });
 
+Route::get('s', function() {
+    return view('sockets');
+})->middleware('auth-dev');
