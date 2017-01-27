@@ -1,7 +1,7 @@
 var path = require('path');
 
 module.exports = {
-    prod: process.argv.indexOf('--prod') > 0,
+    prod: process.env.NODE_ENV === 'production',
     port: 8888,
     host: 'localhost',
     debug: true,

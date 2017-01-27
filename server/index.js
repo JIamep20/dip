@@ -13,7 +13,8 @@ io = io.listen(config.socketPort || 3000);
 console.log('Socket server listens on socket: ' + config.socketPort);
 
 try {
-    redis.subscribe('general', function (err, count) {});
+    redis.subscribe('general', function (err, count) {
+    });
 
     console.log('Subscribed to general channel');
 } catch (e) {
@@ -23,21 +24,23 @@ try {
 
 redis.on('message', function (channel, message) {
     var message = JSON.parse(message);
-    console.log(channel, message);
-    if(channel == 'general') {
+    if (channel == 'general') {
 
     } else {
         id = parseInt(channel.split('-')[1]);
-        users.getUserSockets(id).forEach(function (item) {
-            io.sockets.sockets[item].emit('new event', {channel, data: message.data});
-        });
+        
+        if (!!users.getUserSockets(id)) {
+            users.getUserSockets(id).forEach(function (item) {
+                io.sockets.sockets[item].emit('new event', {channel, data: message.data});
+            });
+        }
     }
 });
 
-io.on('connection', function(socket) {
+io.on('connection', function (socket) {
     console.log('New user connected');
-    socket.on('authorize', function(loginData) {
-        if(!!loginData.token) {
+    socket.on('authorize', function (loginData) {
+        if (!!loginData.token) {
             checkAuth(loginData, function (user) {
                 console.log('user id: ' + user.id + " authorized");
                 users.add(user.id, socket.id);

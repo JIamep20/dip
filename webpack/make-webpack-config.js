@@ -9,7 +9,7 @@ prod ? console.log('Building app with prodaction flag') : console.log('Building 
 
 module.exports = function (options = {}) {
 
-    var entry = ['./resources/assets/js/app.js', 'whatwg-fetch'];
+    var entry = ['./resources/assets/js/index.js'];
     if(options.entry)
         entry = entry.concat(options.entry);
 
@@ -55,7 +55,10 @@ module.exports = function (options = {}) {
             transform: function (c, p) {
                 return prod ? new CleanCSS().minify(c).styles : c;
             }
-        }])
+        }]),
+        new webpack.DefinePlugin({
+            'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+        })
     ];
 
     if(options.plugins)

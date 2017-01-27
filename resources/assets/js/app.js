@@ -1,30 +1,14 @@
-
 import React from 'react';
-import ReactDOM from 'react-dom';
-import axios from 'axios';
+import { Link } from 'react-router';
 
-import io from 'socket.io-client';
+export default class App extends React.Component{
 
-import Tag from './module1.js';
-import P from './module2.js';
-
-var App = React.createClass({
-    componentWillMount: function () {
-
-    },
-
-    render: function() {
-        return (<div>
-            <button onClick={this.request}>asd</button>
+    render() {console.log(this.props.children);
+        return(<div>
+            {this.props.children}
+            <Link to="/module1">Module1</Link>
+            <Link to="/module2">Module2</Link>
         </div>);
-    },
-
-    request: function() {
-        axios.get('http://d.l/api/')
-            .then((r) => {
-                console.log(r)
-            });
     }
-});
+};
 
-ReactDOM.render(<App />, document.getElementById('app'));
