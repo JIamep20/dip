@@ -1,0 +1,17 @@
+#content {
+  padding: 5px;
+  height: 100%;
+  overflow-x: scroll;;
+  background-color: #424242;
+}
+
+.user-video {
+  text-align: center;
+
+  img {
+    width: auto;
+    height: auto;
+    margin: 5px;
+    display: inline-block;
+  }
+}

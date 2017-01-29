@@ -1,0 +1,75 @@
+@import '../styles/variables.scss';
+
+#touch-menu {
+  color: $offWhite;
+  text-decoration: none;
+  line-height: 48px;
+  //display: block;
+  display: none;
+  @include hover-link;
+}
+
+.hidden {display: none;}
+
+header {
+  background: $deepblue;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 48px;
+  text-align: center;
+}
+
+.nav {
+  background-color: $deepblue;
+  height: 100%;
+  display: inline-block;
+  overflow: hidden;
+  ul {
+    width: 100%;
+    display: inline-block;
+  }
+  li {
+    float: left;
+  }
+  a{
+    color: $offWhite;
+    text-decoration: none;
+    padding: 16px;
+    display: block;
+    text-align: center;
+
+    @include  hover-link;
+  }
+}
+
+.sidebar-toggle {
+  background: #DF314D;
+  border-radius: 3px;
+  display: inline-block;
+  position: absolute;
+  padding: 10px 7px;
+  margin: 7px;
+  top: 0;
+  left: 0;
+
+  .bar {
+    display: block;
+    width: 18px;
+    margin-bottom: 3px;
+    height: 2px;
+    background-color: #fff;
+    border-radius: 1px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &:last-child {
+    top: 0;
+    left: auto;
+    right: 0;
+  }
+}

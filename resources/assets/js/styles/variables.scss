@@ -1,0 +1,10 @@
+$deepblue: #032f3e;
+$offWhite: #f8f9fb;
+$hoverColor: #4285F4;
+
+@mixin hover-link {
+  transition: background-color .5s ease-in-out;
+  &:hover {
+    background-color: $hoverColor;
+  }
+}

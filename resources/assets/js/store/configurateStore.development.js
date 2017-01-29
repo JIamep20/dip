@@ -1,21 +1,21 @@
 import { createStore, applyMiddleware, compose } from 'redux';
-import { persistState } from 'redux-devtools';
 import thunk from 'redux-thunk';
-import logger from 'redux-logger';
+import createLogger from 'redux-logger';
 import rootReducer from '../reducers/rootReducer';
-import DevTools from '../devtools/DevTools.js';
+
+const logger = createLogger();
 
 const enhancer = compose(
     // Middleware you want to use in development:
-    applyMiddleware(thunk, logger),
+    applyMiddleware(logger, thunk),
     // Required! Enable Redux DevTools with the monitors you chose
-    DevTools.instrument()
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__()
 );
 
-export default function configureStore(initialState) {
+export default function configureStore(initialState = {}) {
     // Note: only Redux >= 3.1.0 supports passing enhancer as third argument.
     // See https://github.com/rackt/redux/releases/tag/v3.1.0
-    const store = createStore(rootReducer, initialState, enhancer);
+    const store = createStore(rootReducer, enhancer);
 
     // Hot reload reducers (requires Webpack or Browserify HMR to be enabled)
     if (module.hot) {
