@@ -26,6 +26,10 @@ Route::group(['middleware' => ['auth']], function () {
     });
 });
 
+Route::get('fire', function() {
+    return event(new \App\Events\SomeEvent());
+});
+
 Route::get('dd', function(){
     return view('webpackView');
 });

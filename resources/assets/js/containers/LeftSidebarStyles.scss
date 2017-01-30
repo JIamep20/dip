@@ -1,0 +1,37 @@
+.left-sidebar {
+  -webkit-transition:  left 0.5s;
+  -moz-transition:  left 0.5s;
+  -o-transition:  left 0.5s;
+  transition:  left 0.5s;
+  position: fixed;
+  background-color: #3B5998;
+  height: calc(100% - 48px);
+
+  width: 300px;
+  top: 48px;
+  left: -100%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  z-index: 5;
+}
+
+.opened-left-sidebar {
+  left: 0;
+}
+
+.friends {
+  list-style: none;
+  a {
+    color: #fff;
+    padding: 5px;
+    -webkit-transition: background-color .5s;
+    -moz-transition: background-color .5s;
+    -o-transition: background-color .5s;
+    transition: background-color .5s;
+    display: block;
+
+    &:hover {
+      background-color: #4285F4;
+    }
+  }
+}

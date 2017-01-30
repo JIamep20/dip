@@ -1,7 +1,10 @@
 import React from 'react';
 import './ContentStyles.scss'
 
-export default class Content extends React.Component {
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+class Content extends React.Component {
     constructor(props) {
         super(props);
 
@@ -9,8 +12,11 @@ export default class Content extends React.Component {
     }
 
     render() {
+        var { left, right } = this.props.sidebars;
+        left = left ? 'opened-left-sidebar-content ' : '';
+        right = right ? 'opened-right-sidebar-content' : '';
         return (
-            <div className="slideout-panel" id="content">
+            <div id="content" className={`${left} ${right}`}>
                 <div className="user-video">
                     <img src={this.state.img} />
                     <img src={this.state.img} />
@@ -28,3 +34,9 @@ export default class Content extends React.Component {
         );
     }
 }
+
+export default connect(
+    store => ({
+        sidebars: store.sidebars
+    })
+)(Content);

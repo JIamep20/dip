@@ -2,7 +2,6 @@ var config = require('./config');
 var io = require('socket.io');
 var Redis = require('ioredis');
 var redis = new Redis();
-var socketioJwt = require('socketio-jwt');
 
 var users = require('./usersContainer');
 var checkAuth = require('./checkAuth');
@@ -31,7 +30,7 @@ redis.on('message', function (channel, message) {
         
         if (!!users.getUserSockets(id)) {
             users.getUserSockets(id).forEach(function (item) {
-                io.sockets.sockets[item].emit('new event', {channel, data: message.data});
+                io.sockets.sockets[item].emit('ne', {channel, data: message.data, event: message.event});
             });
         }
     }

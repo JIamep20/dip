@@ -8,7 +8,6 @@ import * as sidebarsActions from '../actions/sidebarsActions';
 import './HeaderStyles.scss';
 
 class Header extends React.Component {
-
     constructor(props) {
         super(props);
 

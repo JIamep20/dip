@@ -1,8 +1,20 @@
 #content {
   padding: 5px;
+  -webkit-transition: margin 0.5s;
+  -moz-transition: margin 0.5s;
+  -o-transition: margin 0.5s;
+  transition: margin 0.5s;
   height: 100%;
-  overflow-x: scroll;;
+  overflow-y: scroll;
   background-color: #424242;
+}
+
+.opened-left-sidebar-content {
+  margin-left: 300px;
+}
+
+.opened-right-sidebar-content {
+  margin-right: 300px;
 }
 
 .user-video {
