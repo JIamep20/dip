@@ -31,7 +31,7 @@ class LeftSidebar extends React.Component {
                     {users.map((item, key) => {
                         return (<li key={key}>
                             <a href="#">
-                                <span className="circle circle-green"></span>
+                                <span className="circle circle-orange"></span>
                                 {item.name}
                             </a>
                         </li>)

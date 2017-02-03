@@ -50,10 +50,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Message::class);
     }
-    
+
     public function friends()
     {
-        return $this->hasMany(Friend::class);
+        return $this->belongsToMany(User::class, 'friends', 'user_id', 'friend_id')
+            // if you want to rely on accepted field, then add this:
+            ->wherePivot('accepted', '=', 1);
     }
 
     public function friendsOfMine()

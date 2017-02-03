@@ -1,4 +1,5 @@
 import io from 'socket.io-client';
+import cookie from 'react-cookie';
 
 export default new function () {
     this._socket = null;
@@ -27,8 +28,10 @@ export default new function () {
     };
 
     this._getCookie = function(name) {
-        var value = "; " + document.cookie;
-        var parts = value.split("; " + name + "=");
-        if (parts.length == 2) return parts.pop().split(";").shift();
+        return cookie.load(name);
+        // var value = "; " + document.cookie;
+        // var parts = value.split("; " + name + "=");
+        // if (parts.length == 2) return parts.pop().split(";").shift();
+
     }
 }

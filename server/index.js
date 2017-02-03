@@ -40,7 +40,10 @@ io.on('connection', function (socket) {
     console.log('New user connected');
     socket.on('authorize', function (loginData) {
         if (!!loginData.token) {
-            checkAuth(loginData, function (user) {
+            checkAuth(loginData, function (error, user) {
+                if(error) {
+                    return;
+                }
                 console.log('user id: ' + user.id + " authorized");
                 users.add(user.id, socket.id);
                 socket.emit('logged', {payload: true});

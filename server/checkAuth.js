@@ -1,7 +1,7 @@
 var http = require('http');
 var config = require('./config.js');
 
-module.exports = function (token, onSuccess) {
+module.exports = function (token, cb) {
 
     var responseData = '';
 
@@ -9,20 +9,28 @@ module.exports = function (token, onSuccess) {
 
     var request = http.get(Object.assign({}, {path, host, port}, {
         headers: {
-            'Accept': '/',
-            'Cookie': "x-access-token=" + 123
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            "X-Requested-With": "XMLHttpRequest",
+            'Cookie': "x-access-token=" + token.token
         }
     }));
 
     try {
         request.on('response', function (response) {
+            if(response.statusCode < 200 || response.statusCode > 299)
+            {
+                console.error(`Some undefined error. Code: ${response.statusCode}, Message: ${response.statusMessage}`);
+                cb(true);
+            }
             response.on('end', function () {
-                onSuccess(JSON.parse(responseData));
+                cb(false, JSON.parse(responseData));
             });
 
             response.on('data', function (chunk) {
                 responseData += chunk;
             });
+
         });
 
         request.on('error', function (e) {

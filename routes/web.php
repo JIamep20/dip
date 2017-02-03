@@ -37,3 +37,10 @@ Route::get('dd', function(){
 Route::get('s', function() {
     return view('sockets');
 })->middleware('auth-dev');
+
+Route::get('ajax', function() {
+    if(Request::ajax()){
+        return "AJAX";
+    }
+    return "HTTP";
+});
