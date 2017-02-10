@@ -8,7 +8,7 @@ const initialState = {
 export default function sidebarsReducer(state = initialState, action) {
 
     switch (action.type) {
-        case TOGGLE_LEFT_SIDEBAR: console.log(state);
+        case TOGGLE_LEFT_SIDEBAR:
             return {
                 ...state,
                 left: !state.left

@@ -4,7 +4,9 @@
   -o-transition:  left 0.5s;
   transition:  left 0.5s;
   position: fixed;
-  background-color: #3B5998;
+  //background-color: #3B5998;
+  //background-color: #2B2B2B;
+  background-color: #ECDFBD;
   height: calc(100% - 48px);
 
   width: 300px;
@@ -22,16 +24,20 @@
 .friends {
   list-style: none;
   a {
-    color: #fff;
+    //color: #eee;
     padding: 5px;
-    -webkit-transition: background-color .5s;
-    -moz-transition: background-color .5s;
-    -o-transition: background-color .5s;
-    transition: background-color .5s;
+    -webkit-transition: background-color .5s, color .5s;
+    -moz-transition: background-color .5s, color .5s;
+    -o-transition: background-color .5s, color .5s;
+    transition: background-color .5s, color .5s;
     display: block;
+    color: black;
+    font-weight: bold;
 
     &:hover {
-      background-color: #4285F4;
+      //background-color: #4285F4;
+      background-color: #2D3033;
+      color: #eee;
     }
   }
 }

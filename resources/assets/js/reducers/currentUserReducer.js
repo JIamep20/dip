@@ -1,15 +1,28 @@
-import { FETCH_USER_SUCCESS, FETCH_USER_ERROR } from '../actions/currentUserActions.js';
+import { FETCH_USER_SUCCESS, FETCH_USER_ERROR, UPDATE_USER_ERROR, UPDATE_USER_SUCCESS } from '../actions/currentUserActions.js';
 
 const initialState = {
-    currentUser: null
+    user: {},
+    errors: {}
 };
 
-export default function currentUserReducer(state = initialState, action) {
+export default function userReducer(state = initialState, action) {
     switch(action.type){
         case FETCH_USER_SUCCESS:
             return {
                 ...state,
-                currentUser: action.payload
+                user: action.payload
+            };
+
+        case UPDATE_USER_ERROR:
+            return {
+                ...state,
+                errors: action.payload
+            };
+
+        case UPDATE_USER_SUCCESS:
+            return {
+                ...state,
+                errors: {}
             };
 
         default:

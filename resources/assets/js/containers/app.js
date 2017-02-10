@@ -1,31 +1,33 @@
 import React from 'react';
 
-import { Link } from 'react-router';
+import { connect } from 'react-redux';
+import {Link} from 'react-router';
 
-import './AppResets.scss';
-import './AppStyles.scss';
-import '../styles/slideout.scss';
+import '../styles/AppResets.scss';
+import '../styles/AppStyles.scss';
 
 import Header from './HeaderContainer';
 import LeftSidebar from './LeftSidebar';
-import Content from './ContentContainer';
-import RightSidebar from './RightSidebar';
 
-export default class App extends React.Component{
+
+class App extends React.Component {
 
     constructor(props) {
         super(props);
     }
 
     render() {
-        return(<div className="wrapper">
+        return (<div className="wrapper">
             <Header />
             <LeftSidebar />
-            <Content />
-            <RightSidebar />
+            {this.props.children}
         </div>);
     }
-};
+}
+
+export default connect()(App);
+
+
 
 
 /*

@@ -42,6 +42,7 @@ io.on('connection', function (socket) {
         if (!!loginData.token) {
             checkAuth(loginData, function (error, user) {
                 if(error) {
+                    socket.disconnect();
                     return;
                 }
                 console.log('user id: ' + user.id + " authorized");

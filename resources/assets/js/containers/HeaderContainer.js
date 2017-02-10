@@ -1,11 +1,13 @@
 import React from 'react';
 import Slideout from 'slideout';
 import {connect} from 'react-redux';
+import { Link } from 'react-router';
+
 import { bindActionCreators } from 'redux';
 
 import * as sidebarsActions from '../actions/sidebarsActions';
 
-import './HeaderStyles.scss';
+import '../styles/HeaderStyles.scss';
 
 class Header extends React.Component {
     constructor(props) {
@@ -36,19 +38,19 @@ class Header extends React.Component {
 
                 <a href="#" id="touch-menu">Menu</a>
                 <ul className="nav clearfix">
-                    <li><a href="#">Lorem.</a></li>
-                    <li><a href="#">Illum.</a></li>
-                    <li><a href="#">Pariatur.</a></li>
-                    <li><a href="#">Illum?</a></li>
-                    <li><a href="#">Ea?</a></li>
-                    <li className="dropdown">
+                    <li><Link to="/">Main</Link></li>
+                    <li><Link to="user/find">Find User</Link></li>
+                    <li><a href="#">Pariatur</a></li>
+                    <li><a href="#">Illum</a></li>
+                    <li><Link to="user">Profile</Link></li>
+                    {/*<li className="dropdown">
                         <a href="#">Profile</a>
                         <div className="dropdown-content">
                             <a href="">Lorem.</a>
                             <a href="">Nesciunt?</a>
                             <a href="">Omnis.</a>
                         </div>
-                    </li>
+                    </li>*/}
                 </ul>
                 <a href="#" className="sidebar-toggle" onClick={this.onRightToggleClick}>
                     <span className="bar"></span>

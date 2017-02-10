@@ -22,8 +22,10 @@ module.exports = function (token, cb) {
             {
                 console.error(`Some undefined error. Code: ${response.statusCode}, Message: ${response.statusMessage}`);
                 cb(true);
+                return;
             }
             response.on('end', function () {
+                console.log(responseData);
                 cb(false, JSON.parse(responseData));
             });
 

@@ -24,6 +24,14 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('d', function(){
         return view('webpackView');
     });
+
+    Route::get('ajax', function() {
+        return \Illuminate\Support\Facades\Auth::user()->friends;
+//    if(Request::ajax()){
+//        return "AJAX";
+//    }
+//    return "HTTP";
+    });
 });
 
 Route::get('fire', function() {
@@ -37,10 +45,3 @@ Route::get('dd', function(){
 Route::get('s', function() {
     return view('sockets');
 })->middleware('auth-dev');
-
-Route::get('ajax', function() {
-    if(Request::ajax()){
-        return "AJAX";
-    }
-    return "HTTP";
-});

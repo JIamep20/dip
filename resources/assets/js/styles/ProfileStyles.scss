@@ -1,0 +1,96 @@
+#profile-block {
+  form {
+    background-color: #cccccc;
+    padding: 5px;
+    font-size: 16px;
+  }
+
+  .validation-error {
+    color: red;
+  }
+
+  .form-group {
+    margin: 0 3px 0 3px;
+
+    label {
+      display: inline-block;
+      font-weight: bold;
+      margin-bottom: 3px;
+    }
+
+    input {
+      width: 100%;
+      margin-bottom: 7px;
+      font-size: 16px;
+      padding: 8px;
+      border: 2px solid transparent;
+      border-radius: 7px;
+      &:focus {
+        border: 2px solid #3498DB;
+      }
+    }
+
+    input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+      text-overflow: ellipsis;
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+
+    input:focus::-webkit-input-placeholder {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    input:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+      text-overflow: ellipsis;
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+
+    input:focus::-moz-placeholder {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    input::-moz-placeholder { /* Mozilla Firefox 19+ */
+      text-overflow: ellipsis;
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+
+    input:focus:-moz-placeholder {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    input:-ms-input-placeholder { /* Internet Explorer 10-11 */
+      text-overflow: ellipsis;
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+
+    input:focus:-ms-input-placeholder {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+  }
+}
+
+.btn {
+  display: block;
+  padding: 8px;
+  text-align: center;
+  font-weight: bold;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  font-size: 16px;
+  text-shadow: 0 1px 1px #3c3c3c;
+  cursor: pointer;
+  &.btn-submit {
+    background-color: #00A03E;
+    color: #eee;
+  }
+  &:hover {
+
+  }
+}
