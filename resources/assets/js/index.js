@@ -28,7 +28,8 @@ const history = syncHistoryWithStore(hashHistory, store);
 
 store.dispatch(fetchCurrentUser());
 store.dispatch(fetchFriends());
-socketClient.connect(store);
+socketClient.configurateStore(store);
+//socketClient.connect();
 
 render((
     <Provider store={store}>

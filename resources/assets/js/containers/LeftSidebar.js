@@ -14,24 +14,12 @@ class LeftSidebar extends React.Component {
         this.state = {users: []};
     }
 
-    componentDidMount() {
-        axios.get('api/friends')
-            .then((req) => {
-                var users = req.data.data.map((user, index) => {
-                    user.user = user.invited || user.initiator;
-                    delete user.invited; delete user.initiator;
-                    return user;
-                });
-                this.setState({users: users});
-            });
-    }
-
     render() {
         const {left} = this.props.sidebars;
         var friends = this.props.friends.map((item, index) => {
             return (<li key={index}>
                 <Link to={`/room/${item.room[0].id}`}>
-                    <span className="circle circle-orange"></span>
+                    <span className={`circle ${item.status || false ? 'circle-green' : 'circle-red'}`}></span>
                     {item.user.name}
                 </Link>
             </li>)
