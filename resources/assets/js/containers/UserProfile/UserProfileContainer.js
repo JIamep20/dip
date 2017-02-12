@@ -2,7 +2,7 @@ import React from 'react';
 
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import * as currentUserActions from '../../actions/currentUserActions';
+import { updateCurrentUser } from '../../actions/UsersActions';
 import UserProfileForm from './UserProfileForm';
 
 import '../../styles/ProfileStyles.scss';
@@ -36,7 +36,7 @@ export default connect(
         errors: state.currentUser.errors
     }),
     dispatch => ({
-        currentUserActions: bindActionCreators(currentUserActions, dispatch)
+        currentUserActions: bindActionCreators({updateCurrentUser}, dispatch)
     })
 )
 (Profile);

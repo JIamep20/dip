@@ -18,10 +18,16 @@ Route::group(['middleware' => ['auth']], function () {
 //    Route::get('/user', function () {
 //        return Auth::user();
 //    });
-    
+
+    /* UserController */
+
     Route::get('user', 'UserController@index');
     Route::put('user', 'UserController@update');
-
-    Route::resource('friends', 'FriendsController');
+    
+    /* FriendsController */
+    Route::get('friends', 'FriendsController@index');
+    Route::get('users/{query}', 'FriendsController@search');
+    Route::post('users/{id}', 'FriendsController@addUser');
+    
 });
 

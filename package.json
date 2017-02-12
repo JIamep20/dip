@@ -35,13 +35,13 @@
       }
     },
     "sockets": {
-      "command": "node server/index.js",
+      "command": "nodemon server/index.js",
       "env": {
         "NODE_ENV": "development"
       }
     },
     "sockets:prod": {
-      "command": "node server/index.js",
+      "command": "nodemon server/index.js",
       "env": {
         "NODE_ENV": "production"
       }
@@ -75,6 +75,7 @@
     "css-loader": "^0.26.1",
     "express": "^4.14.0",
     "ioredis": "^2.5.0",
+    "nodemon": "^1.11.0",
     "react": "^15.4.2",
     "react-cookie": "^1.0.4",
     "react-dom": "^15.4.2",

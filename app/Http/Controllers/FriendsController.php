@@ -18,69 +18,32 @@ class FriendsController extends ApiController
         return $this->setStatusCode(200)->respond(Auth::user()->friends);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function search($query)
     {
-        //
+        $result = \App\Models\User::where('name', 'like', "%$query%")
+            ->whereDoesntHave('friendOf', function ($q) {
+                $q->where('user_id', Auth::user()->id)->orWhere('friend_id', Auth::user()->id);
+            })
+            ->whereDoesntHave('friendsOfMine', function ($q) {
+                $q->where('user_id', Auth::user()->id)->orWhere('friend_id', Auth::user()->id);
+            })
+            ->get();
+
+        return $this->setStatusCode(200)->respond($result);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function addUser($id)
     {
-        //
-    }
+        $user = \App\Models\User::findOrFail($id);
+        $friends = new \App\Models\Friend([
+            'user_id' => Auth::user()->id,
+            'friend_id' => $user->id
+        ]);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+        $friends->save();
+        $friends->room()->save(\App\Models\Room::create(['name' => 'Private: ' . Auth::user()->name . ', ' . $user->name]));
+        $friends->load('initiator', 'invited', 'room');
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return $this->setStatusCode(200)->respond($friends);
     }
 }

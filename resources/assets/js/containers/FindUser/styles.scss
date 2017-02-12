@@ -1,0 +1,28 @@
+.find-user-presentation-wrapper {
+  background-color: #eeeeee;
+  height: 100%;
+  border-radius: 3px;
+  padding: 5px;
+
+  .list {
+    border: 1px solid #cccccc;
+    padding: 2px;
+  }
+
+  input[type=text] {
+    width: calc(100% - 80px);
+    float: left;
+    height: 35px;
+    padding: 2px;
+    font-size: 15px;
+
+    &:focus {
+      border-color: #1b6d85;
+    }
+  }
+
+  input[type=submit] {
+    display: inline-block;
+    float: right;
+  }
+}

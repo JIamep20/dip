@@ -4,7 +4,10 @@ import cookie from 'react-cookie';
 export default new function () {
     this._socket = null;
     var self = this;
-    this.connect = function() {
+    this.connect = function({dispatch, getState}) {
+        this._dispatch = dispatch;
+        this._getState = getState;
+        console.log(this._getState());
         this._socket = io('http://localhost:3000/');
 
         var s = this._socket;
@@ -13,11 +16,15 @@ export default new function () {
             console.log('Socket connected');
 
             s.emit('authorize', {token: self._getCookie('x-access-token')});
+            
+            s.on('logged', () => {
 
-            s.on('ne', function(message) {
-                console.log(message);
             });
         });
+    };
+
+    this.emit = () => {
+
     };
 
     this.disconnect = function() {

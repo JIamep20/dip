@@ -25,8 +25,7 @@ module.exports = function (token, cb) {
                 return;
             }
             response.on('end', function () {
-                console.log(responseData);
-                cb(false, JSON.parse(responseData));
+                cb(false, JSON.parse(responseData).data);
             });
 
             response.on('data', function (chunk) {

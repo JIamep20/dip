@@ -27,11 +27,9 @@ class LeftSidebar extends React.Component {
     }
 
     render() {
-
         const {left} = this.props.sidebars;
-
-        var users = this.state.users.map((item, key) => {
-            return (<li key={item.id}>
+        var friends = this.props.friends.map((item, index) => {
+            return (<li key={index}>
                 <Link to={`/room/${item.room[0].id}`}>
                     <span className="circle circle-orange"></span>
                     {item.user.name}
@@ -47,7 +45,7 @@ class LeftSidebar extends React.Component {
                         transitionName="fade"
                         transitionEnterTimeout={300}
                         transitionLeaveTimeout={300}>
-                        {users}
+                        {friends}
                     </ReactTransitionGroup>
                 </ul>
             </div>
@@ -56,5 +54,8 @@ class LeftSidebar extends React.Component {
 }
 
 export default connect(
-    state => ({sidebars: state.sidebars})
+    state => ({
+        sidebars: state.sidebars,
+        friends: state.users.friends
+    })
 )(LeftSidebar);
