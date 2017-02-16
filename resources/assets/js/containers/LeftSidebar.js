@@ -44,6 +44,6 @@ class LeftSidebar extends React.Component {
 export default connect(
     state => ({
         sidebars: state.sidebars,
-        friends: state.users.friends
+        friends: state.friends.friends
     })
 )(LeftSidebar);

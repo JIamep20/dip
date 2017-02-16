@@ -14,14 +14,6 @@ export const ADD_USER_REQUEST = 'ADD_USER_REQUEST';
 export const ADD_USER_SUCCESS = 'ADD_USER_SUCCESS';
 export const ADD_USER_ERROR = 'ADD_USER_ERROR';
 
-export const FETCH_FRIENDS_REQUEST = 'FETCH_FRIENDS_REQUEST';
-export const FETCH_FRIENDS_SUCCESS = 'FETCH_FRIENDS_SUCCESS';
-export const FETCH_FRIENDS_ERROR = 'FETCH_FRIENDS_ERROR';
-
-export const SOCKET_QUERY_ONLINE_FRIENDS_REQUEST = 'SOCKET_QUERY_ONLINE_FRIENDS_REQUEST';
-export const SOCKET_QUERY_ONLINE_FRIENDS_SUCCESS = 'SOCKET_QUERY_ONLINE_FRIENDS_SUCCESS';
-export const SOCKET_QUERY_ONLINE_FRIENDS_ERROR = 'SOCKET_QUERY_ONLINE_FRIENDS_ERROR';
-
 export function fetchCurrentUser() {
     return function(dispatch) {
         return UsersService.fetchCurrentUser()
@@ -52,28 +44,9 @@ export function addUser(id) {
     return (dispatch, getState) => {
 
         UsersService.addUser(id)
-            .then(user => { dispatch({type: ADD_USER_SUCCESS, payload: user})})
+            .then(user => {
+                dispatch({type: ADD_USER_SUCCESS, payload: user})
+            })
             .catch(error => dispatch({type: ADD_USER_ERROR, payload: error}));
     };
-}
-
-export function fetchFriends() {
-    return (dispatch) => {
-
-        UsersService.fetchFriends()
-            .then(friends => {
-                dispatch({type: FETCH_FRIENDS_SUCCESS, payload: friends});
-                dispatch(queryOnlineUsers(friends));
-            })
-            .catch(error => dispatch({type: FETCH_FRIENDS_ERROR, payload: error}));
-    };
-}
-
-export function queryOnlineUsers(friends) {
-    return dispatch => {
-        socketClient.emit('queryOnlineUsers', friends.map(({user}) => ({id: user.id})))
-            .then(response => {dispatch({type: SOCKET_QUERY_ONLINE_FRIENDS_SUCCESS, payload: response})})
-            .catch(error => dispatch({type: SOCKET_QUERY_ONLINE_FRIENDS_ERROR, payload: error}));
-    };
-
 }

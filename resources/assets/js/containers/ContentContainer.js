@@ -7,14 +7,15 @@ import '../styles/ContentContainerStyles.scss'
 class ContentContainer extends React.Component {
     constructor(props) {
         super(props);
-
-
     }
 
     render() {
-        var {left} = this.props.sidebars;
-        left = left ? 'opened-left-sidebar-container ' : '';
-        return(<div className={`container ${left}`}>
+        let {left = false, right = false, sidebars: {left: leftSidebar, right: rightSidebar}} = this.props;
+        
+        left = left && leftSidebar ? 'opened-left-sidebar-container ' : '';
+        right = right && rightSidebar ? 'opened-right-sidebar-container ' : '';
+        
+        return(<div className={`container ${left} ${right}`}>
             {this.props.children}
         </div>);
     }

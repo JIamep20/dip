@@ -6,6 +6,7 @@
     "start": "./node_modules/.bin/better-npm-run build",
     "serve": "./node_modules/.bin/better-npm-run serve",
     "laravel": "./node_modules/.bin/better-npm-run laravel",
+    "laravel:prod": "./node_modules/.bin/better-npm-run laravel:prod",
     "sockets": "node server/index.js",
     "sockets:prod": "node server/index.js"
   },
@@ -32,6 +33,12 @@
       "command": "webpack-dev-server --config webpack/webpack.laravel.config.js",
       "env": {
         "NODE_ENV": "development"
+      }
+    },
+    "laravel:prod": {
+      "command": "webpack-dev-server --config webpack/webpack.laravel.config.js",
+      "env": {
+        "NODE_ENV": "production"
       }
     },
     "sockets": {

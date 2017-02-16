@@ -1,11 +1,49 @@
 import io from 'socket.io-client';
 import cookie from 'react-cookie';
 
+import { SOCKET_FRIEND_STATUS_CHANGE, queryOnlineUsers } from './actions/friendsActions';
+
 export default new function () {
     this._socket = null;
     var self = this;
     this.connect = function () {
-        return new Promise((resolve, reject) => {
+        if(self._socket) return self._socket;
+
+        return self._socket = new Promise((resolve, reject) => {
+            let s = io('http://localhost:3000/');
+
+            s.on('connect', () => {
+                console.log('Socket connected');
+
+                s.emit('authorize', {token: self._getCookie('x-access-token')});
+
+                s.on('logged', () => {
+                    s.on('user-status-changed', data => {
+                        self._dispatch({type: SOCKET_FRIEND_STATUS_CHANGE, payload: data});
+                    });
+
+                    return resolve(s);
+                });
+                
+                s.on('reconnect', () => {
+                    self._dispatch(queryOnlineUsers());
+                });
+
+                s.on('disconnect', () => {
+                    return reject(s);
+                });
+                s.on('connect_error', () => {
+                    return reject(s);
+                });
+                s.on('error', () => {
+                    return reject(s);
+                });
+                s.on('disconnect', () => {
+                    return reject(s);
+                });
+            });
+        });
+        /*return new Promise((resolve, reject) => {
             if(self._socket && self.logged) {return resolve(self._socket);}
 
             if(!self._socket) {self._socket = io('http://localhost:3000/');}
@@ -19,7 +57,7 @@ export default new function () {
                     self.logged = true;
 
                     s.on('user-status-changed', data => {
-                        self._dispatch({type: 'SOCKET_USER_STATUS_CHANGE', payload: data});
+                        self._dispatch({type: SOCKET_FRIEND_STATUS_CHANGE, payload: data});
                     });
 
                     return resolve(s);
@@ -42,16 +80,13 @@ export default new function () {
                     return reject(s);
                 });
             });
-        });
+        });*/
     };
 
     this.emit = (event, data) => {
         return this.connect().then(socket => {
             return new Promise((resolve, reject) => {
-                //if (!this._socket) return reject('No socket connection.');
-
                 return socket.emit(event, data, (response) => {
-                    // Response is the optional callback that you can use with socket.io in every request. See 1 above.
                     if (response) {
                         if (response.error) {
                             console.error(response.error);
@@ -63,14 +98,14 @@ export default new function () {
                     return resolve();
                 });
             });
-        });
+        })
+            .catch(error => console.log('error in socketClient: ', error));
     };
 
     this.disconnect = function () {
         if (this._socket.connected) {
             this._socket.disconnect();
         }
-        self.logged = false;
         this._socket = null;
     };
 

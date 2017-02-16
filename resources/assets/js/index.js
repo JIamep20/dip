@@ -4,7 +4,8 @@ import { render } from "react-dom";
 import { Redirect, IndexRoute, Route, Router, IndexRedirect, hashHistory } from 'react-router';
 
 /* Current users actions */
-import { fetchCurrentUser, fetchFriends } from './actions/UsersActions';
+import { fetchCurrentUser } from './actions/usersActions';
+import { fetchFriends } from './actions/friendsActions';
 
 /* Sockets module */
 import socketClient from './socketClient';
@@ -29,17 +30,15 @@ const history = syncHistoryWithStore(hashHistory, store);
 store.dispatch(fetchCurrentUser());
 store.dispatch(fetchFriends());
 socketClient.configurateStore(store);
-//socketClient.connect();
+socketClient.connect();
 
 render((
     <Provider store={store}>
         <Router history={history}>
             <Route path="/" component={App}>
                 <IndexRoute component={Feeds} />
-                <Route path="/user" component={Container}>
-                    <IndexRoute component={Profile} />
-                    <Route path="find" component={FindUsers} />
-                </Route>
+                <Route path="/user" component={Profile} />
+                <Route path="/user/find" component={FindUsers} />
                 <Route path="/room/:id" component={Room} />
             </Route>
             <Redirect from="*" to="/" />

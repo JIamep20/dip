@@ -3,6 +3,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import {Link} from 'react-router';
 
+import socketClient from '../socketClient';
+
 import '../styles/AppResets.scss';
 import '../styles/AppStyles.scss';
 
@@ -14,6 +16,10 @@ class App extends React.Component {
 
     constructor(props) {
         super(props);
+    }
+
+    componentWillUnmount() {
+        socketClient.disconnect();
     }
 
     render() {

@@ -2,9 +2,10 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import { findUsers, addUser } from '../../actions/UsersActions';
+import { findUsers, addUser } from '../../actions/usersActions';
 
 import FindUserPresentation from './FindUserPresentation';
+import Container from '../ContentContainer';
 
 class FindUserContainer extends React.Component {
     constructor(props) {
@@ -23,8 +24,13 @@ class FindUserContainer extends React.Component {
     }
 
     render() {
-        return (<FindUserPresentation addUserRequest={this.addUserRequest} users={this.props.users}
-                                      searchString={this.props.searchString} searchUsers={this.handleSearchUsers}/>);
+        return (<Container left={true}>
+            <FindUserPresentation
+                addUserRequest={this.addUserRequest} 
+                users={this.props.users}
+                searchString={this.props.searchString}
+                searchUsers={this.handleSearchUsers}/>
+        </Container>);
     }
 }
 

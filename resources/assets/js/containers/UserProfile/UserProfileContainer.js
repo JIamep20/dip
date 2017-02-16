@@ -2,8 +2,9 @@ import React from 'react';
 
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import { updateCurrentUser } from '../../actions/UsersActions';
+import {updateCurrentUser} from '../../actions/usersActions';
 import UserProfileForm from './UserProfileForm';
+import Container from '../ContentContainer';
 
 import '../../styles/ProfileStyles.scss';
 
@@ -15,12 +16,14 @@ class Profile extends React.Component {
     }
 
     render() {
-        return(
-            <UserProfileForm
-                user={this.props.user}
-                saveUser={this.saveUser}
-                errors = {this.props.errors}
-            />
+        return (
+            <Container left={true}>
+                <UserProfileForm
+                    user={this.props.user}
+                    saveUser={this.saveUser}
+                    errors={this.props.errors}
+                />
+            </Container>
         )
     }
 

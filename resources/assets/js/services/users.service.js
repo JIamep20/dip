@@ -1,8 +1,10 @@
 import axios from 'axios';
 
-class UsersService {
-    constructor() {
+import BaseService from './base.service';
 
+class UsersService extends BaseService{
+    constructor(props) {
+        super(props);
     }
     
     fetchCurrentUser() {
@@ -14,27 +16,12 @@ class UsersService {
     }
 
     findUsers(string) {
-        return axios.get(`api/users/${string}`);
+        return axios.get(`api/friends/${string}`);
     }
 
     addUser(id) {
-        return axios.post(`api/users/${id}`)
+        return axios.post(`api/friends/${id}`)
             .then(response => this.transformFriendModel(response.data.data));
-    }
-    
-    fetchFriends() {
-        return axios.get('api/friends')
-            .then(({data}) => {
-                return data.data.map((user) => {
-                    return this.transformFriendModel(user);
-                });
-            });
-    }
-
-    transformFriendModel(user) {
-        user.user = user.invited || user.initiator;
-        delete user.invited; delete user.initiator;
-        return user;
     }
 }
 
