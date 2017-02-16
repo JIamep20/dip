@@ -31,7 +31,7 @@ Combining apache and PHP needs fore efforts. Anyway there are a lot of tutorials
 ### Installiation + back-end:
 
 1. Clone repository
-2. Start web-server
+2. Start web-server or php artisan serve
 3. Start database
 4. Start redis
 5. cd to project's folder
