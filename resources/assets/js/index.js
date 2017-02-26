@@ -3,6 +3,12 @@ import React from "react";
 import { render } from "react-dom";
 import { Redirect, IndexRoute, Route, Router, IndexRedirect, hashHistory } from 'react-router';
 
+import '../../../node_modules/nprogress/nprogress.css';
+
+require('promise.prototype.finally').shim();
+
+window.nprogress = require('nprogress');
+nprogress.configure({ showSpinner: false });
 /* Current users actions */
 import { fetchCurrentUser } from './actions/usersActions';
 import { fetchFriends } from './actions/friendsActions';
@@ -21,7 +27,6 @@ import Profile from './containers/UserProfile/UserProfileContainer';
 import FindUsers from './containers/FindUser/FindUserContainer';
 import Feeds from './containers/FeedsContainer';
 import Room from './containers/RoomContainer';
-import Container from './containers/ContentContainer';
 
 /* Store initialize */
 const store = configureStore({});

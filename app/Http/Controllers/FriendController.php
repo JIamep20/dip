@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Friend;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class FriendsController extends ApiController
+class FriendController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -45,5 +46,11 @@ class FriendsController extends ApiController
         $friends->load('initiator', 'invited', 'room');
 
         return $this->setStatusCode(200)->respond($friends);
+    }
+
+    public function delete($id){
+        $friend = Friend::findOrFail($id);
+        $friend->delete();
+        return $this->setStatusCode(200)->respond();
     }
 }

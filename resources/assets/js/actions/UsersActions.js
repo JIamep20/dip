@@ -15,38 +15,46 @@ export const ADD_USER_SUCCESS = 'ADD_USER_SUCCESS';
 export const ADD_USER_ERROR = 'ADD_USER_ERROR';
 
 export function fetchCurrentUser() {
+    nprogress.start();
     return function(dispatch) {
         return UsersService.fetchCurrentUser()
             .then(response => dispatch({type: FETCH_USER_SUCCESS, payload: response.data.data}))
-            .catch(error => dispatch({type: FETCH_USER_ERROR, payload: error}));
+            .catch(error => dispatch({type: FETCH_USER_ERROR, payload: error}))
+            .finally(() => nprogress.done());
     }
 }
 
 export function updateCurrentUser(model) {
+    nprogress.start();
     return function(dispatch) {
         return UsersService.updateCurrentUser(model)
             .then(response => dispatch({type: UPDATE_USER_SUCCESS, payload: response.data.data}))
-            .catch(error => dispatch({type: UPDATE_USER_ERROR, payload:error.response.data}));
+            .catch(error => dispatch({type: UPDATE_USER_ERROR, payload:error.response.data}))
+            .finally(() => nprogress.done());
     }
 }
 
 export function findUsers(query) {
+    nprogress.start();
     return (dispatch, getStore) => {
         dispatch({type: FIND_USERS_REQUEST});
 
         UsersService.findUsers(query)
             .then(response => dispatch({ type: FIND_USERS_SUCCESS , payload: {data: response.data.data, query: query}}))
-            .catch(error => dispatch({type: FIND_USERS_ERROR, payload: error}));
+            .catch(error => dispatch({type: FIND_USERS_ERROR, payload: error}))
+            .finally(() => nprogress.done());
     };
 }
 
 export function addUser(id) {
+    nprogress.start();
     return (dispatch, getState) => {
 
         UsersService.addUser(id)
             .then(user => {
                 dispatch({type: ADD_USER_SUCCESS, payload: user})
             })
-            .catch(error => dispatch({type: ADD_USER_ERROR, payload: error}));
+            .catch(error => dispatch({type: ADD_USER_ERROR, payload: error}))
+            .finally(() => nprogress.done());
     };
 }

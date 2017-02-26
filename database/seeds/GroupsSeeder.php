@@ -15,8 +15,8 @@ class GroupsSeeder extends Seeder
     {
         factory(Group::class, 5)->create();
         $groups = Group::all();
-        $users = User::take(30);
-
+        $users = User::take(30)->get();
+        
         $groups->each(function ($item) use ($users) {
             foreach ($users as $user) {
                 if(rand(0, 1)) {

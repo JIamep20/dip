@@ -30,4 +30,8 @@ class ApiController extends Controller
         $this->statusCode = $code;
         return $this;
     }
+
+    public function user() {
+        return \Auth::user();
+    }
 }

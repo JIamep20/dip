@@ -13,13 +13,14 @@ export const SOCKET_FRIEND_STATUS_CHANGE = 'SOCKET_FRIEND_STATUS_CHANGE';
 
 export function fetchFriends() {
     return (dispatch) => {
-
+        nprogress.start();
         FriendsService.fetchFriends()
-            .then(friends => {
+            .then(friends => {nprogress.done();
                 dispatch({type: FETCH_FRIENDS_SUCCESS, payload: friends});
                 dispatch(queryOnlineUsers(friends));
             })
-            .catch(error => dispatch({type: FETCH_FRIENDS_ERROR, payload: error}));
+            .catch(error => dispatch({type: FETCH_FRIENDS_ERROR, payload: error}))
+            .finally(() => nprogress.done());
     };
 }
 
