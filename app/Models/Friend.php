@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * App\Models\Friend
@@ -26,6 +27,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Friend extends Model
 {
+    use SoftDeletes;
     protected $table = 'friends';
 
     protected $fillable = ['user_id', 'friend_id', 'room_id'];
@@ -42,5 +44,20 @@ class Friend extends Model
 
     public function invited() {
         return $this->belongsTo(User::class, 'friend_id');
+    }
+
+    public static function findByTwoUsers($user_id, $friend_id) {
+        $model = static::withTrashed()->where(['user_id' => $user_id, 'friend_id' => $friend_id])
+            ->orWhere(['user_id' => $friend_id, 'friend_id' => $user_id])
+            ->first();
+        if(!!$model) {
+            if($model->trashed()) {
+                $model->restore();
+            }
+
+            return $model;
+        }
+
+        return static::create(['user_id' => $user_id, 'friend_id' => $friend_id]);
     }
 }

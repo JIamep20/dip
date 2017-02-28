@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * App\Models\User
@@ -151,4 +152,19 @@ class User extends Authenticatable
     // Check the accepted value:
     $user->friends->first()->pivot->accepted;
      */
+
+    /**
+     * @param $query
+     * @param $name
+     * @return mixed
+     */
+    public function scopeSearchUser($query, $name){
+        return $query->where('name', 'like', "%$name%")
+            ->whereDoesntHave('friendOf', function ($q) {
+                $q->where('user_id', Auth::user()->id)->orWhere('friend_id', Auth::user()->id);
+            })
+            ->whereDoesntHave('friendsOfMine', function ($q) {
+                $q->where('user_id', Auth::user()->id)->orWhere('friend_id', Auth::user()->id);
+            });
+    }
 }

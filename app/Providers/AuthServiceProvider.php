@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Guards\JwtGuard;
+use App\Models\Friend;
+use App\Policies\FriendPolicy;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -15,7 +17,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        'App\Model' => 'App\Policies\ModelPolicy',
+        Friend::class => FriendPolicy::class,
     ];
 
     /**

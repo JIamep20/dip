@@ -16,7 +16,7 @@ class UserController extends ApiController
      */
     public function index()
     {
-        return $this->setStatusCode(200)->respond(Auth::user());
+        return $this->setStatusCode(200)->respond($this->user());
     }
 
     /**
@@ -28,8 +28,8 @@ class UserController extends ApiController
      */
     public function update(UserRequest $request)
     {
-        Auth::user()->update($request->all());
+        $this->user()->update($request->all());
 
-        return $this->setStatusCode(200)->respond(Auth::user());
+        return $this->setStatusCode(200)->respond($this->user());
     }
 }

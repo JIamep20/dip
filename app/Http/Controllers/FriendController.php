@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Friend;
 use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,35 +15,28 @@ class FriendController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(User $user)
+    public function index()
     {
-        return $this->setStatusCode(200)->respond(Auth::user()->friends);
+        return $this->setStatusCode(200)->respond($this->user()->friends);
     }
 
     public function search($query)
     {
-        $result = \App\Models\User::where('name', 'like', "%$query%")
-            ->whereDoesntHave('friendOf', function ($q) {
-                $q->where('user_id', Auth::user()->id)->orWhere('friend_id', Auth::user()->id);
-            })
-            ->whereDoesntHave('friendsOfMine', function ($q) {
-                $q->where('user_id', Auth::user()->id)->orWhere('friend_id', Auth::user()->id);
-            })
-            ->get();
+        $result = User::searchUser($query)->get();
 
         return $this->setStatusCode(200)->respond($result);
     }
 
     public function addUser($id)
     {
+        if($id == $this->user()->id) {
+            throw (new ModelNotFoundException)->setModel(User::class);
+        }
         $user = \App\Models\User::findOrFail($id);
-        $friends = new \App\Models\Friend([
-            'user_id' => Auth::user()->id,
-            'friend_id' => $user->id
-        ]);
 
-        $friends->save();
-        $friends->room()->save(\App\Models\Room::create(['name' => 'Private: ' . Auth::user()->name . ', ' . $user->name]));
+        $friends = Friend::findByTwoUsers($this->user()->id, $user->id);
+
+        $friends->room()->save(\App\Models\Room::create(['name' => 'Private: ' . $this->user()->name . ', ' . $user->name]));
         $friends->load('initiator', 'invited', 'room');
 
         return $this->setStatusCode(200)->respond($friends);
@@ -50,6 +44,7 @@ class FriendController extends ApiController
 
     public function delete($id){
         $friend = Friend::findOrFail($id);
+        $this->authorize('delete', [$friend]);
         $friend->delete();
         return $this->setStatusCode(200)->respond();
     }

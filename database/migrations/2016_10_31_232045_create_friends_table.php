@@ -19,6 +19,7 @@ class CreateFriendsTable extends Migration
             $table->integer('friend_id')->unsigned();
             $table->boolean('accepted')->default(false);
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('friend_id')->references('id')->on('users');

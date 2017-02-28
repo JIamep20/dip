@@ -23,8 +23,8 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Artya $request)
+    public function index()
     {
-        return $request->name;
+        
     }
 }
