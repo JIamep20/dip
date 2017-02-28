@@ -19,16 +19,19 @@ class GroupController extends ApiController
     }
 
     public function get(Group $group){
+        $this->authorize('getGroup', [$group]);
         $group->load('users');
         return $this->setStatusCode(200)->respond($group);
     }
 
     public function put(Request $request, Group $group) {
+        $this->authorize('updateGroup', [$group]);
         $group->update($request->all());
         return $this->setStatusCode(200)->respond($group);
     }
 
     public function delete(Group $group) {
+        $this->authorize('deleteGroup', [$group]);
         $group->delete();
         return $this->setStatusCode(200)->respond();
     }

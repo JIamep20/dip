@@ -44,7 +44,7 @@ class FriendController extends ApiController
 
     public function delete($id){
         $friend = Friend::findOrFail($id);
-        $this->authorize('delete', [$friend]);
+        $this->authorize('deleteFriendship', [$friend]);
         $friend->delete();
         return $this->setStatusCode(200)->respond();
     }

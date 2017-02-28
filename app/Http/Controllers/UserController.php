@@ -29,7 +29,6 @@ class UserController extends ApiController
     public function update(UserRequest $request)
     {
         $this->user()->update($request->all());
-
         return $this->setStatusCode(200)->respond($this->user());
     }
 }

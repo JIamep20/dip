@@ -60,4 +60,8 @@ class Friend extends Model
 
         return static::create(['user_id' => $user_id, 'friend_id' => $friend_id]);
     }
+
+    public function getUsersAttribute() {
+        return collect([$this->initiator, $this->invited]);
+    }
 }
