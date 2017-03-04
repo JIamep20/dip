@@ -18,7 +18,6 @@ use Illuminate\Support\Facades\Auth;
  * @property string $deleted_at
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property string $artya
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Group[] $groups
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Message[] $messages
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Friend[] $friendsOfMine
@@ -32,7 +31,6 @@ use Illuminate\Support\Facades\Auth;
  * @method static \Illuminate\Database\Query\Builder|\App\Models\User whereDeletedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\User whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\User whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Models\User whereArtya($value)
  * @mixin \Eloquent
  */
 class User extends Authenticatable
@@ -47,7 +45,6 @@ class User extends Authenticatable
     protected $fillable = [
         'name', 'email', 'password',
     ];
-
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -61,9 +58,8 @@ class User extends Authenticatable
     {
         $_this = new self;
         try {
-            $user = $_this->withTrashed()->where('email',$email)->firstOrFail();
-        }
-        catch  (ModelNotFoundException $e){
+            $user = $_this->withTrashed()->where('email', $email)->firstOrFail();
+        } catch (ModelNotFoundException $e) {
             return null;
         }
         return $user;
@@ -79,92 +75,184 @@ class User extends Authenticatable
         return $this->hasMany(Message::class);
     }
 
+    public function friends()
+    {
+        return $this->hasMany(Friend::class, 'sender_id');
+    }
+
     public function friendsOfMine()
     {
-        return $this->hasMany(Friend::class)->with('room', 'invited');
+        return $this->hasMany(Friend::class, 'sender_id');
     }
-    
+
     public function friendOf()
     {
-        return $this->hasMany(Friend::class, 'friend_id')->with('room', 'initiator');
+        return $this->hasMany(Friend::class, 'recipient_id');
     }
 
-//    public function friends()
-//    {
-//        return $this->belongsToMany(User::class, 'friends', 'user_id', 'friend_id')
-//            // if you want to rely on accepted field, then add this:
-//            ->wherePivot('accepted', '=', 1);
-//    }
-
-//    public function friendsOfMine()
-//    {
-//        return $this->belongsToMany(User::class, 'friends', 'user_id', 'friend_id')
-//            ->wherePivot('accepted', '=', 1) // to filter only accepted
-//            ->withPivot('accepted', 'id'); // or to fetch accepted value
-//    }
-//
-//    public function friendOf()
-//    {
-//        return $this->belongsToMany(User::class, 'friends', 'friend_id', 'user_id')
-//        ->wherePivot('accepted', '=', 1)
-//        ->withPivot('accepted', 'id');
-//    }
-//
-//    // accessor allowing you call $user->friends
-    public function getFriendsAttribute()
+    public function beFriend($recipient)
     {
-        if ( ! array_key_exists('friends', $this->relations)) $this->loadFriends();
-
-        return $this->getRelation('friends');
-    }
-//
-    protected function loadFriends()
-    {
-        if ( ! array_key_exists('friends', $this->relations))
-        {
-            $friends = $this->mergeFriends();
-
-            $this->setRelation('friends', $friends);
+        if(!$this->canBeFriend($recipient)) {
+            return false;
         }
+
+        $friendship = new Friend();
+        $friendship->recipient_id = $recipient->id;
+        $this->friends()->save($friendship);
+
+        return $friendship;
     }
 
-    protected function mergeFriends()
+    public function unFriend($recipient)
     {
-        return $this->friendsOfMine->merge($this->friendOf);
+        return $this->findFriendship($recipient)->delete();
+    }
+
+    public function hasFriendRequestFrom($recipient)
+    {
+        return $this->findFriendship($recipient)->whereSender($recipient)->whereStatus(Friend::PENDING)->exists();
+    }
+
+    public function hasSendFriendRequestTo($recipient)
+    {
+        return $this->findFriendship($recipient)->whereSender($this)->whereStatus(Friend::PENDING)->exists();
+    }
+
+    public function isFriendWith($recipient)
+    {
+        return $this->findFriendship($recipient)->whereStatus(Friend::ACCEPTED)->exists();
+    }
+
+    public function acceptFriendRequest(User $recipient)
+    {
+        return $this->findFriendship($recipient)->whereRecipient($this)->update(['status' =>Friend::ACCEPTED]);
+    }
+
+    public function denyFriendRequest($recipient)
+    {
+        return $this->findFriendship($recipient)->whereRecipient($this)->update(['status' => Friend::DENIED]);
+    }
+
+    public function blockFriend($recipient)
+    {
+        // TODO event
+        return $this->findFriendship($recipient)->update(['status' => Friend::BLOCKED]);
+    }
+
+    public function unblockFriend($recipient)
+    {
+        return $this->findFriendship($recipient)->update(['status' => Friend::PENDING]);
+    }
+
+    public function getFriendship($recipient)
+    {
+        return $this->findFriendship($recipient)->first();
+    }
+
+    public function getAllFriendships()
+    {
+        return $this->findFriendships()->get();
+    }
+
+    public function getPendingFriendships()
+    {
+        return $this->findFriendships(Friend::PENDING)->get();
+    }
+
+    public function getAcceptedFriendships()
+    {
+        return $this->findFriendships(Friend::ACCEPTED)->get();
+    }
+
+    public function getDeniedFriendships()
+    {
+        return $this->findFriendships(Friend::DENIED)->get();
+    }
+
+    public function getBlockedFriendships()
+    {
+        return $this->findFriendships(Friend::BLOCKED)->get();
+    }
+
+    public function isBlockedBy(User $recipient)
+    {
+        return $recipient->hasBlocked($this);
+    }
+
+    public function getFriendRequests()
+    {
+        return Friend::whereRecipient($this)->whereStatus(Friend::PENDING)->get();
+    }
+
+    public function getFriends($status = Friend::ACCEPTED)
+    {
+        return $this->getFriendsQueryBuilder($status)->get();
+    }
+
+    public function getFriendsCount()
+    {
+        return $this->findFriendships(Friend::ACCEPTED)->count();
+    }
+
+    public function canBeFriend($recipient)
+    {
+        if ($this->hasBlocked($recipient)) {
+            $this->unblockFriend($recipient);
+            return true;
+        }
+
+        if($this->isBlockedBy($recipient)) {
+            return false;
+        }
+
+        if($friendship = $this->getFriendship($recipient)) {
+            if($friendship->status != Friend::DENIED) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
-     * // access all friends
-    $user->friends; // collection of unique User model instances
-
-    // access friends a user invited
-    $user->friendsOfMine; // collection
-
-    // access friends that a user was invited by
-    $user->friendOf; // collection
-
-    // and eager load all friends with 2 queries
-    $usersWithFriends = User::with('friendsOfMine', 'friendOf')->get();
-
-    // then
-    $users->first()->friends; // collection
-
-    // Check the accepted value:
-    $user->friends->first()->pivot->accepted;
-     */
-
-    /**
-     * @param $query
-     * @param $name
+     * @param $recipient
      * @return mixed
      */
-    public function scopeSearchUser($query, $name){
-        return $query->where('name', 'like', "%$name%")
-            ->whereDoesntHave('friendOf', function ($q) {
-                $q->where('user_id', Auth::user()->id)->orWhere('friend_id', Auth::user()->id);
-            })
-            ->whereDoesntHave('friendsOfMine', function ($q) {
-                $q->where('user_id', Auth::user()->id)->orWhere('friend_id', Auth::user()->id);
-            });
+    public function hasBlocked(User $recipient)
+    {
+        return $this->friends()->whereRecipient($recipient)->whereStatus(Friend::BLOCKED)->exists();
+    }
+
+    /**
+     * @param User $recipient
+     * @return Friend|\Illuminate\Database\Query\Builder
+     */
+    private function findFriendship(User $recipient)
+    {
+        return Friend::betweenModels($this, $recipient);
+    }
+
+    public function findFriendships($status = null)
+    {
+        $query = Friend::where(function ($q) {
+            $q->whereSender($this);
+
+        })->orWhere(function ($q) {
+            $q->whereRecipient($this);
+        });
+
+        if(!is_null($status)) {
+            $query->whereStatus($status);
+        }
+
+        return $query;
+    }
+
+    public function getFriendsQueryBuilder($status = Friend::ACCEPTED)
+    {
+        $friendships = $this->findFriendships($status)->get(['sender_id', 'recipient_id']);
+        $recipients = $friendships->pluck('recipient_id')->all();
+        $senders = $friendships->pluck('sender_id')->all();
+        return $this->where('id', '<>', $this->getKey())->whereIn('id', array_merge($recipients, $senders));
     }
 }

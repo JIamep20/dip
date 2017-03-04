@@ -7,6 +7,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -32,7 +33,7 @@ class Handler extends ExceptionHandler
      *
      * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
      *
-     * @param  \Exception  $exception
+     * @param  \Exception $exception
      * @return void
      */
     public function report(Exception $exception)
@@ -43,60 +44,71 @@ class Handler extends ExceptionHandler
     /**
      * Render an exception into an HTTP response.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $exception
+     * @param  \Illuminate\Http\Request $request
+     * @param  \Exception $exception
      * @return \Illuminate\Http\Response
      */
     public function render($request, Exception $e)
     {
-        if ($e instanceof AuthenticationException) {
-            return response('You do not have valid credentials', 401);
-        }
-
-        if ($e instanceof MethodNotAllowedHttpException) {
-            return response('Method Not Allowed', 405);
-        }
-
-        if ($e instanceof ValidationException) {
-            $validationErrors = $e->validator->errors();
-            return response($validationErrors, 400);
-        }
-
-        if ($e instanceof \PDOException) {
-            if (strtolower(env('APP_ENV')) == 'local') {
-                return response($e->getMessage(), 500);
-            } else {
-                return response('Internal Server Error', 500);
+        if ($this->isAjax($request)) {
+            if ($e instanceof AuthenticationException) {
+                return response('You do not have valid credentials', 401);
             }
-        }
 
-        if ($e instanceof ModelNotFoundException) {
-            $modelPathAsArray = explode('\\', $e->getModel());
-            $model = $modelPathAsArray[count($modelPathAsArray) - 1];
-            return response($model . ' not found', 404);
-        }
+            if ($e instanceof MethodNotAllowedHttpException) {
+                return response('Method Not Allowed', 405);
+            }
 
-        if ($e instanceof NotFoundHttpException){
-            return response('Resource not found', 404);
-        }
+            if ($e instanceof ValidationException) {
+                $validationErrors = $e->validator->errors();
+                return response($validationErrors, 400);
+            }
 
-        if ($e instanceof AuthorizationException) {
-            return response($e->getMessage(), 403);
+            if ($e instanceof \PDOException) {
+                if (strtolower(env('APP_ENV')) == 'local') {
+                    return response($e->getMessage(), 500);
+                } else {
+                    return response('Internal Server Error', 500);
+                }
+            }
+
+            if ($e instanceof ModelNotFoundException) {
+                $modelPathAsArray = explode('\\', $e->getModel());
+                $model = $modelPathAsArray[count($modelPathAsArray) - 1];
+                return response($model . ' not found', 404);
+            }
+
+            if ($e instanceof NotFoundHttpException) {
+                return response('Resource not found', 404);
+            }
+
+            if ($e instanceof AuthorizationException) {
+                return response($e->getMessage(), 403);
+            }
         }
 
         return parent::render($request, $e);
     }
 
     /**
+     * @param Request $request
+     * @return bool
+     */
+    protected function isAjax(Request $request)
+    {
+        return $request->ajax() || $request->expectsJson() || $request->wantsJson();
+    }
+
+    /**
      * Convert an authentication exception into an unauthenticated response.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Illuminate\Auth\AuthenticationException  $exception
+     * @param  \Illuminate\Http\Request $request
+     * @param  \Illuminate\Auth\AuthenticationException $exception
      * @return \Illuminate\Http\Response
      */
     protected function unauthenticated($request, AuthenticationException $exception)
     {
-        if ($request->ajax() || $request->expectsJson() || $request->wantsJson()) {
+        if ($this->isAjax($request)) {
             return response()->json(['error' => 'Unauthenticated.'], 401);
         }
 

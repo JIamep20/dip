@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Message whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Message whereDeletedAt($value)
  * @mixin \Eloquent
+ * @property-read \App\Models\User $user
  */
 class Message extends Model
 {

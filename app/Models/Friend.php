@@ -24,44 +24,103 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Friend whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Friend whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property int $sender_id
+ * @property string $sender_type
+ * @property int $recepient_id
+ * @property string $recepient_type
+ * @property string $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $sender
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $recipient
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Friend whereSenderId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Friend whereSenderType($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Friend whereRecepientId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Friend whereRecepientType($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Friend whereDeletedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Friend whereRecepient($model)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Friend whereSender($model)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Friend whereStatus($status = 1)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Friend betweenModels($sender, $recipient)
  */
 class Friend extends Model
 {
     use SoftDeletes;
     protected $table = 'friends';
 
-    protected $fillable = ['user_id', 'friend_id', 'room_id'];
+    protected $guarded = ['id', 'created_at', 'updated_at', 'deleted_at'];
 
+
+    /**
+     * Friendship statuses
+     */
+    const PENDING = 1;
+    const ACCEPTED = 2;
+    const DENIED = 3;
+    const BLOCKED = 4;
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
     public function room()
     {
         return $this->morphMany(Room::class, 'roomable');
     }
 
-    public function initiator()
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function sender()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'sender_id');
     }
 
-    public function invited() {
-        return $this->belongsTo(User::class, 'friend_id');
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function recipient() {
+        return $this->belongsTo(User::class, 'recipient_id');
     }
 
-    public static function findByTwoUsers($user_id, $friend_id) {
-        $model = static::withTrashed()->where(['user_id' => $user_id, 'friend_id' => $friend_id])
-            ->orWhere(['user_id' => $friend_id, 'friend_id' => $user_id])
-            ->first();
-        if(!!$model) {
-            if($model->trashed()) {
-                $model->restore();
-            }
-
-            return $model;
-        }
-
-        return static::create(['user_id' => $user_id, 'friend_id' => $friend_id]);
+    /**
+     * @param $query
+     * @param $model
+     * @return mixed
+     */
+    public function scopeWhereRecipient($query, $model) {
+        return $query->where('recipient_id', $model->getKey());
     }
 
-    public function getUsersAttribute() {
-        return collect([$this->initiator, $this->invited]);
+    /**
+     * @param $query
+     * @param $model
+     * @return mixed
+     */
+    public function scopeWhereSender($query, $model) {
+        return $query->where('sender_id', $model->getKey());
+    }
+
+    /**
+     * @param $query
+     * @param int $status
+     * @return mixed
+     */
+    public function scopeWhereStatus($query, $status = self::PENDING){
+        return $query->where('status', $status);
+    }
+
+    /**
+     * @param $query
+     * @param $sender
+     * @param $recipient
+     * @return mixed
+     */
+    public function scopeBetweenModels($query, $sender, $recipient) {
+        return $query->where(function ($queryIn) use ($sender, $recipient){
+            $queryIn->where(function($q) use ($sender, $recipient) {
+                $q->whereSender($sender)->whereRecipient($recipient);
+            })
+            ->orWhere(function($q) use ($sender, $recipient) {
+                $q->whereSender($recipient)->whereRecipient($sender);
+            });
+        });
     }
 }
