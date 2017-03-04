@@ -50,6 +50,14 @@ Route::group(['middleware' => ['auth']], function () {
      Route::put('room/{room}/message/{message}', 'MessageController@post');
      Route::delete('room/{room}/message/{message}', 'MessageController@delete');
 
+    /* Rooms controller */
+
+    Route::get('room', 'RoomController@index');
+    Route::get('room/{room}', 'RoomController@get');
+    Route::post('room', 'RoomController@post');
+    Route::put('room/{room}', 'RoomController@put');
+    Route::delete('room/{room}', 'RoomController@delete');
+
     
 });
 

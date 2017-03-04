@@ -26,7 +26,7 @@ import App from './containers/App';
 import Profile from './containers/UserProfile/UserProfileContainer';
 import FindUsers from './containers/FindUser/FindUserContainer';
 import Feeds from './containers/FeedsContainer';
-import Room from './containers/RoomContainer';
+import Room from './containers/Room/RoomContainer';
 
 /* Store initialize */
 const store = configureStore({});

@@ -45,6 +45,8 @@ class MessageController extends ApiController
             return $this->setStatusCode(404)->respond();
         }
 
+        $this->authorize('deleteMessage', [$message]);
+
         $message->delete();
         return $this->setStatusCode(200)->respond();
     }
