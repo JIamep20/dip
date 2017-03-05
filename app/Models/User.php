@@ -75,11 +75,6 @@ class User extends Authenticatable
         return $this->hasMany(Message::class);
     }
 
-    public function friends()
-    {
-        return $this->hasMany(Friend::class, 'sender_id');
-    }
-
     public function friendsOfMine()
     {
         return $this->hasMany(Friend::class, 'sender_id');
@@ -92,7 +87,7 @@ class User extends Authenticatable
 
     public function beFriend($recipient)
     {
-        if(!$this->canBeFriend($recipient)) {
+        if (!$this->canBeFriend($recipient)) {
             return false;
         }
 
@@ -103,7 +98,74 @@ class User extends Authenticatable
         return $friendship;
     }
 
-    public function unFriend($recipient)
+    public function canBeFriend($recipient)
+    {
+        if ($this->hasBlocked($recipient)) {
+            $this->unblockFriend($recipient);
+            return true;
+        }
+
+        if ($this->isBlockedBy($recipient)) {
+            return false;
+        }
+
+        if ($this->areFriends($recipient)) {
+            return false;
+        }
+
+        if ($friendship = $this->getFriendship($recipient)) {
+            if ($friendship->status != Friend::DENIED) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $recipient
+     * @return mixed
+     */
+    public function hasBlocked(User $recipient)
+    {
+        return $this->friends()->whereRecipient($recipient)->whereStatus(Friend::BLOCKED)->exists();
+    }
+
+    public function friends()
+    {
+        return $this->hasMany(Friend::class, 'sender_id');
+    }
+
+    public function unblockFriend($recipient)
+    {
+        return $this->findFriendship($recipient)->update(['status' => Friend::PENDING]);
+    }
+
+    /**
+     * @param User $recipient
+     * @return Friend|\Illuminate\Database\Query\Builder
+     */
+    private function findFriendship(User $recipient)
+    {
+        return Friend::betweenModels($this, $recipient);
+    }
+
+    public function isBlockedBy(User $recipient)
+    {
+        return $recipient->hasBlocked($this);
+    }
+
+    public function areFriends($recipient)
+    {
+        return $this->findFriendship($recipient)->exists();
+    }
+
+    public function getFriendship($recipient)
+    {
+        return $this->findFriendship($recipient)->first();
+    }
+
+    public function unFriend(User $recipient)
     {
         return $this->findFriendship($recipient)->delete();
     }
@@ -125,7 +187,7 @@ class User extends Authenticatable
 
     public function acceptFriendRequest(User $recipient)
     {
-        return $this->findFriendship($recipient)->whereRecipient($this)->update(['status' =>Friend::ACCEPTED]);
+        return $this->findFriendship($recipient)->whereRecipient($this)->update(['status' => Friend::ACCEPTED]);
     }
 
     public function denyFriendRequest($recipient)
@@ -139,19 +201,25 @@ class User extends Authenticatable
         return $this->findFriendship($recipient)->update(['status' => Friend::BLOCKED]);
     }
 
-    public function unblockFriend($recipient)
-    {
-        return $this->findFriendship($recipient)->update(['status' => Friend::PENDING]);
-    }
-
-    public function getFriendship($recipient)
-    {
-        return $this->findFriendship($recipient)->first();
-    }
-
     public function getAllFriendships()
     {
-        return $this->findFriendships()->get();
+        return $this->findFriendships(null)->get();
+    }
+
+    public function findFriendships($status = null)
+    {
+        $query = Friend::where(function ($q) {
+            $q->whereSender($this);
+
+        })->orWhere(function ($q) {
+            $q->whereRecipient($this);
+        });
+
+        if (!is_null($status)) {
+            $query->whereStatus($status);
+        }
+
+        return $query;
     }
 
     public function getPendingFriendships()
@@ -174,19 +242,26 @@ class User extends Authenticatable
         return $this->findFriendships(Friend::BLOCKED)->get();
     }
 
-    public function isBlockedBy(User $recipient)
-    {
-        return $recipient->hasBlocked($this);
-    }
-
     public function getFriendRequests()
     {
         return Friend::whereRecipient($this)->whereStatus(Friend::PENDING)->get();
     }
 
+    /**
+     * @param int $status
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
     public function getFriends($status = Friend::ACCEPTED)
     {
         return $this->getFriendsQueryBuilder($status)->get();
+    }
+
+    private function getFriendsQueryBuilder($status = Friend::ACCEPTED)
+    {
+        $friendships = $this->findFriendships($status)->get(['sender_id', 'recipient_id']);
+        $recipients = $friendships->pluck('recipient_id')->all();
+        $senders = $friendships->pluck('sender_id')->all();
+        return $this->where('id', '<>', $this->getKey())->whereIn('id', array_merge($recipients, $senders));
     }
 
     public function getFriendsCount()
@@ -194,65 +269,14 @@ class User extends Authenticatable
         return $this->findFriendships(Friend::ACCEPTED)->count();
     }
 
-    public function canBeFriend($recipient)
-    {
-        if ($this->hasBlocked($recipient)) {
-            $this->unblockFriend($recipient);
-            return true;
-        }
-
-        if($this->isBlockedBy($recipient)) {
-            return false;
-        }
-
-        if($friendship = $this->getFriendship($recipient)) {
-            if($friendship->status != Friend::DENIED) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * @param $recipient
-     * @return mixed
-     */
-    public function hasBlocked(User $recipient)
-    {
-        return $this->friends()->whereRecipient($recipient)->whereStatus(Friend::BLOCKED)->exists();
-    }
-
-    /**
-     * @param User $recipient
-     * @return Friend|\Illuminate\Database\Query\Builder
-     */
-    private function findFriendship(User $recipient)
-    {
-        return Friend::betweenModels($this, $recipient);
-    }
-
-    public function findFriendships($status = null)
-    {
-        $query = Friend::where(function ($q) {
-            $q->whereSender($this);
-
-        })->orWhere(function ($q) {
-            $q->whereRecipient($this);
-        });
-
-        if(!is_null($status)) {
-            $query->whereStatus($status);
-        }
-
-        return $query;
-    }
-
-    public function getFriendsQueryBuilder($status = Friend::ACCEPTED)
-    {
-        $friendships = $this->findFriendships($status)->get(['sender_id', 'recipient_id']);
-        $recipients = $friendships->pluck('recipient_id')->all();
-        $senders = $friendships->pluck('sender_id')->all();
-        return $this->where('id', '<>', $this->getKey())->whereIn('id', array_merge($recipients, $senders));
+    public function scopeSearchUser($query, $name){
+        $user = Auth::user();
+        return $query->where('name', 'like', "%$name%")
+            ->whereDoesntHave('friendOf', function ($q) use($user) {
+                $q->where('sender_id', $user->id)->orWhere('recipient_id', $user->id);
+            })
+            ->whereDoesntHave('friendsOfMine', function ($q) use ($user) {
+                $q->where('sender_id', $user->id)->orWhere('recipient_id', $user->id);
+            });
     }
 }

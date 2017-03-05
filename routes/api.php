@@ -30,10 +30,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('friends', 'FriendController@index');
     // Search users by query string
     Route::get('friends/{query}', 'FriendController@search');
-    // Add user to friends by id param
-    Route::post('friends/{userId}', 'FriendController@addUser');
-    // Delete user from friends by if param
-    Route::delete('friends/{userId}', 'FriendController@delete');
+    // Add user to friends by users's id
+    Route::post('friends/{user}', 'FriendController@addUser');
+    // Delete user from friends by user's id
+    Route::delete('friends/{user}', 'FriendController@delete');
 
     /* Groups Controller */
     Route::get('groups', 'GroupController@index');

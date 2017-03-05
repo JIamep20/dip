@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ApiController extends Controller
@@ -31,6 +32,9 @@ class ApiController extends Controller
         return $this;
     }
 
+    /**
+     * @return User
+     */
     public function user() {
         return \Auth::user();
     }

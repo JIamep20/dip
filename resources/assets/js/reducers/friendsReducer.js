@@ -4,52 +4,41 @@ import {
     SOCKET_FRIEND_STATUS_CHANGE
 } from '../actions/friendsActions';
 
-import { ADD_USER_SUCCESS } from '../actions/usersActions';
+import _ from 'lodash';
+
+import {ADD_USER_SUCCESS} from '../actions/usersActions';
 
 
 const initialState = {
-    friends: []
+    friends: {},
+    online: {}
 };
 
-export default function friendsReducer(state = initialState, action) {
-    switch(action.type) {
+export default function friendsReducer(state = initialState, {type, payload}) {
+    switch (type) {
 
         case FETCH_FRIENDS_SUCCESS:
             return {
                 ...state,
-                friends: action.payload
+                friends: _.mapKeys(payload, 'id')
             };
 
         case SOCKET_QUERY_ONLINE_FRIENDS_SUCCESS:
             return {
                 ...state,
-                friends: state.friends.map(friend => {
-                    return {
-                        ...friend,
-                        status: friend.status || action.payload.some(item => item.id == friend.user.id && item.status == true)
-                    };
-                })
+                online: _.mapKeys(payload, 'id')
             };
 
         case SOCKET_FRIEND_STATUS_CHANGE:
             return {
                 ...state,
-                friends: state.friends.map(friend => {
-                    if (friend.user.id == action.payload.id) {
-                        return {
-                            ...friend,
-                            status: action.payload.status
-                        };
-                    }
-
-                    return friend;
-                })
+                online: {...state.online, [payload.id]: payload.status}
             };
 
         case ADD_USER_SUCCESS:
             return {
                 ...state,
-                friends: state.friends.concat(action.payload)
+                friends: _.concat(state.friends, payload)
             };
 
         default:

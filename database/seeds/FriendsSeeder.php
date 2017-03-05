@@ -13,23 +13,11 @@ class FriendsSeeder extends Seeder
     {
         \App\Models\User::all()->each(function (\App\Models\User $item) {
 
-            factory(\App\Models\User::class, rand(3, 7))->create()->each(function ($f) use ($item) {
-//                $friendRelation = factory(\App\Models\Friend::class)->create([
-//                    'user_id' => $f->id,
-//                    'friend_id' => $item->id
-//                ]);
-//
-//                $friendRelation->room()->save(factory(\App\Models\Room::class)->create());
-                //echo $item;
-                $item->beFriend($f);
+            factory(\App\Models\User::class, rand(10, 15))->create()->each(function ($f) use ($item) {
+                $friendship = $item->beFriend($f);
+                $friendship->room()->save(factory(\App\Models\Room::class)->create());
+                $friendship->update(['status' => rand(\App\Models\Friend::PENDING, \App\Models\Friend::BLOCKED)]);
             });
-
-//            $friend = factory(\App\Models\Friend::class)->create([
-//                'user_id' => factory(\App\Models\User::class)->create()->id,
-//                'friend_id' => $item->id
-//            ]);
-//
-//            $friend->room()->save(factory(\App\Models\Room::class)->create());
         });
     }
 }

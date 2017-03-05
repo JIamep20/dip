@@ -7,13 +7,9 @@ class FriendsService extends BaseService{
         super(props);
     }
 
-    fetchFriends() {
+    fetchFriends(store) {
         return axios.get('api/friends')
-            .then(({data}) => {
-                return data.data.map((user) => {
-                    return this.transformFriendModel(user);
-                });
-            });
+            .then(({data}) => this.transformFriendshipModels(data.data, store));
     }
     
 }

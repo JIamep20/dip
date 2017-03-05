@@ -1,5 +1,6 @@
 import FriendsService from '../services/friends.service.js';
 import socketClient from '../socketClient';
+import _ from 'lodash';
 
 export const FETCH_FRIENDS_REQUEST = 'FETCH_FRIENDS_REQUEST';
 export const FETCH_FRIENDS_SUCCESS = 'FETCH_FRIENDS_SUCCESS';
@@ -12,9 +13,9 @@ export const SOCKET_QUERY_ONLINE_FRIENDS_ERROR = 'SOCKET_QUERY_ONLINE_FRIENDS_ER
 export const SOCKET_FRIEND_STATUS_CHANGE = 'SOCKET_FRIEND_STATUS_CHANGE';
 
 export function fetchFriends() {
-    return (dispatch) => {
+    return (dispatch, getStore) => {
         nprogress.start();
-        FriendsService.fetchFriends()
+        FriendsService.fetchFriends(getStore())
             .then(friends => {nprogress.done();
                 dispatch({type: FETCH_FRIENDS_SUCCESS, payload: friends});
                 dispatch(queryOnlineUsers(friends));
@@ -27,8 +28,10 @@ export function fetchFriends() {
 export function queryOnlineUsers(friends = null) {
     return (dispatch, getState) => {
         if(!friends) {friends = getState().friends.friends;}
-        socketClient.emit('queryOnlineUsers', friends.map(({user}) => ({id: user.id})))
-            .then(response => {dispatch({type: SOCKET_QUERY_ONLINE_FRIENDS_SUCCESS, payload: response})})
+        socketClient.emit('queryOnlineUsers', _.map(friends, 'user.id'))
+            .then(response => {
+                dispatch({type: SOCKET_QUERY_ONLINE_FRIENDS_SUCCESS, payload: response})
+            })
             .catch(error => dispatch({type: SOCKET_QUERY_ONLINE_FRIENDS_ERROR, payload: error}));
     };
 

@@ -11,7 +11,6 @@ window.nprogress = require('nprogress');
 nprogress.configure({ showSpinner: false });
 /* Current users actions */
 import { fetchCurrentUser } from './actions/usersActions';
-import { fetchFriends } from './actions/friendsActions';
 
 /* Sockets module */
 import socketClient from './socketClient';
@@ -33,7 +32,6 @@ const store = configureStore({});
 const history = syncHistoryWithStore(hashHistory, store);
 
 store.dispatch(fetchCurrentUser());
-store.dispatch(fetchFriends());
 socketClient.configurateStore(store);
 socketClient.connect();
 

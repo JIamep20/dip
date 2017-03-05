@@ -7,10 +7,7 @@ import OfflineRoom from './OfflineRoom';
 class RoomContainer extends React.Component {
     constructor(props) {
         super(props);
-        debugger;
     }
-
-    componentWillMount
 
     render() {
         var {left, right} = this.props.sidebars;
