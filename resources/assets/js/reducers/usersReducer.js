@@ -9,20 +9,20 @@ const initialState = {
     searchedUsers: []
 };
 
-export default function usersReducer(state = initialState, action) {
-    switch (action.type) {
+export default function usersReducer(state = initialState, {type, payload}) {
+    switch (type) {
         case FIND_USERS_SUCCESS:
             return {
                 ...state,
-                searchString: action.payload.query,
-                searchedUsers: action.payload.data
+                searchString: payload.query,
+                searchedUsers: payload.data
             };
         
 
-        case ADD_USER_SUCCESS:
+        case ADD_USER_SUCCESS:debugger;
             return {
                 ...state,
-                searchedUsers: state.searchedUsers.filter((item) => item.id !== action.payload.user.id)
+                searchedUsers: state.searchedUsers.filter((item) => item.id !== payload.recipient_id)
             };
 
         default:

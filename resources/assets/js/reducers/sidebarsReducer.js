@@ -5,9 +5,9 @@ const initialState = {
     right: true
 };
 
-export default function sidebarsReducer(state = initialState, action) {
+export default function sidebarsReducer(state = initialState, {type, payload}) {
 
-    switch (action.type) {
+    switch (type) {
         case TOGGLE_LEFT_SIDEBAR:
             return {
                 ...state,

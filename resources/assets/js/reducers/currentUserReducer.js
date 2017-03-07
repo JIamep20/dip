@@ -5,24 +5,24 @@ const initialState = {
     errors: {}
 };
 
-export default function userReducer(state = initialState, action) {
-    switch(action.type){
+export default function userReducer(state = initialState, {type, payload}) {
+    switch(type){
         case FETCH_USER_SUCCESS:
             return {
                 ...state,
-                user: action.payload
+                user: payload
             };
 
         case UPDATE_USER_ERROR:
             return {
                 ...state,
-                errors: action.payload
+                errors: payload
             };
 
         case UPDATE_USER_SUCCESS:
             return {
                 ...state,
-                user: action.payload,
+                user: payload,
                 errors: {}
             };
 

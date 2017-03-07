@@ -8,7 +8,9 @@ export default class OfflineRoom extends React.Component {
     }
 
     render() {
-        return (<h1>Offline</h1>);
+        return (<ul>{this.props.messages.map((item, index) => {
+            return (<li key={index}>{item.text}</li>);
+        })}</ul>);
 
     }
 }

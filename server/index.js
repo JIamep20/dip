@@ -50,7 +50,7 @@ io.on('connection', function (socket) {
                 console.log('user id: ' + user.id + " authorized");
                 users.add(user.id, socket.id);
                 socket.emit('logged', {payload: true});
-                io.emit('user-status-changed', {id: user.id, status: true});
+                socket.broadcast.emit('user-status-changed', {id: user.id, status: true});
                 redis.subscribe('private-' + user.id);
 
                 /* Receive client emits here */
@@ -62,7 +62,7 @@ io.on('connection', function (socket) {
                 socket.on('disconnect', function () {
                     console.log('user id: ' + user.id + ' disconnected');
                     redis.unsubscribe('private-' + user.id);
-                    io.emit('user-status-changed', {id: user.id, status: false});
+                    socket.broadcast.emit('user-status-changed', {id: user.id, status: false});
                     users.delete(socket.id);
                 });
             });

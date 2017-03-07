@@ -10,7 +10,7 @@ class MessageController extends ApiController
 {
     public function index(Room $room)
     {
-        $this->authorize('retrieveRoomMessages', [$room]);
+        //$this->authorize('retrieveRoomMessages', [$room]);
         $messages = $room->messages()->get();
         return $this->setStatusCode(200)->respond($messages);
     }

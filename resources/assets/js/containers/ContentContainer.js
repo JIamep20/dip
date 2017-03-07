@@ -22,8 +22,7 @@ class ContentContainer extends React.Component {
 }
 
 export default connect(
-    (store, ownProps) => ({
-        ownProps: ownProps,
+    (store) => ({
         sidebars: store.sidebars
     })
 )(ContentContainer);

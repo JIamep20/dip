@@ -21,7 +21,8 @@ class UsersService extends BaseService{
 
     addUser(id) {
         return axios.post(`api/friends/${id}`)
-            .then(response => this.transformFriendModel(response.data.data));
+            .then(response => response.data.data);
+            //.then(response => this.transformFriendModel(response.data.data));
     }
 }
 

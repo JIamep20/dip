@@ -13,6 +13,10 @@ class BaseService {
         delete user.sender; delete user.recipient;
         return user;
     }
+
+    beforeRequest() {
+        nprogress.start();
+    }
 }
 
 export default BaseService;

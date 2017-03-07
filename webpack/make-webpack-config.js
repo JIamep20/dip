@@ -64,6 +64,8 @@ module.exports = function (options = {}) {
             transform: function (c, p) {
                 return prod ? new CleanCSS().minify(c).styles : c;
             }
+        },{
+            from: path.join('resources', 'assets', 'sass', 'bootstrap.min.css')
         }]),
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)

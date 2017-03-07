@@ -30,9 +30,10 @@ export default function friendsReducer(state = initialState, {type, payload}) {
             };
 
         case SOCKET_FRIEND_STATUS_CHANGE:
+            let id = payload.id;
             return {
                 ...state,
-                online: {...state.online, [payload.id]: payload.status}
+                online: {...state.online, [id]: {id, status: payload.status}}
             };
 
         case ADD_USER_SUCCESS:
