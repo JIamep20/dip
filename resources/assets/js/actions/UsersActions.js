@@ -1,6 +1,8 @@
 import UsersService from '../services/users.service';
 import socketClient from '../socketClient';
 
+import { fetchFriends } from './friendsActions';
+
 export const FETCH_USER_SUCCESS = 'FETCH_USER_SUCCESS';
 export const UPDATE_USER_SUCCESS = 'UPDATE_USER_SUCCESS';
 export const FETCH_USER_ERROR = 'FETCH_USER_ERROR';
@@ -18,7 +20,10 @@ export function fetchCurrentUser() {
     nprogress.start();
     return function(dispatch) {
         return UsersService.fetchCurrentUser()
-            .then(response => dispatch({type: FETCH_USER_SUCCESS, payload: response.data.data}))
+            .then(response => {
+                dispatch({type: FETCH_USER_SUCCESS, payload: response.data.data});
+                dispatch(fetchFriends());
+            })
             .catch(error => dispatch({type: FETCH_USER_ERROR, payload: error}))
             .finally(() => nprogress.done());
     }
@@ -51,7 +56,7 @@ export function addUser(id) {
     return (dispatch, getState) => {
 
         UsersService.addUser(id)
-            .then(user => {
+            .then(user => {debugger;
                 dispatch({type: ADD_USER_SUCCESS, payload: user})
             })
             .catch(error => dispatch({type: ADD_USER_ERROR, payload: error}))
