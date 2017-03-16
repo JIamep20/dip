@@ -13,7 +13,7 @@ class GroupController extends ApiController
         return $this->setStatusCode(200)->respond($groups);
     }
 
-    public function post(Request $request) {
+    public function create(Request $request) {
         $group = $this->user()->groups()->create([]);
         return $this->setStatusCode(200)->respond($group);
     }

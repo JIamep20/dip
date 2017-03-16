@@ -18,7 +18,7 @@ class FriendController extends ApiController
      */
     public function index()
     {
-        return $this->setStatusCode(200)->respond($this->user()->findFriendships()->with('sender', 'recipient', 'room')->get());
+        return $this->setStatusCode(200)->respond($this->user()->getFriends(null));
     }
 
     public function search($query)
@@ -33,7 +33,6 @@ class FriendController extends ApiController
         if ($user->id == $this->user()->id) {
             throw (new ModelNotFoundException)->setModel(User::class);
         }
-
 
         if($friendship = $this->user()->beFriend($user)) {
             $friendship->room()->save(new Room(['name' => 'asd']));

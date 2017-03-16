@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Friend;
+use App\Models\Group;
 use App\Models\Message;
 use Illuminate\Http\Request;
 
@@ -49,70 +50,38 @@ class MessageController extends ApiController
         return $this->setStatusCode(200)->respond();
     }
 
-    public function groupIndex()
+    public function groupIndex(Group $group)
     {
-
+        $this->authorize('getGroupMessages', [Message::class, $group]);
+        return $this->setStatusCode(200)->respond($group->messages()->get());
     }
 
-    public function groupShow()
+    public function groupShow(Group $group, Message $message)
     {
-
-    }
-
-    public function groupStore()
-    {
-
-    }
-
-    public function groupUpdate()
-    {
-
-    }
-
-    public function groupDestroy()
-    {
-
-    }
-
-    public function index(Room $room)
-    {
-        //$this->authorize('retrieveRoomMessages', [$room]);
-        $messages = $room->messages()->get();
-        return $this->setStatusCode(200)->respond($messages);
-    }
-
-    public function get(Room $room, Message $message){
-        $this->authorize('retrieveOneRoomMessage', [$room]);
-        if($this->doesMessageBelongsToRoom($room, $message)) {
-            return $this->setStatusCode(200)->respond($message);
-        }
-        return $this->setStatusCode(404)->respond();
-    }
-
-    public function post(Request $request, Room $room) {
-        $this->authorize('postMessage', [$room]);
-        $message = $room->messages()->create($request->all());
-
-        return $this->setStatusCode(201)->respond($message);
-    }
-
-    public function put(Request $request, Room $room, Message $message) {
-        $this->authorize('putMessage', [$room]);
-        if(!$this->doesMessageBelongsToRoom($room, $message)) {
-            return $this->setStatusCode(404)->respond();
-        }
-        $message->update($request->all());
-
+        $this->authorize('getGroupMessage', [Message::class, $group, $message]);
         return $this->setStatusCode(200)->respond($message);
     }
 
-    public function delete(Room $room, Message $message) {
-        if(!$this->doesMessageBelongsToRoom($room, $message)) {
-            return $this->setStatusCode(404)->respond();
-        }
+    public function groupStore(Group $group, Request $request)
+    {
+        $this->authorize('createGroupMessage', [Message::class, $group]);
+        $message = new Message($request->all());
+        $message->user()->associate($this->user());
+        $message->messagable()->associate($group);
+        $message->save();
+        return $this->setStatusCode(200)->respond($message);
+    }
 
-        $this->authorize('deleteMessage', [$message]);
+    public function groupUpdate(Group $group, Message $message, Request $request)
+    {
+        $this->authorize('updateGroupMessage', [Message::class, $group, $message]);
+        $message->update($request->all());
+        return $this->setStatusCode(200)->respond($message);
+    }
 
+    public function groupDestroy(Group $group, Message $message)
+    {
+        $this->authorize('destroyGroupMessage', [Message::class, $group, $message]);
         $message->delete();
         return $this->setStatusCode(200)->respond();
     }
