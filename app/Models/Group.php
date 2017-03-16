@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Group whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Group whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Message[] $messages
  */
 class Group extends Model
 {
@@ -27,5 +28,9 @@ class Group extends Model
     public function room()
     {
         return $this->morphMany(Room::class, 'roomable');
+    }
+
+    public function messages(){
+        return $this->morphMany(Message::class, 'messagable');
     }
 }

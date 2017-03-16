@@ -14,7 +14,6 @@ class DatabaseSeeder extends Seeder
         $this->call(UsersSeeder::class);
         $this->call(FriendsSeeder::class);
         $this->call(GroupsSeeder::class);
-        $this->call(RoomsSeeder::class);
         $this->call(MessagesSeeder::class);
         $this->call(AttachmentsSeeder::class);
     }

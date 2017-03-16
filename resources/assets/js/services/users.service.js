@@ -16,11 +16,11 @@ class UsersService extends BaseService{
     }
 
     findUsers(string) {
-        return axios.get(`api/friends/${string}`);
+        return axios.get(`api/friend/${string}`);
     }
 
     addUser(id) {
-        return axios.post(`api/friends/${id}`)
+        return axios.post(`api/friend/${id}`)
             .then(response => response.data.data);
             //.then(response => this.transformFriendModel(response.data.data));
     }

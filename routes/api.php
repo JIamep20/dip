@@ -15,49 +15,42 @@ use Illuminate\Http\Request;
 
 
 Route::group(['middleware' => ['auth']], function () {
-//    Route::get('/user', function () {
-//        return Auth::user();
-//    });
 
     /* UserController */
 
     Route::get('user', 'UserController@index');
     Route::put('user', 'UserController@update');
     
-    /* FriendsController */
+    /* FriendController */
     
     // Get list of all frinds for current user
-    Route::get('friends', 'FriendController@index');
+    Route::get('friend', 'FriendController@index');
     // Search users by query string
-    Route::get('friends/{query}', 'FriendController@search');
+    Route::get('friend/{query}', 'FriendController@search');
     // Add user to friends by users's id
-    Route::post('friends/{user}', 'FriendController@addUser');
+    Route::post('friend/{user}', 'FriendController@addUser');
     // Delete user from friends by user's id
-    Route::delete('friends/{user}', 'FriendController@delete');
+    Route::delete('friend/{user}', 'FriendController@delete');
 
-    /* Groups Controller */
-    Route::get('groups', 'GroupController@index');
-    Route::post('groups', 'GroupController@post');
-    Route::get('groups/{group}', 'GroupController@get');
-    Route::put('groups/{group}', 'GroupController@put');
-    Route::delete('groups/{group}', 'GroupController@delete');
+    /* Group Controller */
+    Route::resource('group', 'GroupController', [
+        'except' => ['create', 'edit']
+    ]);
 
-    /* Messages controller */
+    /* Group messages controller */
 
-     Route::get('room/{room}/message', 'MessageController@index');
-     Route::get('room/{room}/message/{message}', 'MessageController@get');
-     Route::post('room/{room}/message', 'MessageController@post');
-     Route::put('room/{room}/message/{message}', 'MessageController@post');
-     Route::delete('room/{room}/message/{message}', 'MessageController@delete');
+    Route::get('group/{group}/message', 'MessageController@groupIndex');
+    Route::get('group/{group}/message/{message}', 'MessageController@groupShow');
+    Route::post('group/{group}/message', 'MessageController@groupStore');
+    Route::put('group/{group}/message/{message}', 'MessageController@groupUpdate');
+    Route::delete('group/{group}/message/{message}', 'MessageController@groupDestroy');
 
-    /* Rooms controller */
+    /* Friendship message controller */
 
-    Route::get('room', 'RoomController@index');
-    Route::get('room/{room}', 'RoomController@get');
-    Route::post('room', 'RoomController@post');
-    Route::put('room/{room}', 'RoomController@put');
-    Route::delete('room/{room}', 'RoomController@delete');
-
-    
+     Route::get('friend/{friend}/message', 'MessageController@friendIndex');
+     Route::get('friend/{friend}/message/{message}', 'MessageController@friendShow');
+     Route::post('friend/{friend}/message', 'MessageController@friendStore');
+     Route::put('friend/{friend}/message/{message}', 'MessageController@friendUpdate');
+     Route::delete('friend/{friend}/message/{message}', 'MessageController@friendDestroy');
 });
 

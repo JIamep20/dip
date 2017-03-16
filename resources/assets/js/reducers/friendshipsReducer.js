@@ -2,7 +2,7 @@ import {
     FETCH_FRIENDS_SUCCESS,
     SOCKET_QUERY_ONLINE_FRIENDS_SUCCESS,
     SOCKET_FRIEND_STATUS_CHANGE
-} from '../actions/friendsActions';
+} from '../actions/friendshipsActions';
 
 import _ from 'lodash';
 
@@ -14,7 +14,7 @@ const initialState = {
     online: {}
 };
 
-export default function friendsReducer(state = initialState, {type, payload}) {
+export default function friendshipsReducer(state = initialState, {type, payload}) {
     switch (type) {
 
         case FETCH_FRIENDS_SUCCESS:

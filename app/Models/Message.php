@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * App\Models\Message
@@ -25,9 +26,17 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Message whereDeletedAt($value)
  * @mixin \Eloquent
  * @property-read \App\Models\User $user
+ * @property int $messagable_id
+ * @property string $messagable_type
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $messagable
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Message whereMessagableId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Message whereMessagableType($value)
  */
 class Message extends Model
 {
+    use SoftDeletes;
+    
+    protected $fillable = ['text'];
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -36,5 +45,10 @@ class Message extends Model
     public function attachments()
     {
         return $this->hasMany(Attachment::class);
+    }
+
+    public function messagable()
+    {
+        return $this->morphTo();
     }
 }

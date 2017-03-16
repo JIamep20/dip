@@ -40,6 +40,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Friend whereSender($model)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Friend whereStatus($status = 1)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Friend betweenModels($sender, $recipient)
+ * @property int $recipient_id
+ * @property bool $status
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Message[] $messages
+ * @property-read mixed $users
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Friend whereRecipientId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Friend whereRecipient($model)
  */
 class Friend extends Model
 {
@@ -62,7 +68,14 @@ class Friend extends Model
      */
     public function room()
     {
-        return $this->morphMany(Room::class, 'roomable');
+        return $this->morphOne(Room::class, 'roomable');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function messages(){
+        return $this->morphMany(Message::class, 'messagable');
     }
 
     /**
@@ -89,6 +102,10 @@ class Friend extends Model
         return $query->where('recipient_id', $model->getKey());
     }
 
+    public function scopeOrWhereRecipient($query, $model) {
+        return $query->orWhere('recipient_id', $model->getKey());
+    }
+
     /**
      * @param $query
      * @param $model
@@ -96,6 +113,10 @@ class Friend extends Model
      */
     public function scopeWhereSender($query, $model) {
         return $query->where('sender_id', $model->getKey());
+    }
+
+    public function scopeOrWhereSender($query, $model) {
+        return $query->orWhere('sender_id', $model->getKey());
     }
 
     /**
@@ -122,5 +143,9 @@ class Friend extends Model
                 $q->whereSender($recipient)->whereRecipient($sender);
             });
         });
+    }
+
+    public function getUsersAttribute(){
+        return User::where('id', $this->sender_id)->orWhere('id', $this->recipient_id)->get();
     }
 }

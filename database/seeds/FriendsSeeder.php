@@ -15,7 +15,6 @@ class FriendsSeeder extends Seeder
 
             factory(\App\Models\User::class, rand(10, 15))->create()->each(function ($f) use ($item) {
                 $friendship = $item->beFriend($f);
-                $friendship->room()->save(factory(\App\Models\Room::class)->create());
                 $friendship->update(['status' => rand(\App\Models\Friend::PENDING, \App\Models\Friend::BLOCKED)]);
             });
         });

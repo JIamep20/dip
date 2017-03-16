@@ -11,11 +11,21 @@ class MessagesSeeder extends Seeder
      */
     public function run()
     {
+        $faker = Faker\Factory::create();
         $users = \App\Models\User::all();
-        $rooms = \App\Models\Room::all();
-        
-        $users->map(function ($item) use ($rooms){
-            factory(\App\Models\Message::class, rand(1, 6))->create(['user_id' => $item->id, 'room_id' => $rooms->random()->id]);
+
+        $users->each(function (\App\Models\User $user) use ($faker) {
+            $user->getAcceptedFriendships()->each(function(\App\Models\Friend $friendship) use ($user, $faker) {
+                foreach (range(0, rand(3, 10)) as $i) {
+                    $friendship->messages()->create(['user_id' => $user->id, 'text' => $faker->text(10)]);
+                }
+            });
+
+            $user->groups()->each(function ($group) use ($user, $faker) {
+                foreach (range(0, rand(3, 10)) as $i) {
+                    $group->messages()->create(['user_id' => $user->id, 'text' => $faker->text(10)]);
+                }
+            });
         });
     }
 }

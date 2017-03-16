@@ -32,6 +32,7 @@ use Illuminate\Support\Facades\Auth;
  * @method static \Illuminate\Database\Query\Builder|\App\Models\User whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\User whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\User searchUser($name)
  */
 class User extends Authenticatable
 {
@@ -54,6 +55,7 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    /* Static class methods */
     public static function findByEmail($email)
     {
         $_this = new self;
@@ -65,6 +67,11 @@ class User extends Authenticatable
         return $user;
     }
 
+    public function owns($model) {
+        return $this->getKey() == $model->user_id;
+    }
+
+    /* Model relations */
     public function groups()
     {
         return $this->belongsToMany(Group::class);
@@ -85,6 +92,12 @@ class User extends Authenticatable
         return $this->hasMany(Friend::class, 'recipient_id');
     }
 
+    public function friends()
+    {
+        return $this->hasMany(Friend::class, 'sender_id');
+    }
+
+    /* Friendship methods */
     public function beFriend($recipient)
     {
         if (!$this->canBeFriend($recipient)) {
@@ -129,11 +142,6 @@ class User extends Authenticatable
     public function hasBlocked(User $recipient)
     {
         return $this->friends()->whereRecipient($recipient)->whereStatus(Friend::BLOCKED)->exists();
-    }
-
-    public function friends()
-    {
-        return $this->hasMany(Friend::class, 'sender_id');
     }
 
     public function unblockFriend($recipient)
@@ -208,11 +216,16 @@ class User extends Authenticatable
 
     public function findFriendships($status = null)
     {
-        $query = Friend::where(function ($q) {
+        /*$query = Friend::where(function ($q) {
             $q->whereSender($this);
 
         })->orWhere(function ($q) {
             $q->whereRecipient($this);
+        });*/
+
+        $query = Friend::where(function($q) {
+            $q->whereSender($this)
+                ->orWhereRecipient($this);
         });
 
         if (!is_null($status)) {
