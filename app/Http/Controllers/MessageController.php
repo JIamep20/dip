@@ -32,6 +32,7 @@ class MessageController extends ApiController
         $message->user()->associate($this->user());
         $message->messagable()->associate($friend);
         $message->save();
+        // TODO updated friendship message here
         return $this->setStatusCode(201)->respond($message);
     }
 
@@ -39,7 +40,7 @@ class MessageController extends ApiController
     {
         $this->authorize('updateFriendshipMessage', [Message::class, $friend, $message]);
         $message->update($request->all());
-
+        // TODO updated friendship message here
         return $this->setStatusCode(200)->respond($message);
     }
 
@@ -69,6 +70,7 @@ class MessageController extends ApiController
         $message->user()->associate($this->user());
         $message->messagable()->associate($group);
         $message->save();
+        // TODO stored ghoup message
         return $this->setStatusCode(200)->respond($message);
     }
 
@@ -76,6 +78,7 @@ class MessageController extends ApiController
     {
         $this->authorize('updateGroupMessage', [Message::class, $group, $message]);
         $message->update($request->all());
+        // TODO updated group message
         return $this->setStatusCode(200)->respond($message);
     }
 

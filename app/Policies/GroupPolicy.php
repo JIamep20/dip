@@ -21,4 +21,8 @@ class GroupPolicy
     public function deleteGroup(User $user, Group $group){
         return !!$group->users()->find($user->id);
     }
+    
+    public function addUserToGroup(User $user, Group $group){
+        return !!$group->users()->find($user->id);
+    }
 }

@@ -20,22 +20,23 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('user', 'UserController@index');
     Route::put('user', 'UserController@update');
-    
+    // Search users by query string
+    Route::get('user/{query}', 'UserController@search');
+
     /* FriendController */
     
-    // Get list of all frinds for current user
     Route::get('friend', 'FriendController@index');
-    // Search users by query string
-    Route::get('friend/{query}', 'FriendController@search');
-    // Add user to friends by users's id
-    Route::post('friend/{user}', 'FriendController@addUser');
-    // Delete user from friends by user's id
-    Route::delete('friend/{user}', 'FriendController@delete');
+    Route::get('friend/{friend}', 'FriendController@show');
+    Route::post('friend/{friend}', 'FriendController@store');
+    Route::put('friend/{friend}', 'FriendController@update');
+    Route::delete('friend/{friend}', 'FriendController@destroy');
 
     /* Group Controller */
     Route::resource('group', 'GroupController', [
         'except' => ['create', 'edit']
     ]);
+    Route::get('group/{group}/addUser/{user}', 'GroupController@addUser');
+    Route::get('group/{group}/leave', 'GroupController@userLeavesGroup');
 
     /* Group messages controller */
 

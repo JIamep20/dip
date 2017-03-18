@@ -2,29 +2,27 @@
 
 namespace App\Events;
 
-use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use Illuminate\Support\Facades\Auth;
 
-class SomeEvent implements ShouldBroadcast
+class BaseEvent implements ShouldBroadcast
 {
-    use SerializesModels;
+    use InteractsWithSockets, SerializesModels;
 
-    public $user;
-
+    protected $channels;
     /**
      * Create a new event instance.
      *
+     * @param array $channels Array of channels to send on
      * @return void
      */
-    public function __construct()
+    public function __construct($channels = null)
     {
-        $this->user = Auth::user();
+        $this->channels = $channels ?? ['general'];
     }
 
     /**
@@ -34,8 +32,6 @@ class SomeEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        //return new PrivateChannel('user' . $this->user->id);
-        return ['private-' .$this->user->id];
-        //return ['general'];
+        return new $this->channels;
     }
 }

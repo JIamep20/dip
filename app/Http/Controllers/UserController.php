@@ -31,4 +31,11 @@ class UserController extends ApiController
         $this->user()->update($request->all());
         return $this->setStatusCode(200)->respond($this->user());
     }
+
+    public function search($query)
+    {
+        $result = User::searchUser($query)->get();
+
+        return $this->setStatusCode(200)->respond($result);
+    }
 }

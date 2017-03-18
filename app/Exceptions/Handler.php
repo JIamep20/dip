@@ -85,6 +85,10 @@ class Handler extends ExceptionHandler
             if ($e instanceof AuthorizationException) {
                 return response($e->getMessage(), 403);
             }
+            
+            if($e instanceof CustomMessageException) {
+                return response($e->getMessage(), 403);
+            }
         }
 
         return parent::render($request, $e);

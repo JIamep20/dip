@@ -21,30 +21,49 @@ class FriendController extends ApiController
         return $this->setStatusCode(200)->respond($this->user()->getFriends(null));
     }
 
-    public function search($query)
+    public function show(User $friend)
     {
-        $result = User::searchUser($query)->get();
+        if($res = $this->user()->getFriendship($friend))
+        {
+            return $this->setStatusCode(200)->respond($res);
+        }
 
-        return $this->setStatusCode(200)->respond($result);
+        throw (new ModelNotFoundException())->setModel(User::class);
     }
 
-    public function addUser(User $user)
+    public function store(User $user)
     {
         if ($user->id == $this->user()->id) {
             throw (new ModelNotFoundException)->setModel(User::class);
         }
 
         if($friendship = $this->user()->beFriend($user)) {
-            $friendship->room()->save(new Room(['name' => 'asd']));
+            // TODO new friendship created event
             return $this->setStatusCode(200)->respond($friendship);
         }
 
         throw (new ModelNotFoundException)->setModel(User::class);
     }
 
-    public function delete(User $user)
+    public function update(User $friend, Request $request)
     {
-        $this->user()->unFriend($user);
-        return $this->setStatusCode(200)->respond();
+        if($model = $this->user()->getFriendship($friend)){
+            $model->update($request->all());
+            // TODO friendship status updated event
+            return $this->setStatusCode(200)->respond($model);
+        }
+
+        throw (new ModelNotFoundException())->setModel(User::class);
+    }
+
+    public function destroy(User $friend)
+    {
+        if($res = $this->user()->getFriendship($friend)) {
+            $res->delete();
+            // TODO friendship deleted here
+            return $this->setStatusCode(200)->respond();
+        }
+
+        throw (new ModelNotFoundException())->setModel(User::class);
     }
 }
