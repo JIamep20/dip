@@ -18,9 +18,7 @@ export default new function () {
                 s.emit('authorize', {token: self._getCookie('x-access-token')});
 
                 s.on('logged', () => {
-                    s.on('user-status-changed', data => {
-                        self._dispatch({type: SOCKET_FRIEND_STATUS_CHANGE, payload: data});
-                    });
+                    this.registerSocketEvents(s);
 
                     return resolve(s);
                 });
@@ -121,4 +119,10 @@ export default new function () {
         self._dispatch = dispatch;
         self._getState = getState;
     };
-}
+
+    this.registerSocketEvents = (s) => {
+        s.on('userStatusUpdated', data => {
+            self._dispatch({type: SOCKET_FRIEND_STATUS_CHANGE, payload: data});
+        });
+    }
+};

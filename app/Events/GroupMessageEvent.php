@@ -9,7 +9,7 @@
 namespace App\Events;
 
 
-class NewGroupMessageEvent extends BaseEvent
+class GroupMessageEvent extends BaseEvent
 {
     public $message;
 

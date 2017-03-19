@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\FriendshipMessageEvent;
+use App\Events\GroupMessageEvent;
 use App\Models\Friend;
 use App\Models\Group;
 use App\Models\Message;
@@ -32,7 +34,7 @@ class MessageController extends ApiController
         $message->user()->associate($this->user());
         $message->messagable()->associate($friend);
         $message->save();
-        // TODO updated friendship message here
+        event(new FriendshipMessageEvent([$friend->id, $this->user()->id], $message));
         return $this->setStatusCode(201)->respond($message);
     }
 
@@ -40,7 +42,7 @@ class MessageController extends ApiController
     {
         $this->authorize('updateFriendshipMessage', [Message::class, $friend, $message]);
         $message->update($request->all());
-        // TODO updated friendship message here
+        event(new FriendshipMessageEvent([$friend->id, $this->user()->id], $message));
         return $this->setStatusCode(200)->respond($message);
     }
 
@@ -70,7 +72,7 @@ class MessageController extends ApiController
         $message->user()->associate($this->user());
         $message->messagable()->associate($group);
         $message->save();
-        // TODO stored ghoup message
+        event(new GroupMessageEvent($group->users()->get('id'), $message));
         return $this->setStatusCode(200)->respond($message);
     }
 
@@ -78,7 +80,7 @@ class MessageController extends ApiController
     {
         $this->authorize('updateGroupMessage', [Message::class, $group, $message]);
         $message->update($request->all());
-        // TODO updated group message
+        event(new GroupMessageEvent($group->users()->get('id'), $message));
         return $this->setStatusCode(200)->respond($message);
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\FriendshipUpdateEvent;
 use App\Models\Friend;
 use App\Models\Room;
 use App\Models\User;
@@ -38,7 +39,7 @@ class FriendController extends ApiController
         }
 
         if($friendship = $this->user()->beFriend($user)) {
-            // TODO new friendship created event
+            event(new FriendshipUpdateEvent([$this->user()->id, $user->id], $friendship));
             return $this->setStatusCode(200)->respond($friendship);
         }
 
@@ -49,7 +50,7 @@ class FriendController extends ApiController
     {
         if($model = $this->user()->getFriendship($friend)){
             $model->update($request->all());
-            // TODO friendship status updated event
+            event(new FriendshipUpdateEvent([$this->user()->id, $friend->id], $model));
             return $this->setStatusCode(200)->respond($model);
         }
 

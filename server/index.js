@@ -27,7 +27,7 @@ redis.on('message', function (channel, message) {
     if (channel == 'general') {
 
     } else {
-        id = parseInt(channel.split('-')[1]);
+        id = parseInt(channel);
 
         if (!!users.getUserSockets(id)) {
             users.getUserSockets(id).forEach(function (item) {
@@ -51,7 +51,7 @@ io.on('connection', function (socket) {
                 users.add(user.id, socket.id);
                 socket.emit('logged', {payload: true});
                 socket.broadcast.emit('user-status-changed', {id: user.id, status: true});
-                redis.subscribe('private-' + user.id);
+                redis.subscribe(user.id);
 
                 /* Receive client emits here */
 
@@ -61,7 +61,7 @@ io.on('connection', function (socket) {
 
                 socket.on('disconnect', function () {
                     console.log('user id: ' + user.id + ' disconnected');
-                    redis.unsubscribe('private-' + user.id);
+                    redis.unsubscribe(user.id);
                     socket.broadcast.emit('user-status-changed', {id: user.id, status: false});
                     users.delete(socket.id);
                 });

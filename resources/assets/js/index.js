@@ -9,7 +9,7 @@ require('promise.prototype.finally').shim();
 
 window.nprogress = require('nprogress');
 nprogress.configure({ showSpinner: false });
-/* Current users actions */
+/* Current user actions */
 import { fetchCurrentUser } from './actions/usersActions';
 import { fetchRoomMessages } from './actions/messagesActions';
 

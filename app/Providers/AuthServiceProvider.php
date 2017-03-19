@@ -4,8 +4,10 @@ namespace App\Providers;
 
 use App\Guards\JwtGuard;
 use App\Models\Friend;
+use App\Models\Group;
 use App\Models\Message;
 use App\Policies\FriendPolicy;
+use App\Policies\GroupPolicy;
 use App\Policies\MessagePolicy;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -21,6 +23,7 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         Friend::class => FriendPolicy::class,
         Message::class => MessagePolicy::class,
+        Group::class => GroupPolicy::class,
     ];
 
     /**

@@ -204,7 +204,6 @@ class User extends Authenticatable
 
     public function blockFriend($recipient)
     {
-        // TODO event
         return $this->findFriendship($recipient)->update(['status' => Friend::BLOCKED]);
     }
 

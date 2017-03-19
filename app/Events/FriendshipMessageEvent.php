@@ -9,7 +9,7 @@
 namespace App\Events;
 
 
-class NewFriendshipMessageEvent extends BaseEvent
+class FriendshipMessageEvent extends BaseEvent
 {
     protected $message;
 

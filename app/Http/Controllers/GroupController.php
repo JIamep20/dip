@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UserAddedToGroupEvent;
+use App\Events\UserLeavesGroupEvent;
 use App\Exceptions\CustomMessageException;
 use App\Models\Group;
 use App\Models\User;
@@ -20,7 +22,7 @@ class GroupController extends ApiController
     }
 
     public function show(Group $group){
-        $this->authorize('getGroup', [$group]);
+        $this->authorize('getGroup', [Group::class, $group]);
         $group->load('users');
         return $this->setStatusCode(200)->respond($group);
     }
@@ -42,7 +44,7 @@ class GroupController extends ApiController
         if(!!$group->users()->find($user->id)) {
             throw new CustomMessageException('This user in already in group');
         }
-        // TODO user added to group here
+        event(new UserAddedToGroupEvent($group->users()->get('id'), $user, $group));
         $group->users()->attach($user->id);
         return $this->setStatusCode(200)->respond('OK');
     }
@@ -50,7 +52,7 @@ class GroupController extends ApiController
     public function userLeavesGroup(Group $group){
         if(!!$group->users()->find($this->user()->id)) {
             $group->users()->detach($this->user()->id);
-            // TODO user leaves group event here
+            event(new UserLeavesGroupEvent($group->users()->get('id'), $this->user(), $group));
             return $this->setStatusCode(200)->respond('ok');
         }
     }
