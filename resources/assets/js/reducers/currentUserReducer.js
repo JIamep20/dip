@@ -1,32 +1,37 @@
-import { FETCH_USER_SUCCESS, FETCH_USER_ERROR, UPDATE_USER_ERROR, UPDATE_USER_SUCCESS } from '../actions/usersActions';
+import * as types from '../constants/currentUserActionsConst';
+import _ from 'lodash';
 
 const initialState = {
     user: {},
     errors: {}
 };
 
-export default function userReducer(state = initialState, {type, payload}) {
-    switch(type){
-        case FETCH_USER_SUCCESS:
+export default function currentUserReducer(state = initialState, {type, payload}) {
+    switch (type) {
+        case types.getCurrentUserRequest:
+            return state;
+        case types.getCurrentUserSuccess:
             return {
                 ...state,
                 user: payload
             };
+        case types.getCurrentUserError:
+            console.log(types.getCurrentUserError, payload);
+            return {...state};
 
-        case UPDATE_USER_ERROR:
-            return {
-                ...state,
-                errors: payload
-            };
-
-        case UPDATE_USER_SUCCESS:
-            return {
-                ...state,
-                user: payload,
-                errors: {}
-            };
-
-        default:
+        case types.updateCurrentUserRequest:
             return state;
+        case types.updateCurrentUserSuccess:
+            return {
+                ...state,
+                user: payload
+            };
+        case types.updateCurrentUserError:
+            return {
+                ...state,
+                errors: payload.response.data
+            };
+
+        default: return state;
     }
 }

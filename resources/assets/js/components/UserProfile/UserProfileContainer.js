@@ -2,7 +2,7 @@ import React from 'react';
 
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {updateCurrentUser} from '../../actions/usersActions';
+import { updateCurrentUser } from '../../actions/currentUserActions';
 import UserProfileForm from './UserProfileForm';
 import Container from '../ContentContainer';
 
@@ -35,8 +35,8 @@ class Profile extends React.Component {
 
 export default connect(
     state => ({
-        user: state.currentUser.user,
-        errors: state.currentUser.errors
+        user: state['currentUserReducer']['user'],
+        errors: state['currentUserReducer']['errors']
     }),
     dispatch => ({
         currentUserActions: bindActionCreators({updateCurrentUser}, dispatch)

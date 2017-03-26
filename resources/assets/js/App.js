@@ -1,15 +1,14 @@
 import React from 'react';
 
 import { connect } from 'react-redux';
-import {Link} from 'react-router';
 
-import socketClient from '../socketClient';
+import socketClient from './socketClient';
 
-import '../styles/AppResets.scss';
-import '../styles/AppStyles.scss';
+import './styles/AppResets.scss';
+import './styles/AppStyles.scss';
 
-import Header from './HeaderContainer';
-import LeftSidebar from './LeftSidebar';
+import Header from './components/Header/HeaderContainer';
+import LeftSidebar from './components/Sidebars/LeftSidebar';
 
 
 class App extends React.Component {

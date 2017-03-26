@@ -23,6 +23,6 @@ class ContentContainer extends React.Component {
 
 export default connect(
     (store) => ({
-        sidebars: store.sidebars
+        sidebars: store['sidebarsReducer']
     })
 )(ContentContainer);

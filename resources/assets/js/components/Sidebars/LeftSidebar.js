@@ -1,9 +1,8 @@
 import React from 'react';
-import axios from 'axios';
 import { Link } from 'react-router';
 import {connect} from 'react-redux';
 import _ from 'lodash';
-import '../styles/LeftSidebarStyles.scss';
+import '../../styles/LeftSidebarStyles.scss';
 import ReactTransitionGroup from 'react-addons-css-transition-group';
 
 class LeftSidebar extends React.Component {
@@ -19,9 +18,9 @@ class LeftSidebar extends React.Component {
         const { friends, online } = this.props.friends;
         var friendsList = _.map(friends, (item, index) => {
             return (<li key={index}>
-                <Link to={`/room/${item.room[0].id}`}>
-                    <span className={`circle ${_.get(online, [item.user.id, 'status'], false) ? 'circle-green' : 'circle-red'}`}> </span>
-                    {item.user.name}
+                <Link to={`/room/${item.id}`}>
+                    <span className={`circle ${_.get(online, [item.id], false) ? 'circle-green' : 'circle-red'}`}> </span>
+                    {item.name}
                 </Link>
             </li>)
         });
@@ -44,7 +43,7 @@ class LeftSidebar extends React.Component {
 
 export default connect(
     state => ({
-        sidebars: state.sidebars,
-        friends: state.friends
+        sidebars: state['sidebarsReducer'],
+        friends: state['friendsReducer']
     })
 )(LeftSidebar);

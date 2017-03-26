@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import createLogger from 'redux-logger';
-import rootReducer from '../reducers/rootReducer';
+import rootReducer from '../reducers/';
 
 const logger = createLogger();
 
@@ -19,7 +19,7 @@ export default function configureStore(initialState = {}) {
 
     // Hot reload reducers (requires Webpack or Browserify HMR to be enabled)
     if (module.hot) {
-        module.hot.accept('../reducers/rootReducer.js', () =>
+        module.hot.accept('../reducers/', () =>
             store.replaceReducer(rootReducer/*.default if you use Babel 6+ */)
         );
     }

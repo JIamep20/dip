@@ -1,31 +1,40 @@
-import {
-    FIND_USERS_SUCCESS,
-    ADD_USER_SUCCESS,
-} from '../actions/usersActions';
-
+import * as types from '../constants/usersActionsConst';
+import _ from 'lodash';
 
 const initialState = {
-    searchString: '',
-    searchedUsers: []
+    searchFilter: '',
+    searchedUsers: {}
 };
 
-export default function usersReducer(state = initialState, {type, payload}) {
-    switch (type) {
-        case FIND_USERS_SUCCESS:
+export default function (state = initialState, {type, payload}) {
+    switch(type) {
+        case types.fetchUsersByFilterStringRequest:
             return {
                 ...state,
-                searchString: payload.query,
-                searchedUsers: payload.data
+                searchFilter: payload
             };
-        
-
-        case ADD_USER_SUCCESS:debugger;
+        case types.fetchUsersByFilterStringSuccess:
             return {
                 ...state,
-                searchedUsers: state.searchedUsers.filter((item) => item.id !== payload.recipient_id)
+                searchedUsers: payload
             };
+        case types.fetchUsersByFilterStringError:
+            console.log(type, payload);
+            return {
+                ...state,
+                searchedUsers: {}
+            };
+        case types.resetUsersReducer:
+            return initialState;
 
-        default:
+        case types.addUserToFriendsByIdRequest:
             return state;
+        case types.addUserToFriendsByIdSuccess:
+            delete state.searchedUsers[payload['recipient']['id']];
+            return {...state};
+        case types.addUserToFriendsByIdError:
+            console.log(type, payload);
+            return state;
+        default: return state;
     }
 }

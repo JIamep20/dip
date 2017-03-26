@@ -12,7 +12,7 @@ class FriendshipService extends BaseService {
      * @returns {*}
      */
     getFriends() {
-        return axios.get('api/friends');
+        return axios.get('api/friend');
     }
 
     /**

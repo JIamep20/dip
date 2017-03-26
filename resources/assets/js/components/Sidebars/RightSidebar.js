@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import '../styles/RightSidebarStyles.scss';
+import '../../styles/RightSidebarStyles.scss';
 
 class RightSidebar extends React.Component {
     constructor(props) {

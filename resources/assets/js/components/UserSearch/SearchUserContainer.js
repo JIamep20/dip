@@ -2,12 +2,12 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import { findUsers, addUser } from '../../actions/usersActions';
+import { fetchUsersByFilterString, addUserToFriendsById } from '../../actions/usersActions';
 
-import FindUserPresentation from './FindUserPresentation';
+import SearchUserPresentation from './SearchUserPresentation';
 import Container from '../ContentContainer';
 
-class FindUserContainer extends React.Component {
+class SearchUserContainer extends React.Component {
     constructor(props) {
         super(props);
 
@@ -16,7 +16,7 @@ class FindUserContainer extends React.Component {
     }
 
     handleSearchUsers(query) {
-        this.props.findUsersActions.findUsers(query);
+        this.props.findUsersActions.fetchUsersByFilterString(query);
     }
 
     addUserRequest(id) {
@@ -25,10 +25,10 @@ class FindUserContainer extends React.Component {
 
     render() {
         return (<Container left={true}>
-            <FindUserPresentation
+            <SearchUserPresentation
                 addUserRequest={this.addUserRequest} 
                 users={this.props.users}
-                searchString={this.props.searchString}
+                searchString={this.props.searchFilter}
                 searchUsers={this.handleSearchUsers}/>
         </Container>);
     }
@@ -36,10 +36,10 @@ class FindUserContainer extends React.Component {
 
 export default connect(
     state => ({
-        searchString: state.users.searchString,
-        users: state.users.searchedUsers
+        searchFilter: state['usersReducer']['searchFilter'],
+        users: state['usersReducer']['searchedUsers']
     }),
     dispatch => ({
-        findUsersActions: bindActionCreators({ findUsers, addUser }, dispatch)
+        findUsersActions: bindActionCreators({ fetchUsersByFilterString, addUserToFriendsById }, dispatch)
     })
-)(FindUserContainer);
+)(SearchUserContainer);

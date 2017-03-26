@@ -1,13 +1,12 @@
 import React from 'react';
-import Slideout from 'slideout';
 import {connect} from 'react-redux';
 import { Link } from 'react-router';
 
 import { bindActionCreators } from 'redux';
 
-import * as sidebarsActions from '../actions/sidebarsActions';
+import * as sidebarsActions from '../../actions/sidebarsActions';
 
-import '../styles/HeaderStyles.scss';
+import '../../styles/HeaderStyles.scss';
 
 class Header extends React.Component {
     constructor(props) {

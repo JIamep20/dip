@@ -2,7 +2,7 @@ import React from 'react';
 
 import {connect} from 'react-redux';
 
-import Container from './ContentContainer';
+import Container from './../ContentContainer';
 
 class FeedsContainer extends React.Component {
     constructor(props) {
@@ -18,4 +18,4 @@ class FeedsContainer extends React.Component {
     }
 }
 
-export default connect()(FeedsContainer);
+export default FeedsContainer;

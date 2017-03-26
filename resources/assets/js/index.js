@@ -10,8 +10,7 @@ require('promise.prototype.finally').shim();
 window.nprogress = require('nprogress');
 nprogress.configure({ showSpinner: false });
 /* Current user actions */
-import { fetchCurrentUser } from './actions/usersActions';
-import { fetchRoomMessages } from './actions/messagesActions';
+import { fetchCurrentUser } from './actions/currentUserActions';
 
 /* Sockets module */
 import socketClient from './socketClient';
@@ -21,11 +20,10 @@ import configureStore from './store/configurateStore.js';
 import { Provider } from 'react-redux';
 
 /* Containers */
-import App from './containers/App';
-import Profile from './containers/UserProfile/UserProfileContainer';
-import FindUsers from './containers/FindUser/FindUserContainer';
-import Feeds from './containers/FeedsContainer';
-import Room from './containers/Room/RoomContainer';
+import App from './App';
+import Profile from './components/UserProfile/UserProfileContainer';
+import SearchUsers from './components/UserSearch/SearchUserContainer';
+import Feeds from './components/Feeds/FeedsContainer';
 
 /* Store initialize */
 const store = configureStore({});
@@ -40,9 +38,11 @@ render((
             <Route path="/" component={App}>
                 <IndexRoute component={Feeds} />
                 <Route path="/user" component={Profile} />
-                <Route path="/user/find" component={FindUsers} />
-                <Route path="/room/:id" component={Room} onEnter={(a) => store.dispatch(fetchRoomMessages(a.params.id, true))}/>
+                <Route path="/user/find" component={SearchUsers} />
+                {/*<Route path="/friend/:id" component={Friend}/>
+                <Route path="/group/:id" component={Group}/>*/}
             </Route>
             <Redirect from="*" to="/" />
         </Router>
-    </Provider>), document.getElementById('app'));
+    </Provider>),
+    document.getElementById('app'));

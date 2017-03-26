@@ -1,8 +1,9 @@
 import React from 'react';
+import _ from 'lodash';
 
 import './styles.scss';
 
-export default class FindUserPresentation extends React.Component {
+export default class SearchUserPresentation extends React.Component {
     constructor(props) {
         super(props);
         this.onInputChange = this.onInputChange.bind(this);
@@ -31,9 +32,11 @@ export default class FindUserPresentation extends React.Component {
             <div className="clearfix"></div>
             {!this.props.users.length && <span>0 users found</span>}
             <ul>
-                {this.props.users.map((user, index) => {
-                    return (<li key={index}>{user.name} <button onClick={() => {this.props.addUserRequest(user.id)}}>Add</button></li>);
-                })}
+                {
+                    _.map(this.props.users, (item, key) => {
+                        return (<li key={key}>{item.name} <button onClick={() => {this.props.addUserRequest(item.id)}}>Add</button></li>);
+                    })
+                }
             </ul>
         </div>);
     }
