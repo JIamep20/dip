@@ -11,18 +11,9 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 class MessagePolicy
 {
     use HandlesAuthorization;
-
-
-    public function getFriendshipMessages(User $user, Friend $friend){
-        return $user->findFriendships(Friend::ACCEPTED)->where('id', $friend->id)->exists();
-    }
     
     public function getFriendshipMessage(User $user, Friend $friend, Message $message){
-        return $user->findFriendships(Friend::ACCEPTED)->where('id', $friend->id)->exists() && $friend->messages()->where('id', $message->id)->exists();
-    }
-
-    public function createFriendshipMessage(User $user, Friend $friend){
-        return $user->findFriendships(Friend::ACCEPTED)->where('id', $friend->id)->exists();
+        return $user->findFriendships(null)->where('sender_id', $friend->id)->orWhere('recipient_id', $friend->id)->exists() && $friend->messages()->where('id', $message->id)->exists();
     }
     
     public function updateFriendshipMessage(User $user, Friend $friend, Message $message)

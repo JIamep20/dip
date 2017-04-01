@@ -22,7 +22,9 @@ $factory->define(\App\Models\User::class, function (Faker\Generator $faker) {
 });
 
 $factory->define(\App\Models\Group::class, function (\Faker\Generator $faker){
-    return [];
+    return [
+        'name' => $faker->name
+    ];
 });
 
 $factory->define(\App\Models\Room::class, function (\Faker\Generator $faker){

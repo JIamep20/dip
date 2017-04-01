@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 
-//import { routerReducer } from 'react-router-redux';
+import { routerReducer } from 'react-router-redux';
 import currentUserReducer from './currentUserReducer';
 import friendsReducer from './friendsReducer';
 import groupsReducer from './groupsReducer';
@@ -12,5 +12,6 @@ export default combineReducers({
     friendsReducer,
     groupsReducer,
     sidebarsReducer,
-    usersReducer
+    usersReducer,
+    routing: routerReducer
 });

@@ -52,6 +52,25 @@ class FriendshipService extends BaseService {
         return axios.delete(`api/friend/${id}`);
     }
 
+    /**
+     * 
+     * @param id
+     * @returns {*}
+     */
+    loadFriendMessages(id) {
+        return axios.get(`api/friend/${id}/message`);
+    }
+
+    /**
+     *
+     * @param id
+     * @param text
+     * @returns {*|AxiosPromise}
+     */
+    createFriendMessage(id, text) {
+        return axios.post(`api/friend/${id}/message`, {text: text});
+    }
+
     
 }
 

@@ -16,13 +16,22 @@ class LeftSidebar extends React.Component {
     render() {
         const { left } = this.props.sidebars;
         const { friends, online } = this.props.friends;
-        var friendsList = _.map(friends, (item, index) => {
+        const { groups } = this.props.groups;
+        let friendsList = _.map(friends, (item, index) => {
             return (<li key={index}>
-                <Link to={`/room/${item.id}`}>
+                <Link to={`/friend/${item.id}`}>
                     <span className={`circle ${_.get(online, [item.id], false) ? 'circle-green' : 'circle-red'}`}> </span>
                     {item.name}
                 </Link>
             </li>)
+        });
+
+        let groupsList = _.map(groups, (item, index) => {
+            return (<li key={index}>
+                <Link to={`/group/${item.id}`}>
+                    {item.name || item.id}
+                </Link>
+            </li>);
         });
 
         var opened = left ? 'opened-left-sidebar' : '';
@@ -34,6 +43,7 @@ class LeftSidebar extends React.Component {
                         transitionEnterTimeout={300}
                         transitionLeaveTimeout={300}>
                         {friendsList}
+                        {groupsList}
                     </ReactTransitionGroup>
                 </ul>
             </div>
@@ -44,6 +54,7 @@ class LeftSidebar extends React.Component {
 export default connect(
     state => ({
         sidebars: state['sidebarsReducer'],
-        friends: state['friendsReducer']
+        friends: state['friendsReducer'],
+        groups: state['groupsReducer']
     })
 )(LeftSidebar);

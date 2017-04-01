@@ -32,6 +32,6 @@ class BaseEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new $this->channels;
+        return $this->channels;
     }
 }

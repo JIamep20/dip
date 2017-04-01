@@ -2,7 +2,7 @@
 import React from "react";
 import { render } from "react-dom";
 import { Redirect, IndexRoute, Route, Router, IndexRedirect, hashHistory } from 'react-router';
-
+import { syncHistoryWithStore } from 'react-router-redux';
 import '../../../node_modules/nprogress/nprogress.css';
 
 require('promise.prototype.finally').shim();
@@ -11,6 +11,7 @@ window.nprogress = require('nprogress');
 nprogress.configure({ showSpinner: false });
 /* Current user actions */
 import { fetchCurrentUser } from './actions/currentUserActions';
+import { loadFriendMessages } from './actions/friendsActions';
 
 /* Sockets module */
 import socketClient from './socketClient';
@@ -24,9 +25,11 @@ import App from './App';
 import Profile from './components/UserProfile/UserProfileContainer';
 import SearchUsers from './components/UserSearch/SearchUserContainer';
 import Feeds from './components/Feeds/FeedsContainer';
+import Friend from './components/Friend/FriendContainer';
 
 /* Store initialize */
 const store = configureStore({});
+const history = syncHistoryWithStore(hashHistory, store);
 
 store.dispatch(fetchCurrentUser());
 socketClient.configurateStore(store);
@@ -39,8 +42,8 @@ render((
                 <IndexRoute component={Feeds} />
                 <Route path="/user" component={Profile} />
                 <Route path="/user/find" component={SearchUsers} />
-                {/*<Route path="/friend/:id" component={Friend}/>
-                <Route path="/group/:id" component={Group}/>*/}
+                <Route path="/friend/:id" component={Friend} onEnter={(nextState) => store.dispatch(loadFriendMessages(nextState.params.id))}/>
+                {/*<Route path="/group/:id" component={Group}/>*/}
             </Route>
             <Redirect from="*" to="/" />
         </Router>

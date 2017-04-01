@@ -27,7 +27,7 @@ class GroupRequest extends FormRequest
         {
             case 'POST':
                 return [
-                    
+                    'name' => 'require|min:1'
                 ];
             case 'PATCH':
             case 'PUT':

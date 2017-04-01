@@ -7,17 +7,21 @@ use App\Events\GroupMessageEvent;
 use App\Models\Friend;
 use App\Models\Group;
 use App\Models\Message;
+use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 class MessageController extends ApiController
 {
-    public function friendIndex(Friend $friend)
+    public function friendIndex(User $friend)
     {
-        $this->authorize('getFriendshipMessages', [Message::class, $friend]);
-        return $this->setStatusCode(200)->respond($friend->messages()->get());
+        if($friendship = $this->user()->getFriendship($friend)) {
+            return $this->setStatusCode(200)->respond($friendship->messages()->get());
+        }
+        throw (new ModelNotFoundException())->setModel(Friend::class);
     }
 
-    public function friendShow(Friend $friend, Message $message)
+    public function friendShow(User $friend, Message $message)
     {
         $this->authorize('getFriendshipMessage', [Message::class, $friend, $message]);
         if($this->doesMessageBelongsToModel($friend, $message)) {
@@ -26,16 +30,18 @@ class MessageController extends ApiController
         return $this->setStatusCode(404)->respond();
     }
 
-    public function friendStore(Friend $friend, Request $request)
+    public function friendStore(User $friend, Request $request)
     {
-        $this->authorize('createFriendshipMessage', [Message::class, $friend]);
-        $message = new Message();
-        $message->fill($request->all());
-        $message->user()->associate($this->user());
-        $message->messagable()->associate($friend);
-        $message->save();
-        event(new FriendshipMessageEvent([$friend->id, $this->user()->id], $message));
-        return $this->setStatusCode(201)->respond($message);
+        if($friendship = $this->user()->getFriendship($friend)) {
+            $message = new Message();
+            $message->fill($request->all());
+            $message->user()->associate($this->user());
+            $message->messagable()->associate($friendship);
+            $message->save();
+            event(new FriendshipMessageEvent([$friend->id, $this->user()->id], $message));
+            return $this->setStatusCode(201)->respond($message);
+        }
+        throw (new ModelNotFoundException())->setModel(Friend::class);
     }
 
     public function friendUpdate(Friend $friend, Message $message, Request $request)
