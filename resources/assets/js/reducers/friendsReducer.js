@@ -41,7 +41,7 @@ export default function friendsReducer(state = initialState, {type, payload}) {
             return state;
         case types.createFriendMessageSuccess:
             if(state.messages[payload.id]) {
-                state.messages[payload.id].push(payload.res);
+                state.messages[payload.id] = state.messages[payload.id].concat(payload.res);
             }
             return {...state};
         case types.createFriendMessageError:

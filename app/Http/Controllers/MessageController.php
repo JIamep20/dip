@@ -16,7 +16,7 @@ class MessageController extends ApiController
     public function friendIndex(User $friend)
     {
         if($friendship = $this->user()->getFriendship($friend)) {
-            return $this->setStatusCode(200)->respond($friendship->messages()->get());
+            return $this->setStatusCode(200)->respond($friendship->messages()->with('user')->get());
         }
         throw (new ModelNotFoundException())->setModel(Friend::class);
     }
@@ -62,7 +62,7 @@ class MessageController extends ApiController
     public function groupIndex(Group $group)
     {
         $this->authorize('getGroupMessages', [Message::class, $group]);
-        return $this->setStatusCode(200)->respond($group->messages()->get());
+        return $this->setStatusCode(200)->respond($group->messages()->with('user')->get());
     }
 
     public function groupShow(Group $group, Message $message)
@@ -78,7 +78,7 @@ class MessageController extends ApiController
         $message->user()->associate($this->user());
         $message->messagable()->associate($group);
         $message->save();
-        event(new GroupMessageEvent($group->users()->get('id'), $message));
+        event(new GroupMessageEvent($group->users()->get(['users.id']), $message));
         return $this->setStatusCode(200)->respond($message);
     }
 
@@ -86,7 +86,7 @@ class MessageController extends ApiController
     {
         $this->authorize('updateGroupMessage', [Message::class, $group, $message]);
         $message->update($request->all());
-        event(new GroupMessageEvent($group->users()->get('id'), $message));
+        event(new GroupMessageEvent($group->users()->get(['users.id']), $message));
         return $this->setStatusCode(200)->respond($message);
     }
 

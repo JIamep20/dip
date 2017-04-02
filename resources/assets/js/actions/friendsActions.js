@@ -3,7 +3,7 @@ import FriendsService from '../services/friend.service';
 
 export function fetchFriendships() {
     return function(dispatch) {
-        dispatch({type: types.getFriendsError});
+        dispatch({type: types.getFriendsRequest});
         return FriendsService.getFriends()
             .then(res => dispatch({type: types.getFriendsSuccess, payload: res.data.data}))
             .catch(error => dispatch({type: types.getFriendsError, payload: error}));

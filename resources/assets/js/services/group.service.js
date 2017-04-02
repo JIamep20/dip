@@ -52,6 +52,15 @@ class GroupService extends BaseService {
     destroyGroup(id) {
         return axios.delete(`api/group/${id}`);
     }
+
+    /**
+     * 
+     * @param id
+     * @returns {*}
+     */
+    loadGroupMessages(id) {
+        return axios.get(`api/group/${id}/message`);
+    }
 }
 
 export default new GroupService();
