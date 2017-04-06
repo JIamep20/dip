@@ -167,9 +167,13 @@ class User extends Authenticatable
         return $this->findFriendship($recipient)->exists();
     }
 
-    public function getFriendship($recipient)
+    public function getFriendship($recipient, $wt = false)
     {
-        return $this->findFriendship($recipient)->first();
+        $query = $this->findFriendship($recipient);
+        if($wt) {
+            $query->withTrashed();
+        }
+        return $query->first();
     }
 
     public function unFriend(User $recipient)

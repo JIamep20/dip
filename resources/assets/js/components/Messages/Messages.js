@@ -13,13 +13,14 @@ export default class Messages extends React.Component {
 
     render() {
 
-        let { messages, onSubmitMessage, user_id } = this.props;
+        let { messages, onSubmitMessage, user_id, id } = this.props;
 
         return(
             <div className="messages-container">
                 <MessagesList
                     messages={messages}
                     user_id={user_id}
+                    id={id}
                 />
                 <MessagesInput
                     onSubmitMessage={onSubmitMessage}

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import Container from '../ContentContainer';
 import Messages from '../Messages/Messages';
+import FriendProfile from './FriendProfile';
 
 import { createFriendMessage } from '../../actions/friendsActions';
 
@@ -41,6 +42,12 @@ class FriendContainer extends React.Component {
                             user_id={user_id}
                             id={id}
                         />
+                    }
+                    {
+                        this.state.openedProfile &&
+                            <FriendProfile
+                                friend={friend}
+                            />
                     }
                 </div>
             </Container>

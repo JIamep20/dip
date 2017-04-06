@@ -81,7 +81,7 @@ export default class UserProfileForm extends React.Component {
                         <span className="validation-error">{this.state.errors.password}</span>
                     </div>
                     <div className="form-group">
-                        <button type="submit" className="btn btn-submit">Save</button>
+                        <button type="submit" className="btn btn-success">Save</button>
                     </div>
 
                 </form>

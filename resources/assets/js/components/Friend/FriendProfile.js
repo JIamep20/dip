@@ -6,6 +6,13 @@ class FriendProfile extends React.Component {
     }
 
     render() {
-        return (<h1>asdasd</h1>);
+        let { friend } = this.props;
+        return (
+            <div className="friend-profile">
+                <p>{friend.name}</p>
+            </div>
+        );
     }
 }
+
+export default FriendProfile;

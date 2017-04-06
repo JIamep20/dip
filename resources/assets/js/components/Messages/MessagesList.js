@@ -19,8 +19,8 @@ export default class MessagesList extends React.Component {
         );
     }
 
-    componentWillReceiveProps(nextProps, oldProps) {
-        if(nextProps.id !== oldProps.id) {
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.id != this.props.id) {
             this.scroll = true;
         }
     }
@@ -53,7 +53,3 @@ export default class MessagesList extends React.Component {
         ));
     }
 }
-
-MessagesList.defaultProps = {
-    id: 0
-};
