@@ -41,7 +41,19 @@ export default function groupsReducer(state = initialState, {type, payload}) {
         case types.createGroupMessageError:
             console.log(type, payload);
             return state;
-        
+
+        case types.leaveGroupRequest:
+            return state;
+        case types.leaveGroupSuccess:
+            delete state.groups[payload.id];
+            return {
+                ...state,
+                friends: {...state.friend}
+            };
+        case types.leaveGroupError:
+            console.error(type, payload);
+            return state;
+
         default: return state;
     }
 

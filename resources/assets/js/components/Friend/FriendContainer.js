@@ -5,7 +5,7 @@ import Container from '../ContentContainer';
 import Messages from '../Messages/Messages';
 import FriendProfile from './FriendProfile';
 
-import { createFriendMessage } from '../../actions/friendsActions';
+import { createFriendMessage, deleteFriend } from '../../actions/friendsActions';
 
 import '../../styles/FriendStyles.scss';
 
@@ -24,14 +24,21 @@ class FriendContainer extends React.Component {
         this.props.createFriendMessage(this.props.id, text);
     }
 
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.id != this.props.id) {
+            this.state.openedProfile = false;
+        }
+    }
+
     render() {
-        let { messages, id, user_id, friend } = this.props;
+        let { messages, id, user_id, friend, onDeleteClick } = this.props;
         return (
             <Container left={true} right={true}>
                 <div className="friend-container-offline">
                     {friend && <div
                         className="profile-label"
-                        onClick={() => this.setState({openedProfile: !this.state.openedProfile})}>
+                        onClick={() => this.setState({openedProfile: !this.state.openedProfile})}
+                    >
                         {friend.name} {this.state.openedProfile ? "\u00AB" : "\u00BB"}
                     </div>
                     }
@@ -47,6 +54,7 @@ class FriendContainer extends React.Component {
                         this.state.openedProfile &&
                             <FriendProfile
                                 friend={friend}
+                                onDeleteClick={onDeleteClick}
                             />
                     }
                 </div>
@@ -63,6 +71,7 @@ export default connect(
         user_id: state['currentUserReducer']['user'].id
     }),
     dispatch => ({
-        createFriendMessage: (id, text) => dispatch(createFriendMessage(id, text))
+        createFriendMessage: (id, text) => dispatch(createFriendMessage(id, text)),
+        onDeleteClick: (id) => dispatch(deleteFriend(id))
     })
 )(FriendContainer);

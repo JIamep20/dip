@@ -1,32 +1,58 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import GroupPresentation from './GroupPresentation';
+import GroupProfile from './GroupProfile';
 import Container from '../ContentContainer';
 import Messages from '../Messages/Messages';
 
-import { createGroupMessage } from '../../actions/groupsActions';
+import { createGroupMessage, leaveGroup } from '../../actions/groupsActions';
 import '../../styles/GroupStyles.scss';
 
 class GroupContainer extends React.Component {
     constructor(props) {
         super(props);
 
+        this.state = {openedProfile: false};
         this.onSubmitMessage = this.onSubmitMessage.bind(this);
     }
 
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.id != this.props.id) {
+            this.state.openedProfile = false;
+        }
+    }
+
     render() {
-        let { messages, user_id, id } = this.props;
+        let { messages, user_id, id, group, onLeaveClick, friends } = this.props;
         return (
             <Container left={true} right={true}>
                 <div className="group-container-offline">
-                    <div style={{height: '100px', backgroundColor: 'black'}}></div>
-                    <Messages
-                        messages={messages}
-                        onSubmitMessage={this.onSubmitMessage}
-                        user_id={user_id}
-                        id={id}
-                    />
+                    {
+                        group &&
+                            <div
+                                className="profile-label"
+                                onClick={() => this.setState({openedProfile: !this.state.openedProfile})}
+                            >
+                                {group.name} {this.state.openedProfile ? "\u00AB" : "\u00BB"}
+                            </div>
+                    }
+                    {
+                        !this.state.openedProfile &&
+                        <Messages
+                            messages={messages}
+                            onSubmitMessage={this.onSubmitMessage}
+                            user_id={user_id}
+                            id={id}
+                        />
+                    }
+                    {
+                        this.state.openedProfile &&
+                            <GroupProfile
+                                group={group}
+                                onLeaveClick={onLeaveClick}
+                                friends={friends}
+                            />
+                    }
                 </div>
             </Container>
         );
@@ -42,9 +68,12 @@ export default connect(
     (state, r) => ({
         id: r.params.id,
         messages: state['groupsReducer']['messages'][r.params.id],
-        user_id: state['currentUserReducer']['user'].id
+        user_id: state['currentUserReducer']['user'].id,
+        group: state['groupsReducer']['groups'][r.params.id],
+        friends: state['friendsReducer']['friends']
     }),
     dispatch => ({
-        createGroupMessage: (id, text) => dispatch(createGroupMessage(id, text))
+        createGroupMessage: (id, text) => dispatch(createGroupMessage(id, text)),
+        onLeaveClick: (id) => dispatch(leaveGroup(id))
     })
 )(GroupContainer);

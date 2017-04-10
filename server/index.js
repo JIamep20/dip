@@ -24,6 +24,7 @@ try {
 
 redis.on('message', function (channel, message) {
     message = JSON.parse(message);
+    console.log(channel);
     if (channel == 'general') {
 
     } else {

@@ -1,5 +1,6 @@
 import * as types from '../constants/friendshipsActionsConst';
 import FriendsService from '../services/friend.service';
+import { hashHistory } from 'react-router';
 
 export function fetchFriendships() {
     return function(dispatch) {
@@ -27,5 +28,18 @@ export function createFriendMessage(id, text) {
         FriendsService.createFriendMessage(id, text)
             .then(res => dispatch({type: types.createFriendMessageSuccess, payload: {id, res: res.data.data}}))
             .catch(error => dispatch({type: types.createFriendMessageError, payload: error}));
+    }
+}
+
+export function deleteFriend(id) {
+    return (dispatch) => {
+        dispatch({type: types.deleteUserFromFriendsRequest});
+        FriendsService.destroyFriend(id)
+            .then(res =>
+            {
+                hashHistory.push('/');
+                dispatch({type: types.deleteUserFromFriendsSuccess, payload: res.data.data});
+            })
+            .catch(error => dispatch({type: types.deleteUserFromFriendsError, payload: error}));
     }
 }

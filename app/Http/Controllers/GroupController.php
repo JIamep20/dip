@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 class GroupController extends ApiController
 {
     public function index(){
-        $groups = $this->user()->groups()->get();
+        $groups = $this->user()->groups()->with('users')->get();
         return $this->setStatusCode(200)->respond($groups);
     }
 
@@ -52,8 +52,8 @@ class GroupController extends ApiController
     public function userLeavesGroup(Group $group){
         if(!!$group->users()->find($this->user()->id)) {
             $group->users()->detach($this->user()->id);
-            event(new UserLeavesGroupEvent($group->users()->get('id'), $this->user(), $group));
-            return $this->setStatusCode(200)->respond('ok');
+            event(new UserLeavesGroupEvent($group->users()->get(['users.id']), $this->user(), $group));
+            return $this->setStatusCode(200)->respond($group);
         }
     }
 }

@@ -47,6 +47,20 @@ export default function friendsReducer(state = initialState, {type, payload}) {
         case types.createFriendMessageError:
             console.log(type, payload);
             return state;
+
+        case types.deleteUserFromFriendsRequest:
+            return state;
+        case types.deleteUserFromFriendsSuccess:
+            delete state.friends[payload.id];
+            return {
+                ...state,
+                friends: {...state.friends}
+            };
+        case types.deleteUserFromFriendsError:
+            console.error(type, payload);
+            return state;
+
+
         default: return state;
     }
 }

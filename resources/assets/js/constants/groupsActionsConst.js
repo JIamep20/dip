@@ -13,3 +13,7 @@ export const loadGroupMessagesError = 'loadGroupMessagesError';
 export const createGroupMessageRequest = 'createGroupMessageRequest';
 export const createGroupMessageSuccess = 'createGroupMessageSuccess';
 export const createGroupMessageError = 'createGroupMessageError';
+
+export const leaveGroupRequest = 'leaveGroupRequest';
+export const leaveGroupSuccess = 'leaveGroupSuccess';
+export const leaveGroupError = 'leaveGroupError';

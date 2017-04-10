@@ -13,7 +13,7 @@ class GroupsSeeder extends Seeder
      */
     public function run()
     {
-        factory(Group::class, 5)->create();
+        factory(Group::class, 7)->create();
         $groups = Group::all();
         $users = User::take(30)->get();
         

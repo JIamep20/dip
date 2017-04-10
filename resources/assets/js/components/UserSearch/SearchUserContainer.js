@@ -20,7 +20,7 @@ class SearchUserContainer extends React.Component {
     }
 
     addUserRequest(id) {
-        this.props.findUsersActions.addUser(id);
+        this.props.findUsersActions.addUserToFriendsById(id);
     }
 
     render() {

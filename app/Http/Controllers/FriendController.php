@@ -34,14 +34,14 @@ class FriendController extends ApiController
         throw (new ModelNotFoundException())->setModel(User::class);
     }
 
-    public function store(User $user)
+    public function store(User $friend)
     {
-        if ($user->id == $this->user()->id) {
+        if ($friend->id == $this->user()->id) {
             throw (new ModelNotFoundException)->setModel(User::class);
         }
         $result = null;
 
-        if ($friendship = $this->user()->getFriendship($user, true)) {
+        if ($friendship = $this->user()->getFriendship($friend, true)) {
             if ($friendship->trashed()) {
                 $friendship->restore();
             } else {
@@ -50,13 +50,13 @@ class FriendController extends ApiController
         } else {
             $result = new Friend([
                 'sender_id' => $this->user()->id,
-                'recipient_id' => $user->id
+                'recipient_id' => $friend->id
             ]);
             $result->save();
         }
 
-        event(new FriendshipCreatedEvent([$user->id], $user));
-        return $this->setStatusCode(200)->respond($user);
+        event(new FriendshipCreatedEvent([$friend->id], $this->user()));
+        return $this->setStatusCode(200)->respond($friend);
     }
 
     public function update(User $friend, Request $request)
@@ -75,7 +75,7 @@ class FriendController extends ApiController
         if($res = $this->user()->getFriendship($friend)) {
             $res->delete();
             event(new FriendshipDeletedEvent([$friend->id], $res));
-            return $this->setStatusCode(200)->respond();
+            return $this->setStatusCode(200)->respond($friend);
         }
 
         throw (new ModelNotFoundException())->setModel(User::class);

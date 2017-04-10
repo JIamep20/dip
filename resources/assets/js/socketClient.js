@@ -1,11 +1,14 @@
 import io from 'socket.io-client';
 import cookie from 'react-cookie';
 
+import * as friendsAction from './constants/friendshipsActionsConst';
+import * as groupsAction from './constants/groupsActionsConst';
+
 import { SOCKET_FRIEND_STATUS_CHANGE, queryOnlineUsers } from './actions/friendsActions';
 
 export default new function () {
     this._socket = null;
-    var self = this;
+    const self = this;
     this.connect = function () {
         if(self._socket) return self._socket;
 
@@ -123,6 +126,19 @@ export default new function () {
     this.registerSocketEvents = (s) => {
         s.on('userStatusUpdated', data => {
             self._dispatch({type: SOCKET_FRIEND_STATUS_CHANGE, payload: data});
+        });
+
+        s.on('ne', m => {
+            const { friend, message, group } = m.data;
+            switch (m.event){
+                case 'App\\Events\\FriendshipMessageEvent':
+                    message.user = friend;
+                    this._dispatch({type: friendsAction.createFriendMessageSuccess, payload: {id: friend.id, res: message}});
+                    break;
+                case 'App\\Events\\GroupMessageEvent':
+                    this._dispatch({type: groupsAction.createGroupMessageSuccess, payload: {id: group.id, res: message}});
+                    break;
+            }
         });
     }
 };

@@ -38,7 +38,7 @@ class MessageController extends ApiController
             $message->user()->associate($this->user());
             $message->messagable()->associate($friendship);
             $message->save();
-            event(new FriendshipMessageEvent([$friend->id, $this->user()->id], $message));
+            event(new FriendshipMessageEvent([$friend->id], $message, $this->user()));
             return $this->setStatusCode(201)->respond($message);
         }
         throw (new ModelNotFoundException())->setModel(Friend::class);
@@ -78,7 +78,7 @@ class MessageController extends ApiController
         $message->user()->associate($this->user());
         $message->messagable()->associate($group);
         $message->save();
-        event(new GroupMessageEvent($group->users()->get(['users.id']), $message));
+        event(new GroupMessageEvent($group->users()->where('users.id', '<>', $this->user()->id)->get(['users.id']), $message, $group));
         return $this->setStatusCode(200)->respond($message);
     }
 

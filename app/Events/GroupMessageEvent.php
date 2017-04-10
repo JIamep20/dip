@@ -9,17 +9,33 @@
 namespace App\Events;
 
 
+use App\Models\Group;
+use App\Models\Message;
+use Illuminate\Support\Collection;
+
 class GroupMessageEvent extends BaseEvent
 {
-    public $message;
+    protected
+        $message,
+        $group
+    ;
 
     /**
      * NewGroupMessageEvent constructor.
-     * @param array|null $channel
-     * @param $message
+     * @param Collection $channel
+     * @param Message $message
+     * @param Group $group
      */
-    public function __construct($channel, $message){
+    public function __construct($channel, $message, $group){
         $this->message = $message;
-        parent::__construct($channel);
+        $this->group = $group;
+        parent::__construct($channel->pluck('id')->toArray());
+    }
+
+    public function broadcastWith() {
+        return [
+            'message' => $this->message->load('user'),
+            'group' => $this->group
+        ];
     }
 }

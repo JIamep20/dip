@@ -61,6 +61,15 @@ class GroupService extends BaseService {
     loadGroupMessages(id) {
         return axios.get(`api/group/${id}/message`);
     }
+
+    /**
+     * 
+     * @param id
+     * @returns {*}
+     */
+    leaveGroup(id) {
+        return axios.get(`api/group/${id}/leave`);
+    }
 }
 
 export default new GroupService();
