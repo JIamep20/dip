@@ -48,7 +48,7 @@ class MessageController extends ApiController
     {
         $this->authorize('updateFriendshipMessage', [Message::class, $friend, $message]);
         $message->update($request->all());
-        event(new FriendshipMessageEvent([$friend->id, $this->user()->id], $message));
+        event(new FriendshipMessageEvent([$friend->id, $this->user()->id], $message, $friend));
         return $this->setStatusCode(200)->respond($message);
     }
 
@@ -86,7 +86,7 @@ class MessageController extends ApiController
     {
         $this->authorize('updateGroupMessage', [Message::class, $group, $message]);
         $message->update($request->all());
-        event(new GroupMessageEvent($group->users()->get(['users.id']), $message));
+        event(new GroupMessageEvent($group->users()->where('users.id', '<>', $this->user()->id)->get(['users.id']), $message, $group));
         return $this->setStatusCode(200)->respond($message);
     }
 

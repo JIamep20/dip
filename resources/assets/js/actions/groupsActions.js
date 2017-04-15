@@ -43,3 +43,12 @@ export function leaveGroup(id) {
             .catch(error => dispatch({type: types.leaveGroupError, payload: error}));
     }
 }
+
+export function addUserToGroup(group_id, user_id) {
+    return dispatch => {
+        dispatch({type: types.addUserToGroupRequest});
+        GroupService.addUserToGroupById(group_id, user_id)
+            .then(res => dispatch({type: types.addUserToGroupSuccess, payload: {id: group_id, res: res.data.data}}))
+            /*.catch(error => dispatch({type: types.addUserToGroupError, payload: error}))*/;
+    }
+}

@@ -35,7 +35,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('group', 'GroupController', [
         'except' => ['create', 'edit']
     ]);
-    Route::get('group/{group}/addUser/{user}', 'GroupController@addUser');
+    Route::get('group/{group}/adduser/{user}', 'GroupController@addUserToGroup');
     Route::get('group/{group}/leave', 'GroupController@userLeavesGroup');
 
     /* Group messages controller */

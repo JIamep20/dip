@@ -5,7 +5,7 @@ import GroupProfile from './GroupProfile';
 import Container from '../ContentContainer';
 import Messages from '../Messages/Messages';
 
-import { createGroupMessage, leaveGroup } from '../../actions/groupsActions';
+import { createGroupMessage, leaveGroup, addUserToGroup } from '../../actions/groupsActions';
 import '../../styles/GroupStyles.scss';
 
 class GroupContainer extends React.Component {
@@ -23,7 +23,7 @@ class GroupContainer extends React.Component {
     }
 
     render() {
-        let { messages, user_id, id, group, onLeaveClick, friends } = this.props;
+        let { messages, user_id, id, group, onLeaveClick, friends, onAddUserToGroup } = this.props;
         return (
             <Container left={true} right={true}>
                 <div className="group-container-offline">
@@ -50,6 +50,7 @@ class GroupContainer extends React.Component {
                             <GroupProfile
                                 group={group}
                                 onLeaveClick={onLeaveClick}
+                                onAddUserClick={onAddUserToGroup}
                                 friends={friends}
                             />
                     }
@@ -74,6 +75,7 @@ export default connect(
     }),
     dispatch => ({
         createGroupMessage: (id, text) => dispatch(createGroupMessage(id, text)),
-        onLeaveClick: (id) => dispatch(leaveGroup(id))
+        onLeaveClick: (id) => dispatch(leaveGroup(id)),
+        onAddUserToGroup: (group_id, user_id) => dispatch(addUserToGroup(group_id, user_id))
     })
 )(GroupContainer);

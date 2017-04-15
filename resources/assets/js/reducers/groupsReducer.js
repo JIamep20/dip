@@ -54,6 +54,49 @@ export default function groupsReducer(state = initialState, {type, payload}) {
             console.error(type, payload);
             return state;
 
+        case types.addUserToGroupRequest:
+            return state;
+        case types.addUserToGroupSuccess:
+            let group = _.get(state, `groups.${payload.id}`, false);
+            if (group) {
+                group.users = group.users.filter(item => item.id != payload.res.id).concat(payload.res);
+                return {
+                    ...state,
+                    groups: {
+                        ...state.groups,
+                        [payload.id]: {...state.groups[payload.id]}
+                    }
+                }
+            }
+            return state;
+        case types.addUserToGroupError:
+            console.log(type, payload);
+            return state;
+
+        case types.socket_addedToGroupNotification:
+            payload.group.users = payload.users;
+            return {
+                ...state,
+                groups: {
+                    ...state.groups,
+                    [payload.group.id]: payload.group
+                }
+            };
+        
+        case types.socket_userLeftGroupNotification:
+            let groupn = _.get(state, `groups.${payload.group.id}`, false);
+            if (groupn) {
+                groupn.users = groupn.users.filter((item) => item.id != payload.user.id);
+                return {
+                    ...state,
+                    groups: {
+                        ...state.groups,
+                        [groupn.id]: {...state.groups[groupn.id]}
+                    }
+                }
+            }
+            return state;
+
         default: return state;
     }
 

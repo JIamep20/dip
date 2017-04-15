@@ -6,7 +6,6 @@ use App\Events\FriendshipCreatedEvent;
 use App\Events\FriendshipDeletedEvent;
 use App\Exceptions\CustomMessageException;
 use App\Models\Friend;
-use App\Models\Room;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -74,7 +73,7 @@ class FriendController extends ApiController
     {
         if($res = $this->user()->getFriendship($friend)) {
             $res->delete();
-            event(new FriendshipDeletedEvent([$friend->id], $res));
+            event(new FriendshipDeletedEvent([$friend->id], $this->user()));
             return $this->setStatusCode(200)->respond($friend);
         }
 

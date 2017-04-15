@@ -17,3 +17,6 @@ export const createGroupMessageError = 'createGroupMessageError';
 export const leaveGroupRequest = 'leaveGroupRequest';
 export const leaveGroupSuccess = 'leaveGroupSuccess';
 export const leaveGroupError = 'leaveGroupError';
+
+export const socket_addedToGroupNotification = 'socket_addedToGroupNotification';
+export const socket_userLeftGroupNotification = 'socket_userLeftGroupNotification';

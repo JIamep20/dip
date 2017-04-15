@@ -3,6 +3,7 @@ import cookie from 'react-cookie';
 
 import * as friendsAction from './constants/friendshipsActionsConst';
 import * as groupsAction from './constants/groupsActionsConst';
+import * as usersAction from './constants/usersActionsConst';
 
 import { SOCKET_FRIEND_STATUS_CHANGE, queryOnlineUsers } from './actions/friendsActions';
 
@@ -31,6 +32,7 @@ export default new function () {
                 });
 
                 s.on('disconnect', () => {
+                    s.connect();
                     return reject(s);
                 });
                 s.on('connect_error', () => {
@@ -44,44 +46,6 @@ export default new function () {
                 });
             });
         });
-        /*return new Promise((resolve, reject) => {
-            if(self._socket && self.logged) {return resolve(self._socket);}
-
-            if(!self._socket) {self._socket = io('http://localhost:3000/');}
-            self._socket.on('connect', () => {
-                let s = self._socket;
-                console.log('Socket connected');
-
-                s.emit('authorize', {token: self._getCookie('x-access-token')});
-
-                s.on('logged', () => {
-                    self.logged = true;
-
-                    s.on('user-status-changed', data => {
-                        self._dispatch({type: SOCKET_FRIEND_STATUS_CHANGE, payload: data});
-                    });
-
-                    return resolve(s);
-                });
-
-                s.on('disconnect', () => {
-                    self.logged = false;
-                    return reject(s);
-                });
-                self._socket.on('connect_error', () => {
-                    self.logged = false;
-                    return reject(s);
-                });
-                self._socket.on('error', () => {
-                    self.logged = false;
-                    return reject(s);
-                });
-                self._socket.on('disconnect', () => {
-                    self.logged = false;
-                    return reject(s);
-                });
-            });
-        });*/
     };
 
     this.emit = (event, data) => {
@@ -129,11 +93,27 @@ export default new function () {
         });
 
         s.on('ne', m => {
-            const { friend, message, group } = m.data;
+            const { friend, message, group, user, users } = m.data;
             switch (m.event){
                 case 'App\\Events\\FriendshipMessageEvent':
                     message.user = friend;
                     this._dispatch({type: friendsAction.createFriendMessageSuccess, payload: {id: friend.id, res: message}});
+                    break;
+                case 'App\\Events\\FriendshipDeletedEvent':
+                    this._dispatch({type: friendsAction.deleteUserFromFriendsSuccess, payload: friend});
+                    break;
+                case 'App\\Events\\FriendshipCreatedEvent':
+                    this._dispatch({type: usersAction.addUserToFriendsByIdSuccess, payload: friend});
+                    break;
+
+                case 'App\\Events\\UserAddedToGroupEvent':
+                        this._dispatch({type: groupsAction.addUserToGroupSuccess, payload: {id: group.id, res: user}});
+                    break;
+                case 'App\\Events\\UserLeavesGroupEvent':
+                    this._dispatch({type: groupsAction.socket_userLeftGroupNotification, payload: {user, group}});
+                    break;
+                case 'App\\Events\\AddedToGroupNotificationEvent':
+                    this._dispatch({type: groupsAction.socket_addedToGroupNotification, payload: {group, users}});
                     break;
                 case 'App\\Events\\GroupMessageEvent':
                     this._dispatch({type: groupsAction.createGroupMessageSuccess, payload: {id: group.id, res: message}});

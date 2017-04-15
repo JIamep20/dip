@@ -16,7 +16,7 @@ export default function (state = initialState, {type, payload}) {
         case types.fetchUsersByFilterStringSuccess:
             return {
                 ...state,
-                searchedUsers: payload
+                searchedUsers: _.mapKeys(payload, 'id')
             };
         case types.fetchUsersByFilterStringError:
             console.log(type, payload);
@@ -30,8 +30,11 @@ export default function (state = initialState, {type, payload}) {
         case types.addUserToFriendsByIdRequest:
             return state;
         case types.addUserToFriendsByIdSuccess:
-            delete state.searchedUsers[payload['recipient']['id']];
-            return {...state};
+            delete state.searchedUsers[payload['id']];
+            return {
+                ...state,
+                searchedUsers: {...state.searchedUsers}
+            };
         case types.addUserToFriendsByIdError:
             console.log(type, payload);
             return state;

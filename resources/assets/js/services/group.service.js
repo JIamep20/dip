@@ -70,6 +70,10 @@ class GroupService extends BaseService {
     leaveGroup(id) {
         return axios.get(`api/group/${id}/leave`);
     }
+
+    addUserToGroupById(group_id, user_id) {
+        return axios.get(`api/group/${group_id}/adduser/${user_id}`);
+    }
 }
 
 export default new GroupService();

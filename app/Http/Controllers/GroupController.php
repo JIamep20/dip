@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\AddedToGroupNotificationEvent;
 use App\Events\UserAddedToGroupEvent;
 use App\Events\UserLeavesGroupEvent;
 use App\Exceptions\CustomMessageException;
 use App\Models\Group;
 use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 class GroupController extends ApiController
@@ -44,16 +46,19 @@ class GroupController extends ApiController
         if(!!$group->users()->find($user->id)) {
             throw new CustomMessageException('This user in already in group');
         }
-        event(new UserAddedToGroupEvent($group->users()->get('id'), $user, $group));
         $group->users()->attach($user->id);
-        return $this->setStatusCode(200)->respond('OK');
+        event(new UserAddedToGroupEvent($group->users()->where('users.id', '!=', $user->id)->get(['users.id']), $user, $group));
+        event(new AddedToGroupNotificationEvent([$user->id], $group));
+        return $this->setStatusCode(200)->respond($user);
     }
 
     public function userLeavesGroup(Group $group){
         if(!!$group->users()->find($this->user()->id)) {
             $group->users()->detach($this->user()->id);
-            event(new UserLeavesGroupEvent($group->users()->get(['users.id']), $this->user(), $group));
+            event(new UserLeavesGroupEvent($group->users()->get(['users.id']), $group, $this->user()));
             return $this->setStatusCode(200)->respond($group);
+        } else {
+            throw (new ModelNotFoundException())->setModel(User::class);
         }
     }
 }

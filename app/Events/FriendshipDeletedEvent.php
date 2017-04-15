@@ -4,15 +4,15 @@ namespace App\Events;
 
 class FriendshipDeletedEvent extends BaseEvent
 {
-    public $friendship;
+    public $friend;
 
     /**
      * FriendshipDeletedEvent constructor.
      * @param array|null $channel
-     * @param $friendship
+     * @param $friend
      */
-    public function __construct($channel, $friendship){
-        $this->friendship = $friendship;
+    public function __construct($channel, $friend){
+        $this->friend = $friend;
         parent::__construct($channel);
     }
 }

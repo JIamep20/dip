@@ -14,7 +14,8 @@ class UsersSeeder extends Seeder
         foreach (range('a', 'z') as $i) {
             factory(\App\Models\User::class)->create([
                 'email' => 'tester' . $i . '@example.com',
-                'password' => bcrypt('tester' . $i)
+                'password' => bcrypt('tester' . $i),
+                'name' => 'tester' . $i
             ]);
         }
         factory(\App\Models\User::class, 3)->create();
