@@ -16,5 +16,6 @@ class DatabaseSeeder extends Seeder
         $this->call(GroupsSeeder::class);
         $this->call(MessagesSeeder::class);
         $this->call(AttachmentsSeeder::class);
+        $this->call(FeedsSeeder::class);
     }
 }

@@ -21,11 +21,11 @@ class MessagesSeeder extends Seeder
                 }
             });
 
-            $user->groups()->each(function ($group) use ($user, $faker) {
+            /*$user->groups()->each(function ($group) use ($user, $faker) {
                 foreach (range(0, rand(3, 10)) as $i) {
                     $group->messages()->create(['user_id' => $user->id, 'text' => $faker->text(10)]);
                 }
-            });
+            });*/
         });
     }
 }

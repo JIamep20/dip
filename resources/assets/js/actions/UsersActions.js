@@ -1,6 +1,7 @@
 import * as types from '../constants/usersActionsConst';
 import UserService from '../services/user.service';
 import FriendService from  '../services/friend.service';
+import {socket_queryOnlineUsers} from './friendsActions';
 
 export function fetchUsersByFilterString(string) {
     return function(dispatch) {
@@ -15,7 +16,10 @@ export function addUserToFriendsById(id) {
     return function(dispatch) {
         dispatch({type:types.addUserToFriendsByIdRequest});
         return FriendService.storeFriend(id)
-            .then(res => dispatch({type: types.addUserToFriendsByIdSuccess, payload: res.data.data}))
+            .then(res => {
+                dispatch({type: types.addUserToFriendsByIdSuccess, payload: res.data.data});
+                dispatch(socket_queryOnlineUsers(res.data.data.id));
+            })
             .catch(error => dispatch({type: types.addUserToFriendsByIdError, payload: error}));
     }
 }

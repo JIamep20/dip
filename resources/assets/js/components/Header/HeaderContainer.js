@@ -39,7 +39,7 @@ class Header extends React.Component {
                 <ul className="nav clearfix">
                     <li><Link to="/">Main</Link></li>
                     <li><Link to="user/find">Find User</Link></li>
-                    <li><a href="#">Pariatur</a></li>
+                    <li><Link to="creategroup">Create Group</Link></li>
                     <li><a href="#">Illum</a></li>
                     <li><Link to="user">Profile</Link></li>
                     {/*<li className="dropdown">

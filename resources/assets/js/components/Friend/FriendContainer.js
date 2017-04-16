@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import Container from '../ContentContainer';
 import Messages from '../Messages/Messages';
 import FriendProfile from './FriendProfile';
+import { push } from 'react-router-redux';
 
 import { createFriendMessage, deleteFriend } from '../../actions/friendsActions';
 
@@ -33,7 +34,7 @@ class FriendContainer extends React.Component {
     render() {
         let { messages, id, user_id, friend, onDeleteClick } = this.props;
         return (
-            <Container left={true} right={true}>
+            <Container left={true} right={false}>
                 <div className="friend-container-offline">
                     {friend && <div
                         className="profile-label"
@@ -42,7 +43,8 @@ class FriendContainer extends React.Component {
                         {friend.name} {this.state.openedProfile ? "\u00AB" : "\u00BB"}
                     </div>
                     }
-                    {!this.state.openedProfile &&
+                    {
+                        !this.state.openedProfile &&
                         <Messages
                             messages={messages}
                             onSubmitMessage={this.onSubmitMessage}

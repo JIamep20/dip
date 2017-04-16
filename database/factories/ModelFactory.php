@@ -21,33 +21,33 @@ $factory->define(\App\Models\User::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(\App\Models\Group::class, function (\Faker\Generator $faker){
+$factory->define(\App\Models\Group::class, function (\Faker\Generator $faker) {
     return [
         'name' => $faker->name
     ];
 });
 
-$factory->define(\App\Models\Room::class, function (\Faker\Generator $faker){
-    return [
-        'name' => $faker->name
-    ];
-});
-
-$factory->define(\App\Models\Friend::class, function (\Faker\Generator $faker){
+$factory->define(\App\Models\Friend::class, function (\Faker\Generator $faker) {
     return [
         'accepted' => random_int(0, 1)
     ];
 });
 
-$factory->define(\App\Models\Message::class, function (\Faker\Generator $faker){
+$factory->define(\App\Models\Message::class, function (\Faker\Generator $faker) {
     return [
         'text' => $faker->text(20)
     ];
 });
-$factory->define(\App\Models\Attachment::class, function (\Faker\Generator $faker){
+$factory->define(\App\Models\Attachment::class, function (\Faker\Generator $faker) {
     return [
         'url' => $faker->text(10),
         'type' => $faker->text(10)
+    ];
+});
+
+$factory->define(\App\Models\Feed::class, function (\Faker\Generator $faker) {
+    return [
+        'text' => $faker->text(25)
     ];
 });
 //$factory->define(\App\Models\Group::class, function (\Faker\Generator $faker){});

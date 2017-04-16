@@ -2,12 +2,14 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import createLogger from 'redux-logger';
 import rootReducer from '../reducers/';
+import { hashHistory } from 'react-router';
+import { routerMiddleware } from 'react-router-redux';
 
 const logger = createLogger();
 
 const enhancer = compose(
     // Middleware you want to use in development:
-    applyMiddleware(logger, thunk),
+    applyMiddleware(logger, thunk, routerMiddleware(hashHistory)),
     // Required! Enable Redux DevTools with the monitors you chose
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__()
 );

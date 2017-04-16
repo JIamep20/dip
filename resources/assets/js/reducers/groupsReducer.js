@@ -20,16 +20,24 @@ export default function groupsReducer(state = initialState, {type, payload}) {
             return state;
 
         case types.loadGroupMessagesRequest:
-            state.isLoadingMessages[payload] = true;
-            return {...state};
+            return {
+                ...state,
+                isLoadingMessages: {
+                    ...state.isLoadingMessages,
+                    [payload]: true
+                }
+            };
         case types.loadGroupMessagesSuccess:
             delete state.isLoadingMessages[payload.id];
             state.messages[payload.id] = payload.res;
-            return {...state};
+            return {
+                ...state,
+                isLoadingMessages: {...state.isLoadingMessages}
+            };
         case types.loadGroupMessagesError:
             delete state.isLoadingMessages[payload.id];
             console.log(type, payload.error);
-            return {...state};
+            return {...state, isLoadingMessages: {...state.isLoadingMessages}};
         
         case types.createGroupMessageRequest:
             return state;
@@ -46,9 +54,11 @@ export default function groupsReducer(state = initialState, {type, payload}) {
             return state;
         case types.leaveGroupSuccess:
             delete state.groups[payload.id];
+            delete state.messages[payload.id];
             return {
                 ...state,
-                friends: {...state.friend}
+                friends: {...state.friend},
+                messages: {...state.messages}
             };
         case types.leaveGroupError:
             console.error(type, payload);
@@ -95,6 +105,20 @@ export default function groupsReducer(state = initialState, {type, payload}) {
                     }
                 }
             }
+            return state;
+
+        case types.createGroupRequest:
+            return state;
+        case types.createGroupSuccess:
+            return {
+                ...state,
+                groups: {
+                    ...state.groups,
+                    [payload.id]: payload
+                }
+            };
+        case types.createGroupError:
+            console.log(type, payload);
             return state;
 
         default: return state;

@@ -20,3 +20,7 @@ export const leaveGroupError = 'leaveGroupError';
 
 export const socket_addedToGroupNotification = 'socket_addedToGroupNotification';
 export const socket_userLeftGroupNotification = 'socket_userLeftGroupNotification';
+
+export const createGroupRequest = 'createGroupRequest';
+export const createGroupSuccess = 'createGroupSuccess';
+export const createGroupError = 'createGroupError';

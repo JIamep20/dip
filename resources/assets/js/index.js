@@ -13,6 +13,7 @@ nprogress.configure({ showSpinner: false });
 import { fetchCurrentUser } from './actions/currentUserActions';
 import { loadFriendMessages } from './actions/friendsActions';
 import { loadGroupMessages } from './actions/groupsActions';
+import { loadFeeds } from './actions/feedsActions';
 
 /* Sockets module */
 import socketClient from './socketClient';
@@ -28,6 +29,7 @@ import SearchUsers from './components/UserSearch/SearchUserContainer';
 import Feeds from './components/Feeds/FeedsContainer';
 import Friend from './components/Friend/FriendContainer';
 import Group from './components/Group/GroupContainer';
+import CreateGroup from './components/GroupCreate/GroupCreate';
 
 /* Store initialize */
 const store = configureStore({});
@@ -39,13 +41,14 @@ socketClient.connect();
 
 render((
     <Provider store={store}>
-        <Router history={hashHistory}>
+        <Router history={history}>
             <Route path="/" component={App}>
-                <IndexRoute component={Feeds} />
+                <IndexRoute component={Feeds} onEnter={nextState => store.dispatch(loadFeeds())}/>
                 <Route path="/user" component={Profile} />
                 <Route path="/user/find" component={SearchUsers} />
                 <Route path="/friend/:id" component={Friend} onEnter={(nextState) => store.dispatch(loadFriendMessages(nextState.params.id))}/>
                 <Route path="/group/:id" component={Group} onEnter={nextState => store.dispatch(loadGroupMessages(nextState.params.id))}/>
+                <Route path="/creategroup" component={CreateGroup}/>
             </Route>
             <Redirect from="*" to="/" />
         </Router>

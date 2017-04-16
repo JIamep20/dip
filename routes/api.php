@@ -16,6 +16,9 @@ use Illuminate\Http\Request;
 
 Route::group(['middleware' => ['auth']], function () {
 
+    /* FeedsController */
+    Route::get('feed', 'FeedController@index');
+    
     /* UserController */
 
     Route::get('user', 'UserController@index');

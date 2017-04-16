@@ -6,6 +6,7 @@ import friendsReducer from './friendsReducer';
 import groupsReducer from './groupsReducer';
 import sidebarsReducer from './sidebarsReducer';
 import usersReducer from './usersReducer';
+import feedsReducer from './feedsReducer';
 
 export default combineReducers({
     currentUserReducer,
@@ -13,5 +14,6 @@ export default combineReducers({
     groupsReducer,
     sidebarsReducer,
     usersReducer,
+    feedsReducer,
     routing: routerReducer
 });

@@ -1,11 +1,12 @@
 import io from 'socket.io-client';
 import cookie from 'react-cookie';
+import { push } from 'react-router-redux';
 
 import * as friendsAction from './constants/friendshipsActionsConst';
 import * as groupsAction from './constants/groupsActionsConst';
 import * as usersAction from './constants/usersActionsConst';
 
-import { SOCKET_FRIEND_STATUS_CHANGE, queryOnlineUsers } from './actions/friendsActions';
+import { socket_queryOnlineUsers, friendshipCreated } from './actions/friendsActions';
 
 export default new function () {
     this._socket = null;
@@ -28,7 +29,7 @@ export default new function () {
                 });
                 
                 s.on('reconnect', () => {
-                    self._dispatch(queryOnlineUsers());
+                    self._dispatch(socket_queryOnlineUsers());
                 });
 
                 s.on('disconnect', () => {
@@ -89,7 +90,7 @@ export default new function () {
 
     this.registerSocketEvents = (s) => {
         s.on('userStatusUpdated', data => {
-            self._dispatch({type: SOCKET_FRIEND_STATUS_CHANGE, payload: data});
+            self._dispatch({type: friendsAction.socket_userStatusChanged, payload: data});
         });
 
         s.on('ne', m => {
@@ -101,13 +102,17 @@ export default new function () {
                     break;
                 case 'App\\Events\\FriendshipDeletedEvent':
                     this._dispatch({type: friendsAction.deleteUserFromFriendsSuccess, payload: friend});
+                    console.log(this._getState());
+                    if (this._getState().routing.locationBeforeTransitions.pathname == `/friend/${friend.id}`) {
+                        this._dispatch(push('/'));
+                    }
                     break;
                 case 'App\\Events\\FriendshipCreatedEvent':
-                    this._dispatch({type: usersAction.addUserToFriendsByIdSuccess, payload: friend});
+                    this._dispatch(friendshipCreated(friend));
                     break;
 
                 case 'App\\Events\\UserAddedToGroupEvent':
-                        this._dispatch({type: groupsAction.addUserToGroupSuccess, payload: {id: group.id, res: user}});
+                    this._dispatch({type: groupsAction.addUserToGroupSuccess, payload: {id: group.id, res: user}});
                     break;
                 case 'App\\Events\\UserLeavesGroupEvent':
                     this._dispatch({type: groupsAction.socket_userLeftGroupNotification, payload: {user, group}});

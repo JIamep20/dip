@@ -24,7 +24,6 @@ try {
 
 redis.on('message', function (channel, message) {
     message = JSON.parse(message);
-    console.log(channel);
     if (channel == 'general') {
 
     } else {
@@ -51,19 +50,15 @@ io.on('connection', function (socket) {
                 console.log('user id: ' + user.id + " authorized");
                 users.add(user.id, socket.id);
                 socket.emit('logged', {payload: true});
-                socket.broadcast.emit('user-status-changed', {id: user.id, status: true});
+                socket.broadcast.emit('userStatusUpdated', {id: user.id, status: true});
                 redis.subscribe(user.id);
 
-                /* Receive client emits here */
-
                 socketEvents(socket);
-
-                /* ========================== */
 
                 socket.on('disconnect', function () {
                     console.log('user id: ' + user.id + ' disconnected');
                     redis.unsubscribe(user.id);
-                    socket.broadcast.emit('user-status-changed', {id: user.id, status: false});
+                    socket.broadcast.emit('userStatusUpdated', {id: user.id, status: false});
                     users.delete(socket.id);
                 });
             });

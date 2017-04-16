@@ -19,7 +19,8 @@ class GroupController extends ApiController
     }
 
     public function store(Request $request) {
-        $group = $this->user()->groups()->create([]);
+        $group = $this->user()->groups()->create($request->all());
+        $group->load('users');
         return $this->setStatusCode(200)->respond($group);
     }
 

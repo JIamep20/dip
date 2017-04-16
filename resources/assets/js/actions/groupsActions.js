@@ -49,6 +49,15 @@ export function addUserToGroup(group_id, user_id) {
         dispatch({type: types.addUserToGroupRequest});
         GroupService.addUserToGroupById(group_id, user_id)
             .then(res => dispatch({type: types.addUserToGroupSuccess, payload: {id: group_id, res: res.data.data}}))
-            /*.catch(error => dispatch({type: types.addUserToGroupError, payload: error}))*/;
+            .catch(error => dispatch({type: types.addUserToGroupError, payload: error}));
+    }
+}
+
+export function createGroup(name) {
+    return dispatch => {
+        dispatch({type: types.createGroupRequest});
+        GroupService.storeGroup({name})
+            .then(res => dispatch({type: types.createGroupSuccess, payload: res.data.data}))
+            .catch(error => dispatch({type: types.createGroupError, payload: error}));
     }
 }

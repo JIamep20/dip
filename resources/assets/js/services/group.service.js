@@ -25,13 +25,12 @@ class GroupService extends BaseService {
     }
 
     /**
-     *
-     * @param id
+     * 
      * @param data
-     * @returns {*|AxiosPromise}
+     * @returns {AxiosPromise|*}
      */
-    storeGroup(id, data = {}) {
-        return axios.post(`api/group/${id}`, data);
+    storeGroup(data) {
+        return axios.post(`api/group`, data);
     }
 
     /**

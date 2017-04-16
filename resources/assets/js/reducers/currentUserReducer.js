@@ -17,7 +17,7 @@ export default function currentUserReducer(state = initialState, {type, payload}
             };
         case types.getCurrentUserError:
             console.log(types.getCurrentUserError, payload);
-            return {...state};
+            return state;
 
         case types.updateCurrentUserRequest:
             return state;

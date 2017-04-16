@@ -75,6 +75,11 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Group::class);
     }
+    
+    public function feeds()
+    {
+        return $this->hasMany(Feed::class);
+    }
 
     public function messages()
     {
@@ -264,11 +269,12 @@ class User extends Authenticatable
 
     /**
      * @param int $status
+     * @param array $columns
      * @return \Illuminate\Database\Eloquent\Collection|static[]
      */
-    public function getFriends($status = Friend::ACCEPTED)
+    public function getFriends($status = Friend::ACCEPTED, $columns = ['*'])
     {
-        return $this->getFriendsQueryBuilder($status)->get();
+        return $this->getFriendsQueryBuilder($status)->get($columns);
     }
 
     private function getFriendsQueryBuilder($status = Friend::ACCEPTED)

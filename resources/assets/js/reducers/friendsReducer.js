@@ -23,15 +23,16 @@ export default function friendsReducer(state = initialState, {type, payload}) {
             return state;
 
         case types.loadFriendMessagesRequest:
-            state.isLoadingMessages[payload.id] = false;
             return {
-                ...state
+                ...state,
+                isLoadingMessages: {...state.isLoadingMessages, [payload.id]: false}
             };
         case types.loadFriendMessagesSuccess:
             delete state.isLoadingMessages[payload.id];
             state.messages[payload.id] = payload.res;
             return {
-                ...state
+                ...state,
+                isLoadingMessages: {...state.isLoadingMessages}
             };
         case types.loadFriendMessagesError:
             delete state.isLoadingMessages[payload.id];
@@ -53,9 +54,11 @@ export default function friendsReducer(state = initialState, {type, payload}) {
             return state;
         case types.deleteUserFromFriendsSuccess:
             delete state.friends[payload.id];
+            delete state.messages[payload.id];
             return {
                 ...state,
-                friends: {...state.friends}
+                friends: {...state.friends},
+                messages: {...state.messages}
             };
         case types.deleteUserFromFriendsError:
             console.error(type, payload);
@@ -69,6 +72,31 @@ export default function friendsReducer(state = initialState, {type, payload}) {
                     [payload.id]: payload
                 }
             };
+
+        case types.socket_queryOnlineFriendsRequest:
+            return state;
+        case types.socket_queryOnlineFriendsSuccess:
+            _.forEach(payload, (item) => {
+                if (!!state.friends[item.id]) {
+                    state.online[item.id] = item.status;
+                }
+            });
+            return {
+                ...state,
+                online: {...state.online}
+            };
+        case types.socket_queryOnlineFriendsError:
+            console.log(type, payload);
+            return state;
+        case types.socket_userStatusChanged:
+            if (!!state.friends[payload.id]) {
+                state.online[payload.id] = payload.status;
+                return {
+                    ...state,
+                    online: {...state.online}
+                }
+            }
+            return state;
 
 
         default: return state;
