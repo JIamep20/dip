@@ -1,8 +1,8 @@
 var _ = require('lodash');
 
 module.exports = new function () {
-    this._UserSockets = [];
-    this._SocketUser = [];
+    this._UserSockets = {};
+    this._SocketUser = {};
 
     this.add = function (userId, socketId, cb) {
         this._UserSockets[userId] !== undefined

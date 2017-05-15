@@ -24,7 +24,7 @@ export default new function () {
 
                 s.on('logged', () => {
                     this.registerSocketEvents(s);
-
+                    s.on('pong', () => {console.log('pong');});
                     return resolve(s);
                 });
                 
@@ -40,9 +40,6 @@ export default new function () {
                     return reject(s);
                 });
                 s.on('error', () => {
-                    return reject(s);
-                });
-                s.on('disconnect', () => {
                     return reject(s);
                 });
             });

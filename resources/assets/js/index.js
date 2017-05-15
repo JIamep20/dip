@@ -17,6 +17,7 @@ import { loadFeeds } from './actions/feedsActions';
 
 /* Sockets module */
 import socketClient from './socketClient';
+//import Room from './webrtc/Room';
 
 /* Redux */
 import configureStore from './store/configurateStore.js';
@@ -38,6 +39,7 @@ const history = syncHistoryWithStore(hashHistory, store);
 store.dispatch(fetchCurrentUser());
 socketClient.configurateStore(store);
 socketClient.connect();
+//window.Room = new Room(store.getState, store.dispatch);
 
 render((
     <Provider store={store}>

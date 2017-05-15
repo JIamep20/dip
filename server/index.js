@@ -53,7 +53,7 @@ io.on('connection', function (socket) {
                 socket.broadcast.emit('userStatusUpdated', {id: user.id, status: true});
                 redis.subscribe(user.id);
 
-                socketEvents(socket);
+                socketEvents(socket, user.id);
 
                 socket.on('disconnect', function () {
                     console.log('user id: ' + user.id + ' disconnected');

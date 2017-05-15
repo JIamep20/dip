@@ -80,7 +80,10 @@ class JwtGuard implements Guard
     }
 
     /**
-     *
+     * @param array $credentials
+     * @param bool $remember
+     * @param bool $login
+     * @return bool
      */
     public function attempt(array $credentials = [], $remember = false, $login = false)
     {
@@ -94,6 +97,10 @@ class JwtGuard implements Guard
         return false;
     }
 
+    /**
+     * @param null $user
+     * @param bool $remember
+     */
     protected function assignToken($user = null, $remember = false)
     {
         if (!$user) {
@@ -130,6 +137,9 @@ class JwtGuard implements Guard
         return $this->user = $user;
     }
 
+    /**
+     * @return bool|\Lcobucci\JWT\Token|null
+     */
     public function getJwt()
     {
         if (is_null($this->token)) {
@@ -148,6 +158,10 @@ class JwtGuard implements Guard
         return $this->token;
     }
 
+    /**
+     * @param null $token
+     * @return bool
+     */
     public function is_validJwt($token = null)
     {
         if (is_null($token)) {
@@ -158,6 +172,9 @@ class JwtGuard implements Guard
 
     }
 
+    /**
+     * @return bool
+     */
     public function logout()
     {
         Cookie::queue(Cookie::forget($this->key));

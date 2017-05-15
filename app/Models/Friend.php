@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Query\Builder;
 
 /**
  * App\Models\Friend
@@ -120,7 +121,7 @@ class Friend extends Model
     }
 
     /**
-     * @param $query
+     * @param Builder $query
      * @param int $status
      * @return mixed
      */
