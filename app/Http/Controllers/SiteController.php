@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class SiteController extends Controller
 {
@@ -13,6 +13,10 @@ class SiteController extends Controller
 
     public function webpackView()
     {
-        return view('webpackView');
+        if (env('APP_DEBUG')) {
+            return view('webpackView');
+        } else {
+            throw new AuthorizationException('', 403);
+        }
     }
 }

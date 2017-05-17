@@ -11,7 +11,7 @@ export default class MessagesInput extends React.Component {
     render() {
         return (
             <div className="messages-input">
-                <button onClick={this.createMessage}>Send</button>
+                <button onClick={this.createMessage}>OK</button>
                 <textarea ref={el => this.messageInput = el} onKeyPress={this.onKeyPress}></textarea>
             </div>
         );

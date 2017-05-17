@@ -26,16 +26,16 @@ export default class SearchUserPresentation extends React.Component {
         return (<div className="find-user-presentation-wrapper">
             <form onSubmit={this.handleSubmit}>
                 <input type="text" name="search-text" value={this.state.searchString} onChange={this.onInputChange}/>
-                <input type="submit" value="Search" name="search" disabled={!this.state.searchString}
+                <input type="submit" value="Пошук" name="search" disabled={!this.state.searchString}
                        className="btn btn-success"/>
             </form>
             <div className="clearfix"></div>
             <div style={{flexGrow: 1, overflowY: 'scroll'}}>
-                {!this.props.users.length && <span>0 users found</span>}
+                {!_.size(this.props.users) && <span>0 users found</span>}
                 <ul>
                     {
                         _.map(this.props.users, (item, key) => {
-                            return (<li key={key}>{item.name} <button onClick={() => {this.props.addUserRequest(item.id)}}>Add</button></li>);
+                            return (<li style={{margin: '3px 0'}} key={key}>{item.name} <button className="btn btn-success" onClick={() => {this.props.addUserRequest(item.id)}}>Додати</button></li>);
                         })
                     }
                 </ul>

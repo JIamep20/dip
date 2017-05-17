@@ -37,11 +37,10 @@ class Header extends React.Component {
 
                 <a href="#" id="touch-menu">Menu</a>
                 <ul className="nav clearfix">
-                    <li><Link to="/">Main</Link></li>
-                    <li><Link to="user/find">Find User</Link></li>
-                    <li><Link to="creategroup">Create Group</Link></li>
-                    <li><a href="#">Illum</a></li>
-                    <li><Link to="user">Profile</Link></li>
+                    <li><Link to="/">Головна</Link></li>
+                    <li><Link to="user/find">Знайти користувача</Link></li>
+                    <li><Link to="creategroup">Створити групу</Link></li>
+                    <li><Link to="user">Профіль</Link></li>
                     {/*<li className="dropdown">
                         <a href="#">Profile</a>
                         <div className="dropdown-content">
