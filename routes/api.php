@@ -2,18 +2,6 @@
 
 use Illuminate\Http\Request;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
-
-
 Route::group(['middleware' => ['auth']], function () {
 
     /* FeedsController */
@@ -23,7 +11,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('user', 'UserController@index');
     Route::put('user', 'UserController@update');
-    // Search users by query string
+    // Пошук користувачів
     Route::get('user/{query}', 'UserController@search');
 
     /* FriendController */
@@ -41,7 +29,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('group/{group}/adduser/{user}', 'GroupController@addUserToGroup');
     Route::get('group/{group}/leave', 'GroupController@userLeavesGroup');
 
-    /* Group messages controller */
+    /* Контролер групових повідомлень */
 
     Route::get('group/{group}/message', 'MessageController@groupIndex');
     Route::get('group/{group}/message/{message}', 'MessageController@groupShow');
@@ -49,7 +37,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::put('group/{group}/message/{message}', 'MessageController@groupUpdate');
     Route::delete('group/{group}/message/{message}', 'MessageController@groupDestroy');
 
-    /* Friendship message controller */
+    /* Контролер повідомлень товаришу */
 
      Route::get('friend/{friend}/message', 'MessageController@friendIndex');
      Route::get('friend/{friend}/message/{message}', 'MessageController@friendShow');

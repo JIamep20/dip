@@ -20,4 +20,5 @@ Route::get('auth/{service}/callback', 'Auth\\SocialAuth@handleProviderCallback')
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/', ['as' => 'base', 'uses' => 'SiteController@main']);
     Route::get('d', 'SiteController@webpackView');
+    Route::get('asd', 'SiteController@asd');
 });

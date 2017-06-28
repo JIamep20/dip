@@ -47,6 +47,8 @@ class JwtGuard implements Guard
 
     protected $prefix = 'bearer';
 
+    protected $lastAttempted;
+
     /**
      * JwtGuard constructor.
      * @param UserProvider $provider
@@ -54,7 +56,6 @@ class JwtGuard implements Guard
     public function __construct(UserProvider $provider)
     {
         $this->key = config('jwt.cookie_key');
-        //$this->request = $request;
         $this->provider = $provider;
         $this->algo = new Sha256();
     }
@@ -66,17 +67,7 @@ class JwtGuard implements Guard
      */
     public function validate(array $credentials = [])
     {
-        if (empty($credentials[$this->key])) {
-            return false;
-        }
-
-        $credentials = [$this->key => $credentials[$this->key]];
-
-        if ($this->provider->retrieveByCredentials($credentials)) {
-            return true;
-        }
-
-        return false;
+        return $this->attempt($credentials, false, false);
     }
 
     /**
@@ -85,15 +76,16 @@ class JwtGuard implements Guard
      * @param bool $login
      * @return bool
      */
-    public function attempt(array $credentials = [], $remember = false, $login = false)
+    public function attempt(array $credentials = [], $remember = false, $login = true)
     {
-        $user = $this->provider->retrieveByCredentials($credentials);
-        if ($user) {
-            $this->setUser($user);
-            $this->assignToken($user, $remember);
+        $this->lastAttempted = $user = $this->provider->retrieveByCredentials($credentials);
+
+        if ($this->hasValidCredentials($user, $credentials)) {
+            if ($login) {
+                $this->login($user);
+            }
             return true;
         }
-
         return false;
     }
 

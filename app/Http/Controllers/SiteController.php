@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
 
 class SiteController extends Controller
@@ -18,5 +19,13 @@ class SiteController extends Controller
         } else {
             throw new AuthorizationException('', 403);
         }
+    }
+
+    public function asd()
+    {
+        $users = User::join('messages', function ($j) {
+            $j->on('users.id', '=', 'messages.user_id');
+        })->get();
+        echo 1;
     }
 }

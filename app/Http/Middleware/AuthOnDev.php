@@ -17,7 +17,7 @@ class AuthOnDev
      */
     public function handle($request, Closure $next)
     {
-        if(env('APP_AUTH')) {
+        if(env('APP_AUTH') && Auth::guest()) {
             Auth::login(User::first());
         }
 
