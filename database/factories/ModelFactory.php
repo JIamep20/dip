@@ -27,12 +27,6 @@ $factory->define(\App\Models\Group::class, function (\Faker\Generator $faker) {
     ];
 });
 
-$factory->define(\App\Models\Friend::class, function (\Faker\Generator $faker) {
-    return [
-        'accepted' => random_int(0, 1)
-    ];
-});
-
 $factory->define(\App\Models\Message::class, function (\Faker\Generator $faker) {
     return [
         'text' => $faker->text(20)

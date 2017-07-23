@@ -40,22 +40,12 @@ class FriendController extends ApiController
         }
         $result = null;
 
-        if ($friendship = $this->user()->getFriendship($friend, true)) {
-            if ($friendship->trashed()) {
-                $friendship->restore();
-            } else {
-                throw new CustomMessageException('You have already this user in friends list');
-            }
-        } else {
-            $result = new Friend([
-                'sender_id' => $this->user()->id,
-                'recipient_id' => $friend->id
-            ]);
-            $result->save();
+        if ($friendship = $this->user()->makeFriendship($friend)) {
+            event(new FriendshipCreatedEvent([$friend->id], $this->user()));
+            return $this->setStatusCode(200)->respond($friend);
         }
 
-        event(new FriendshipCreatedEvent([$friend->id], $this->user()));
-        return $this->setStatusCode(200)->respond($friend);
+        throw new CustomMessageException('You can not create or change this friendship');
     }
 
     public function update(User $friend, Request $request)

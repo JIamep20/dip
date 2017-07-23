@@ -163,6 +163,8 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
 
+        \Lamer1\LaravelFriendships\Providers\FriendshipsServiceProvider::class,
+
         /*
          * Package Service Providers...
          */

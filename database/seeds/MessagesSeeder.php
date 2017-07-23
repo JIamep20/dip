@@ -15,7 +15,8 @@ class MessagesSeeder extends Seeder
         $users = \App\Models\User::all();
 
         $users->each(function (\App\Models\User $user) use ($faker) {
-            $user->getAcceptedFriendships()->each(function(\App\Models\Friend $friendship) use ($user, $faker) {
+            /** @var \Lamer1\LaravelFriendships\Traits\Friendshipable $user */
+            $user->getFriendships()->each(function(\App\Models\Friend $friendship) use ($user, $faker) {
                 foreach (range(0, rand(3, 10)) as $i) {
                     $friendship->messages()->create(['user_id' => $user->id, 'text' => $faker->text(10)]);
                 }

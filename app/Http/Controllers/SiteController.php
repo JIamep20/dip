@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Friend;
 use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
 
@@ -23,9 +24,6 @@ class SiteController extends Controller
 
     public function asd()
     {
-        $users = User::join('messages', function ($j) {
-            $j->on('users.id', '=', 'messages.user_id');
-        })->get();
-        echo 1;
+        dd(factory(Friend::class, 5)->make()->each(function ($item) {$item->sender_id = 1;}));
     }
 }

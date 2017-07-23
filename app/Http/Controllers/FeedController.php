@@ -10,8 +10,8 @@ use Illuminate\Http\Request;
 class FeedController extends ApiController
 {
     public function index() {
-        $friends = $this->user()->getFriends(Friend::ACCEPTED, ['id'])->pluck('id');
-        $feeds = Feed::whereIn('user_id', $friends)->orderBy('id', 'desc')->get();
-        return $this->setStatusCode(200)->respond($feeds);
+        //$friends = $this->user()->getFriends(Friend::ACCEPTED, ['id'])->pluck('id');
+        //$feeds = Feed::whereIn('user_id', $friends)->orderBy('id', 'desc')->get();
+        return $this->setStatusCode(200)->respond([]);
     }
 }

@@ -11,7 +11,8 @@
         "doctrine/dbal": "^2.5",
         "lcobucci/jwt": "^3.2",
         "laravel/socialite": "^2.0",
-        "predis/predis": "^1.1"
+        "predis/predis": "^1.1",
+        "lamer1/laravel-friendship": "^1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -56,5 +57,11 @@
     },
     "config": {
         "preferred-install": "dist"
-    }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url":  "git@github.com:JIamep20/laravel-friendship.git"
+        }
+    ]
 }

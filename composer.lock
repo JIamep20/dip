@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7d4e9aa884724fe39cd84fb6b6743e86",
-    "content-hash": "3652da22d3c4b9723b7e890467599aa8",
+    "hash": "94ef4dde67decea9b6dd8f6a9282d9ec",
+    "content-hash": "8eee8b2b91d42f05298fd624f26009bd",
     "packages": [
         {
             "name": "barryvdh/laravel-ide-helper",
@@ -993,6 +993,61 @@
                 "tokenizer"
             ],
             "time": "2015-12-05 17:17:57"
+        },
+        {
+            "name": "lamer1/laravel-friendship",
+            "version": "v1.1.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/JIamep20/laravel-friendship.git",
+                "reference": "27b060166e227f1c66c2577f0f57cd40325da51e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/JIamep20/laravel-friendship/zipball/27b060166e227f1c66c2577f0f57cd40325da51e",
+                "reference": "27b060166e227f1c66c2577f0f57cd40325da51e",
+                "shasum": ""
+            },
+            "require-dev": {
+                "fzaninotto/faker": "~1.4",
+                "laravel/laravel": "5.4",
+                "phpunit/phpunit": "~5.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Lamer1\\LaravelFriendships\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "classmap": [
+                    "tests",
+                    "tests/database/migrations",
+                    "src/database/migrations"
+                ],
+                "psr-4": {
+                    "Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "tests": [
+                    "phpunit"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "JIamep20",
+                    "email": "cobectb16@gmail.com"
+                }
+            ],
+            "support": {
+                "source": "https://github.com/JIamep20/laravel-friendship/tree/v1.1.7",
+                "issues": "https://github.com/JIamep20/laravel-friendship/issues"
+            },
+            "time": "2017-07-22 21:37:14"
         },
         {
             "name": "laravel/framework",
@@ -3040,12 +3095,12 @@
             "version": "0.9.5",
             "source": {
                 "type": "git",
-                "url": "https://github.com/padraic/mockery.git",
+                "url": "https://github.com/mockery/mockery.git",
                 "reference": "4db079511a283e5aba1b3c2fb19037c645e70fc2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/padraic/mockery/zipball/4db079511a283e5aba1b3c2fb19037c645e70fc2",
+                "url": "https://api.github.com/repos/mockery/mockery/zipball/4db079511a283e5aba1b3c2fb19037c645e70fc2",
                 "reference": "4db079511a283e5aba1b3c2fb19037c645e70fc2",
                 "shasum": ""
             },
