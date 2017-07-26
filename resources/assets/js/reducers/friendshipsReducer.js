@@ -1,6 +1,5 @@
 import * as types from '../constants/friendshipsActionsConst';
 import _ from 'lodash';
-import { addUserToFriendsByIdSuccess } from '../constants/usersActionsConst';
 
 const initialState = {
     friends: {},
@@ -63,15 +62,6 @@ export default function friendsReducer(state = initialState, {type, payload}) {
         case types.deleteUserFromFriendsError:
             console.error(type, payload);
             return state;
-
-        case addUserToFriendsByIdSuccess:
-            return {
-                ...state,
-                friends: {
-                    ...state.friends,
-                    [payload.id]: payload
-                }
-            };
 
         case types.socket_queryOnlineFriendsRequest:
             return state;

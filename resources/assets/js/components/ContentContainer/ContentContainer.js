@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { connect } from 'react-redux';
 
 import '../styles/ContentContainerStyles.scss'
 
@@ -10,7 +9,6 @@ class ContentContainer extends React.Component {
     }
 
     render() {
-        let {left = false, right = false, sidebars: {left: leftSidebar, right: rightSidebar}} = this.props;
         
         left = left && leftSidebar ? 'opened-left-sidebar-container ' : '';
         right = right && rightSidebar ? 'opened-right-sidebar-container ' : '';
@@ -21,8 +19,4 @@ class ContentContainer extends React.Component {
     }
 }
 
-export default connect(
-    (store) => ({
-        sidebars: store['sidebarsReducer']
-    })
-)(ContentContainer);
+export default ContentContainer;
