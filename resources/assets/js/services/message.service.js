@@ -1,19 +1,13 @@
-import axios from 'axios';
-
 import BaseService from './base.service';
 
 class MessageService extends BaseService {
-    constructor(props) {
-        super(props);
-    }
-
     /**
      *
      * @param id
      * @returns {*}
      */
     getFriendshipMessages(id) {
-        return axios.get(`api/friend/${id}/message`);
+        return this.get(`api/friend/${id}/message`);
     }
 
     /**
@@ -23,7 +17,7 @@ class MessageService extends BaseService {
      * @returns {*}
      */
     getFriendshipMessage(id, messageId) {
-        return axios.get(`api/friend/${id}/message/${messageId}`);
+        return this.get(`api/friend/${id}/message/${messageId}`);
     }
 
     /**
@@ -33,7 +27,7 @@ class MessageService extends BaseService {
      * @returns {*|AxiosPromise}
      */
     storeFriendshipMessage(id, data) {
-        return axios.post(`api/friend/${id}/message`, data);
+        return this.post(`api/friend/${id}/message`, data);
     }
 
     /**
@@ -44,7 +38,7 @@ class MessageService extends BaseService {
      * @returns {AxiosPromise}
      */
     updateFriendshipMessage(id, messageId, data) {
-        return axios.put(`api/friend/${id}/message/${messageId}`, data);
+        return this.put(`api/friend/${id}/message/${messageId}`, data);
     }
 
     /**
@@ -54,7 +48,7 @@ class MessageService extends BaseService {
      * @returns {*}
      */
     destroyFriendshipMessage(id, messageId) {
-        return axios.delete(`api/friend/${id}/message/${messageId}`);
+        return this.delete(`api/friend/${id}/message/${messageId}`);
     }
 
     /**
@@ -63,7 +57,7 @@ class MessageService extends BaseService {
      * @returns {*}
      */
     getGroupMessages(id) {
-        return axios.get(`api/group/${id}/message`);
+        return this.get(`api/group/${id}/message`);
     }
 
     /**
@@ -73,7 +67,7 @@ class MessageService extends BaseService {
      * @returns {*}
      */
     getGroupMessage(id, messageId) {
-        return axios.get(`api/group/${id}/message/${messageId}`);
+        return this.get(`api/group/${id}/message/${messageId}`);
     }
 
     /**
@@ -83,7 +77,7 @@ class MessageService extends BaseService {
      * @returns {*|AxiosPromise}
      */
     storeGroupMessage(id, data) {
-        return axios.post(`api/group/${id}/message`, data);
+        return this.post(`api/group/${id}/message`, data);
     }
 
     /**
@@ -94,7 +88,7 @@ class MessageService extends BaseService {
      * @returns {AxiosPromise}
      */
     updateGroupMessage(id, messageId, data) {
-        return axios.put(`api/group/${id}/message/${messageId}`, data);
+        return this.put(`api/group/${id}/message/${messageId}`, data);
     }
 
     /**
@@ -104,7 +98,7 @@ class MessageService extends BaseService {
      * @returns {*}
      */
     destroyGroupMessage(id, messageId) {
-        return axios.delete(`api/group/${id}/message/${messageId}`);
+        return this.delete(`api/group/${id}/message/${messageId}`);
     }
 }
 

@@ -1,18 +1,12 @@
-import axios from 'axios';
-
 import BaseService from './base.service';
 
 class FriendshipService extends BaseService {
-    constructor(props) {
-        super(props);
-    }
-
     /**
      *
      * @returns {*}
      */
-    getFriends() {
-        return axios.get('api/friend');
+    getFriendships() {
+        return this.get('api/friend');
     }
 
     /**
@@ -20,8 +14,8 @@ class FriendshipService extends BaseService {
      * @param id
      * @returns {*}
      */
-    getFriend(id) {
-        return axios.get(`api/friend/${id}`);
+    getFriendship(id) {
+        return this.get(`api/friend/${id}`);
     }
 
     /**
@@ -29,8 +23,8 @@ class FriendshipService extends BaseService {
      * @param id
      * @returns {*|AxiosPromise}
      */
-    storeFriend(id) {
-        return axios.post(`api/friend/${id}`);
+    storeFriendship(id) {
+        return this.post(`api/friend/${id}`);
     }
 
     /**
@@ -39,8 +33,8 @@ class FriendshipService extends BaseService {
      * @param data
      * @returns {AxiosPromise}
      */
-    updateFriend(id, data = {}) {
-        return axios.put(`api/friend/${id}`, data);
+    updateFriendship(id, data = {}) {
+        return this.put(`api/friend/${id}`, data);
     }
 
     /**
@@ -48,8 +42,8 @@ class FriendshipService extends BaseService {
      * @param id
      * @returns {*}
      */
-    destroyFriend(id) {
-        return axios.delete(`api/friend/${id}`);
+    destroyFriendship(id) {
+        return this.delete(`api/friend/${id}`);
     }
 
     /**
@@ -57,8 +51,8 @@ class FriendshipService extends BaseService {
      * @param id
      * @returns {*}
      */
-    loadFriendMessages(id) {
-        return axios.get(`api/friend/${id}/message`);
+    loadFriendshipMessages(id) {
+        return this.get(`api/friend/${id}/message`);
     }
 
     /**
@@ -67,8 +61,8 @@ class FriendshipService extends BaseService {
      * @param text
      * @returns {*|AxiosPromise}
      */
-    createFriendMessage(id, text) {
-        return axios.post(`api/friend/${id}/message`, {text: text});
+    createFriendshipMessage(id, text) {
+        return this.post(`api/friend/${id}/message`, {text: text});
     }
 
     

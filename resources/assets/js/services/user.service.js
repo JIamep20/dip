@@ -1,22 +1,16 @@
-import axios from 'axios';
-
 import BaseService from './base.service';
 
 class UserService extends BaseService{
-    constructor(props) {
-        super(props);
-    }
-    
     fetchCurrentUser() {
-        return axios.get('api/user');
+        return this.get('api/user');
     }
     
     updateCurrentUser(data) {
-        return axios.put('api/user', data);
+        return this.put('api/user', data);
     }
 
     findUsers(string) {
-        return axios.get(`api/user/${string}`);
+        return this.get(`api/user/${string}`);
     }
 }
 

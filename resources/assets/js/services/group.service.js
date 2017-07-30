@@ -1,18 +1,12 @@
-import axios from 'axios';
-
 import BaseService from './base.service';
 
 class GroupService extends BaseService {
-    constructor(props) {
-        super(props);
-    }
-    
     /**
      *
      * @returns {*}
      */
     getGroups() {
-        return axios.get(`api/group`);
+        return this.get(`api/group`);
     }
 
     /**
@@ -21,7 +15,7 @@ class GroupService extends BaseService {
      * @returns {*}
      */
     getGroup(id) {
-        return axios.get(`api/group/${id}`);
+        return this.get(`api/group/${id}`);
     }
 
     /**
@@ -30,7 +24,7 @@ class GroupService extends BaseService {
      * @returns {AxiosPromise|*}
      */
     storeGroup(data) {
-        return axios.post(`api/group`, data);
+        return this.post(`api/group`, data);
     }
 
     /**
@@ -40,7 +34,7 @@ class GroupService extends BaseService {
      * @returns {AxiosPromise}
      */
     updateGroup(id, data = {}) {
-        return axios.put(`api/group/${id}`, data);
+        return this.put(`api/group/${id}`, data);
     }
 
     /**
@@ -49,7 +43,7 @@ class GroupService extends BaseService {
      * @returns {*}
      */
     destroyGroup(id) {
-        return axios.delete(`api/group/${id}`);
+        return this.delete(`api/group/${id}`);
     }
 
     /**
@@ -58,7 +52,7 @@ class GroupService extends BaseService {
      * @returns {*}
      */
     loadGroupMessages(id) {
-        return axios.get(`api/group/${id}/message`);
+        return this.get(`api/group/${id}/message`);
     }
 
     /**
@@ -67,11 +61,11 @@ class GroupService extends BaseService {
      * @returns {*}
      */
     leaveGroup(id) {
-        return axios.get(`api/group/${id}/leave`);
+        return this.get(`api/group/${id}/leave`);
     }
 
     addUserToGroupById(group_id, user_id) {
-        return axios.get(`api/group/${group_id}/adduser/${user_id}`);
+        return this.get(`api/group/${group_id}/adduser/${user_id}`);
     }
 }
 

@@ -26,11 +26,7 @@ import { Provider } from 'react-redux';
 /* Containers */
 import App from './App';
 import Profile from './components/UserProfile/UserProfileContainer';
-import SearchUsers from './components/UserSearch/SearchUserContainer';
 import Feeds from './components/Feeds/FeedsContainer';
-import Friend from './components/Friend/FriendContainer';
-import Group from './components/Group/GroupContainer';
-import CreateGroup from './components/GroupCreate/GroupCreate';
 
 /* Store initialize */
 const store = configureStore({});

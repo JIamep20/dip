@@ -14,7 +14,7 @@ export function getGroups() {
 
 export function loadGroupMessages(id) {
     return (dispatch, getStore) => {
-        if(!getStore().groupsReducer['isLoadingMessages'][id] && !getStore().groupsReducer['messages'][id]) {
+        if(!getStore()['groups']['isLoadingMessages'][id] && !getStore()['groups']['messages'][id]) {
             dispatch({type: types.loadGroupMessagesRequest, payload: id});
             GroupService.loadGroupMessages(id)
                 .then(res => dispatch({type: types.loadGroupMessagesSuccess, payload: {id, res:res.data.data}}))
