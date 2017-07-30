@@ -1,13 +1,15 @@
 import { combineReducers } from 'redux';
 
 import { routerReducer } from 'react-router-redux';
-import currentUserReducer from './currentUserReducer';
-import groupsReducer from './groupsReducer';
-import feedsReducer from './feedsReducer';
+import currentUser from './currentUserReducer';
+import groups from './groupsReducer';
+import feeds from './feedsReducer';
+import friendships from './friendshipsReducer';
 
 export default combineReducers({
-    currentUser: currentUserReducer,
-    groups: groupsReducer,
-    feeds: feedsReducer,
+    currentUser,
+    groups,
+    friendships,
+    feeds,
     routing: routerReducer
 });

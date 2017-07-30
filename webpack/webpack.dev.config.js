@@ -15,7 +15,10 @@ module.exports = require('./make-webpack-config.js')({
         port: port,
         stats: 'minimal',
         hot: true,
-        inline: true
+        inline: true,
+        headers: {
+            'Access-Control-Allow-Origin': '*'
+        }
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),

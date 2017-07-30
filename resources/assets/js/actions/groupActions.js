@@ -3,7 +3,7 @@ import GroupService from '../services/group.service';
 import MessageService from '../services/message.service';
 import { hashHistory } from 'react-router';
 
-export function getGroups() {
+export function fetchGroups() {
     return (dispatch, getState) => {
         dispatch({type: types.getGroupsRequest});
         GroupService.getGroups()
@@ -12,7 +12,7 @@ export function getGroups() {
     }
 }
 
-export function loadGroupMessages(id) {
+export function fetchGroupMessages(id) {
     return (dispatch, getStore) => {
         if(!getStore()['groups']['isLoadingMessages'][id] && !getStore()['groups']['messages'][id]) {
             dispatch({type: types.loadGroupMessagesRequest, payload: id});

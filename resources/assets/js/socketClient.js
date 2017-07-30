@@ -2,11 +2,11 @@ import io from 'socket.io-client';
 import cookie from 'react-cookie';
 import { push } from 'react-router-redux';
 
-import * as friendsAction from './constants/friendshipsActionsConst';
-import * as groupsAction from './constants/groupsActionsConst';
-import * as usersAction from './constants/usersActionsConst';
+import socketServerConfig from '../../../server/config';
 
-import { socket_queryOnlineUsers, friendshipCreated } from './actions/friendsActions';
+import { refreshApp } from './actions/commonActions';
+
+import * as friendsAction from './constants/friendshipsActionsConst';
 
 export default new function () {
     this._socket = null;
@@ -15,33 +15,23 @@ export default new function () {
         if(self._socket) return self._socket;
 
         return self._socket = new Promise((resolve, reject) => {
-            let s = io('http://localhost:3000/');
+            let s = io(`${socketServerConfig.socketProtocol}${socketServerConfig.socketHost}`, {query: `token=${self._getCookie()}`});
+
+            s.on('connect_error', () => {
+                return reject(s);
+            });
 
             s.on('connect', () => {
-                console.log('Socket connected');
-
-                s.emit('authorize', {token: self._getCookie('x-access-token')});
-
-                s.on('logged', () => {
-                    this.registerSocketEvents(s);
-                    s.on('pong', () => {console.log('pong');});
-                    return resolve(s);
-                });
-                
-                s.on('reconnect', () => {
-                    self._dispatch(socket_queryOnlineUsers());
-                });
 
                 s.on('disconnect', () => {
                     s.connect();
-                    return reject(s);
                 });
-                s.on('connect_error', () => {
-                    return reject(s);
+
+                s.on('reconnect', () => {
+                    self._dispatch(refreshApp());
                 });
-                s.on('error', () => {
-                    return reject(s);
-                });
+
+                return resolve(s);
             });
         });
     };
@@ -72,7 +62,7 @@ export default new function () {
         this._socket = null;
     };
 
-    this._getCookie = function (name) {
+    this._getCookie = function (name = 'x-access-token') {
         return cookie.load(name);
         // var value = "; " + document.cookie;
         // var parts = value.split("; " + name + "=");
@@ -90,7 +80,7 @@ export default new function () {
             self._dispatch({type: friendsAction.socket_userStatusChanged, payload: data});
         });
 
-        s.on('ne', m => {
+        /*s.on('ne', m => {
             const { friend, message, group, user, users } = m.data;
             switch (m.event){
                 case 'App\\Events\\FriendshipMessageEvent':
@@ -121,6 +111,10 @@ export default new function () {
                     this._dispatch({type: groupsAction.createGroupMessageSuccess, payload: {id: group.id, res: message}});
                     break;
             }
-        });
-    }
+        });*/
+    };
+
+    this.resetSocket = () => {
+        this._socket = null;
+    };
 };

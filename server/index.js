@@ -3,6 +3,8 @@ var io = require('socket.io');
 var Redis = require('ioredis');
 var redis = new Redis();
 
+var _ = require('lodash');
+
 var socketEvents = require('./socketEvents');
 var users = require('./usersContainer');
 var checkAuth = require('./checkAuth');
@@ -37,35 +39,32 @@ redis.on('message', function (channel, message) {
     }
 });
 
-io.on('connection', function (socket) {
-    console.log('New user connected');
-    socket.on('authorize', function (loginData) {
-        if (!!loginData.token) {
-            checkAuth(loginData, function (error, user) {
-                if (error) {
-                    socket.emit('auth-error', {code: 401, type: 'Unauthorized'});
-                    socket.disconnect();
-                    return;
-                }
-                console.log('user id: ' + user.id + " authorized");
-                users.add(user.id, socket.id);
-                socket.emit('logged', {payload: true});
-                socket.broadcast.emit('userStatusUpdated', {id: user.id, status: true});
-                redis.subscribe(user.id);
-
-                socketEvents(socket, user.id);
-
-                socket.on('disconnect', function () {
-                    console.log('user id: ' + user.id + ' disconnected');
-                    redis.unsubscribe(user.id);
-                    socket.broadcast.emit('userStatusUpdated', {id: user.id, status: false});
-                    users.delete(socket.id);
-                });
-            });
-        } else {
-            socket.on('disconnect', function () {
-                console.log('Anauthorized socket disconnected');
-            });
+io.use(function (socket, next) {
+    var token = _.get(socket, 'handshake.query.token', false);
+    checkAuth(token, function (error, user) {
+        if (error) {
+            return next(new Error(error));
         }
+        socket._parsedUser = user;
+        next();
+    });
+});
+
+io.on('connection', function (socket) {
+    var user = socket._parsedUser;
+    delete socket._parsedUser;
+
+    console.log(`User (id: ${user.id}) connected.`);
+
+    users.add(user.id, socket.id);
+    socket.broadcast.emit('userStatusUpdated', {id: user.id, status: true});
+    redis.subscribe(user.id);
+    socketEvents(socket, user.id);
+
+    socket.on('disconnect', function () {
+        console.log(`User (id: ${user.id}) disconnected.`);
+        redis.unsubscribe(user.id);
+        socket.broadcast.emit('userStatusUpdated', {id: user.id, status: false});
+        users.delete(socket.id);
     });
 });

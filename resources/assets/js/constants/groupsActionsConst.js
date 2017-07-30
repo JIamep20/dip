@@ -24,3 +24,5 @@ export const socket_userLeftGroupNotification = 'socket_userLeftGroupNotificatio
 export const createGroupRequest = 'createGroupRequest';
 export const createGroupSuccess = 'createGroupSuccess';
 export const createGroupError = 'createGroupError';
+
+export const resetGroupMessages = 'resetGroupMessages';

@@ -2,22 +2,22 @@ import * as types from '../constants/friendshipsActionsConst';
 import _ from 'lodash';
 
 const initialState = {
-    friends: {},
+    friendships: {},
     online: {},
     isLoadingMessages: {},
     messages: {}
 };
 
-export default function friendsReducer(state = initialState, {type, payload}) {
+export default function friendshipsReducer(state = initialState, {type, payload}) {
     switch (type) {
-        case types.getFriendsRequest:
+        case types.fetchFriendsRequest:
             return state;
-        case types.getFriendsSuccess:
+        case types.fetchFriendsSuccess:
             return {
                 ...state,
                 friends: _.mapKeys(payload, 'id')
             };
-        case types.getFriendsError:
+        case types.fetchFriendsError:
             console.log(type, payload);
             return state;
 
@@ -52,11 +52,11 @@ export default function friendsReducer(state = initialState, {type, payload}) {
         case types.deleteUserFromFriendsRequest:
             return state;
         case types.deleteUserFromFriendsSuccess:
-            delete state.friends[payload.id];
+            delete state.friendships[payload.id];
             delete state.messages[payload.id];
             return {
                 ...state,
-                friends: {...state.friends},
+                friends: {...state.friendships},
                 messages: {...state.messages}
             };
         case types.deleteUserFromFriendsError:
@@ -67,7 +67,7 @@ export default function friendsReducer(state = initialState, {type, payload}) {
             return state;
         case types.socket_queryOnlineFriendsSuccess:
             _.forEach(payload, (item) => {
-                if (!!state.friends[item.id]) {
+                if (!!state.friendships[item.id]) {
                     state.online[item.id] = item.status;
                 }
             });
@@ -79,7 +79,7 @@ export default function friendsReducer(state = initialState, {type, payload}) {
             console.log(type, payload);
             return state;
         case types.socket_userStatusChanged:
-            if (!!state.friends[payload.id]) {
+            if (!!state.friendships[payload.id]) {
                 state.online[payload.id] = payload.status;
                 return {
                     ...state,
@@ -87,6 +87,13 @@ export default function friendsReducer(state = initialState, {type, payload}) {
                 }
             }
             return state;
+
+        case types.resetFriendshipMessages:
+            return {
+                ...state,
+                messages: {}
+            };
+            break;
 
 
         default: return state;

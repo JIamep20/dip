@@ -7,8 +7,7 @@ import socketClient from './socketClient';
 import './styles/AppResets.scss';
 import './styles/AppStyles.scss';
 
-import Header from './components/Header/HeaderContainer';
-import LeftSidebar from './components/Sidebars/LeftSidebar';
+import LeftSidebar from './components/LeftSidebar/index';
 
 
 class App extends React.Component {
@@ -23,7 +22,6 @@ class App extends React.Component {
 
     render() {
         return (<div className="wrapper">
-            <Header />
             <LeftSidebar />
             {this.props.children}
         </div>);

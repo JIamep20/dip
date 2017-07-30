@@ -9,11 +9,6 @@ require('promise.prototype.finally').shim();
 
 window.nprogress = require('nprogress');
 nprogress.configure({ showSpinner: false });
-/* Current user actions */
-import { fetchCurrentUser } from './actions/currentUserActions';
-import { loadFriendMessages } from './actions/friendsActions';
-import { loadGroupMessages } from './actions/groupsActions';
-import { loadFeeds } from './actions/feedsActions';
 
 /* Sockets module */
 import socketClient from './socketClient';
@@ -25,28 +20,21 @@ import { Provider } from 'react-redux';
 
 /* Containers */
 import App from './App';
-import Profile from './components/UserProfile/UserProfileContainer';
-import Feeds from './components/Feeds/FeedsContainer';
 
 /* Store initialize */
 const store = configureStore({});
 const history = syncHistoryWithStore(hashHistory, store);
 
-store.dispatch(fetchCurrentUser());
-socketClient.configurateStore(store);
-socketClient.connect();
+import { initApp } from './actions/commonActions';
+
+store.dispatch(initApp());
 //window.Room = new Room(store.getState, store.dispatch);
 
 render((
     <Provider store={store}>
         <Router history={history}>
             <Route path="/" component={App}>
-                <IndexRoute component={Feeds} onEnter={nextState => store.dispatch(loadFeeds())}/>
-                <Route path="/user" component={Profile} />
-                <Route path="/user/find" component={SearchUsers} />
-                <Route path="/friend/:id" component={Friend} onEnter={(nextState) => store.dispatch(loadFriendMessages(nextState.params.id))}/>
-                <Route path="/group/:id" component={Group} onEnter={nextState => store.dispatch(loadGroupMessages(nextState.params.id))}/>
-                <Route path="/creategroup" component={CreateGroup}/>
+
             </Route>
             <Redirect from="*" to="/" />
         </Router>

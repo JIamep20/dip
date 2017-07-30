@@ -121,6 +121,13 @@ export default function groupsReducer(state = initialState, {type, payload}) {
             console.log(type, payload);
             return state;
 
+        case types.resetGroupMessages:
+            return {
+                ...state,
+                messages: {}
+            };
+        break;
+
         default: return state;
     }
 

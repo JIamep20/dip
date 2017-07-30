@@ -1,6 +1,6 @@
-export const getFriendsRequest = 'getFriendsRequest';
-export const getFriendsSuccess = 'getFriendsSuccess';
-export const getFriendsError = 'getFriendsError';
+export const fetchFriendsRequest = 'fetchFriendsRequest';
+export const fetchFriendsSuccess = 'fetchFriendsSuccess';
+export const fetchFriendsError = 'fetchFriendsError';
 
 export const deleteUserFromFriendsSuccess = 'deleteUserFromFriendsSuccess';
 export const deleteUserFromFriendsRequest = 'deleteUserFromFriendsRequest';
@@ -19,3 +19,5 @@ export const socket_queryOnlineFriendsSuccess = 'socket_queryOnlineFriendsSucces
 export const socket_queryOnlineFriendsError = 'socket_queryOnlineFriendsError';
 
 export const socket_userStatusChanged = 'socket_userStatusChanged';
+
+export const resetFriendshipMessages = 'resetFriendshipMessages';

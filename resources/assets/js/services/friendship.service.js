@@ -5,7 +5,7 @@ class FriendshipService extends BaseService {
      *
      * @returns {*}
      */
-    getFriendships() {
+    fetchFriendships() {
         return this.get('api/friend');
     }
 
@@ -14,7 +14,7 @@ class FriendshipService extends BaseService {
      * @param id
      * @returns {*}
      */
-    getFriendship(id) {
+    fetchFriendship(id) {
         return this.get(`api/friend/${id}`);
     }
 
@@ -51,7 +51,7 @@ class FriendshipService extends BaseService {
      * @param id
      * @returns {*}
      */
-    loadFriendshipMessages(id) {
+    fetchFriendshipMessages(id) {
         return this.get(`api/friend/${id}/message`);
     }
 

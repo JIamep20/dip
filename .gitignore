@@ -6,6 +6,7 @@
 /public/assets
 /vendor
 /.idea
+/server/config.js
 Homestead.json
 Homestead.yaml
 .env
