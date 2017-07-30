@@ -20,6 +20,7 @@ import { Provider } from 'react-redux';
 
 /* Containers */
 import App from './App';
+import Friendship from './components/Friendship/index';
 
 /* Store initialize */
 const store = configureStore({});
@@ -34,7 +35,7 @@ render((
     <Provider store={store}>
         <Router history={history}>
             <Route path="/" component={App}>
-
+                <Route path="/friend/:id" component={Friendship} />
             </Route>
             <Redirect from="*" to="/" />
         </Router>

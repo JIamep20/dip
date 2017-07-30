@@ -1,0 +1,56 @@
+.left-sidebar {
+  flex-basis: 300px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-right: 1px solid #cccccc;
+  background-color: white;
+  -webkit-box-shadow: inset 0px 0px 5px 1px rgba(159, 159, 159, 0.75);
+  -moz-box-shadow: inset 0px 0px 5px 1px rgba(159, 159, 159, 0.75);
+  box-shadow: inset 0px 0px 5px 1px rgba(159, 159, 159, 0.75);
+
+  & .handbook {
+    flex: 1;
+
+    & ul {
+      & li {
+        & a {
+          display: inline-block;
+          width: 100%;
+          padding: 4px;
+          transition: background-color .3s linear;
+
+          &:hover {
+            background-color: #e7e7e7;
+          }
+        }
+      }
+    }
+  }
+
+  #sidebar-control-buttons {
+    display: flex;
+
+    & button {
+      flex: 1;
+    }
+  }
+}
+
+
+.circle {
+  border-radius: 50%;
+  border: 1px solid #cccccc;
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+  margin: 0 5px 0 0;
+}
+
+.circle-green {background-color: #00ad00;}
+.circle-red {background-color: #ff0000;}
+.circle-orange {background-color: #ffa500;}
+
+
+.circle-grey {background-color: #7b7d72;}
+.circle-default {background-color: #000000};

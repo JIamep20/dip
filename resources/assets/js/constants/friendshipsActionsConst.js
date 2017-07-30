@@ -21,3 +21,8 @@ export const socket_queryOnlineFriendsError = 'socket_queryOnlineFriendsError';
 export const socket_userStatusChanged = 'socket_userStatusChanged';
 
 export const resetFriendshipMessages = 'resetFriendshipMessages';
+
+export const STATUS_PENDING = 1;
+export const STATUS_ACCEPTED = 2;
+export const STATUS_DENIED = 3;
+export const STATUS_BLOCKED = 4;

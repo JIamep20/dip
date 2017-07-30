@@ -23,6 +23,9 @@
             }
         </style>
     </div>
+    <script type="text/javascript">
+        window.initApp = {user: JSON.parse('{"id": {!! Auth::user()->id !!}}')};
+    </script>
 </div>
     <script type="text/javascript" src="http://localhost:8888/assets/bundle.js"></script>
 </body>

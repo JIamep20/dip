@@ -1,0 +1,3 @@
+export const socketFriendshipSynchronizationStart = 'socketFriendshipSynchronizationStart';
+export const socketFriendshipSynchronizationSuccess = 'socketFriendshipSynchronizationSuccess';
+export const socketFriendshipSynchronizationError = 'socketFriendshipSynchronizationError';

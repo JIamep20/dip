@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import { fetchCurrentUser } from './currentUserActions';
 import { fetchGroups } from './groupActions';
 import { fetchFriendships } from './friendshipActions';
@@ -11,7 +13,8 @@ export function initApp() {
     return (dispatch, store) => {
         socketClient.configurateStore({dispatch, store});
         socketClient.connect();
-        dispatch(fetchCurrentUser());
+        let user = _.get(window, 'initApp.user', null);
+        dispatch(fetchCurrentUser(user));
         dispatch(refreshApp());
     };
 }

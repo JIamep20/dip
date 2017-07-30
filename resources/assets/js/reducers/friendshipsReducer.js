@@ -1,4 +1,5 @@
 import * as types from '../constants/friendshipsActionsConst';
+import * as socketTypes from '../constants/socketActionsConst';
 import _ from 'lodash';
 
 const initialState = {
@@ -15,7 +16,7 @@ export default function friendshipsReducer(state = initialState, {type, payload}
         case types.fetchFriendsSuccess:
             return {
                 ...state,
-                friends: _.mapKeys(payload, 'id')
+                friendships: _.mapKeys(payload, 'id')
             };
         case types.fetchFriendsError:
             console.log(type, payload);
@@ -56,34 +57,35 @@ export default function friendshipsReducer(state = initialState, {type, payload}
             delete state.messages[payload.id];
             return {
                 ...state,
-                friends: {...state.friendships},
+                friendships: {...state.friendships},
                 messages: {...state.messages}
             };
         case types.deleteUserFromFriendsError:
             console.error(type, payload);
             return state;
 
-        case types.socket_queryOnlineFriendsRequest:
+        case socketTypes.socketFriendshipSynchronizationStart:
             return state;
-        case types.socket_queryOnlineFriendsSuccess:
-            _.forEach(payload, (item) => {
-                if (!!state.friendships[item.id]) {
-                    state.online[item.id] = item.status;
+        case socketTypes.socketFriendshipSynchronizationSuccess:
+            let online = {};
+            _.forEach(payload, ({friendshipId}) => {
+                if (!!state.friendships[friendshipId]) {
+                    online[friendshipId] = true;
                 }
             });
             return {
                 ...state,
-                online: {...state.online}
+                online: online
             };
-        case types.socket_queryOnlineFriendsError:
+        case socketTypes.socketFriendshipSynchronizationError:
             console.log(type, payload);
             return state;
         case types.socket_userStatusChanged:
-            if (!!state.friendships[payload.id]) {
-                state.online[payload.id] = payload.status;
+            let friendship = _.find(state.friendships, (item) => item.friendObject.id = payload.id);
+            if (friendship) {
                 return {
                     ...state,
-                    online: {...state.online}
+                    online: {...state.online, [friendship.id]: payload.status}
                 }
             }
             return state;

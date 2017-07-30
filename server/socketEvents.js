@@ -1,11 +1,9 @@
 var usersContainer = require('./usersContainer');
 
 module.exports = function (socket, socketUserId) {
-    socket.on('queryOnlineUsers', (request, callback) => {
-        if (callback && request) {
-            callback(request.map(id => {
-                return {id: id, status: !!usersContainer._UserSockets[id]};
-            }));
+    socket.on('friendshipSynchronization', (request, callback) => {
+        if (callback && request) { console.log(request);
+            callback(request.filter(({friendId}) => !!usersContainer._UserSockets[friendId]));
         }
     });
 

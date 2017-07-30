@@ -1,8 +1,11 @@
 import * as types from '../constants/currentUserActionsConst';
 import UserService from '../services/user.service';
 
-export function fetchCurrentUser() {
+export function fetchCurrentUser(user = null) {
     return function (dispatch) {
+        if (!_.isNull(user)) {
+            dispatch({type: types.getCurrentUserSuccess, payload: user});
+        }
         dispatch({type: types.getCurrentUserRequest});
         return UserService.fetchCurrentUser()
             .then(res => dispatch({type: types.getCurrentUserSuccess, payload: res.data.data}))

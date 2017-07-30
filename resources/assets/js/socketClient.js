@@ -22,7 +22,8 @@ export default new function () {
             });
 
             s.on('connect', () => {
-
+                self.registerSocketEvents(s);
+                
                 s.on('disconnect', () => {
                     s.connect();
                 });

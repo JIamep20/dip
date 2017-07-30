@@ -20,7 +20,7 @@ class FriendController extends ApiController
      */
     public function index()
     {
-        return $this->setStatusCode(200)->respond($this->user()->getFriends(null));
+        return $this->setStatusCode(200)->respond($this->user()->getFriendships(null)->load(['sender', 'recipient']));
     }
 
     public function show(User $friend)

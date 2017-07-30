@@ -23,6 +23,9 @@
             }
         </style>
     </div>
+    <script type="text/javascript">
+        window.initApp = {user: JSON.parse('{"id": {!! Auth::user()->id !!}}')};
+    </script>
 </div>
 @if(env('APP_DEBUG'))
     <script type="text/javascript" src="assets/bundle.js?v={{time()}}"></script>

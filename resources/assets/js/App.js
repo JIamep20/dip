@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
 import socketClient from './socketClient';
 
@@ -8,6 +8,7 @@ import './styles/AppResets.scss';
 import './styles/AppStyles.scss';
 
 import LeftSidebar from './components/LeftSidebar/index';
+import ContentContainer from './components/ContentContainer/ContentContainer';
 
 
 class App extends React.Component {
@@ -21,10 +22,12 @@ class App extends React.Component {
     }
 
     render() {
-        return (<div className="wrapper">
-            <LeftSidebar />
-            {this.props.children}
-        </div>);
+        return (
+            <ContentContainer>
+                <LeftSidebar />
+                {this.props.children}
+            </ContentContainer>
+        );
     }
 }
 
